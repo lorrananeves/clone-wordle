@@ -10,7 +10,7 @@ var xingos = [
     "antas", "antao", "azeda", "azedo", "babao", "bagos", "bebum", "besta", 
     "bicha", "bicho", "birra", "bisca", "bobao", "bocao", "bosta", 
     "brega", "bruta", "bruto", "bunda", "burra", "burro", "cagao", 
-    "calva", "calvo", "chata", "chato", "choco", "chupa", "corna", "corno", 
+    "calva", "calvo", "chata", "chato", "chupa", "corna", "corno", 
     "cuzao", "doida", "doido", "falsa", "falso", "feiao", "fraco", "grelo", 
     "ladra", "lerda", "lerdo", "lesmo", "lixao", "meiao", "merda", 
     "mijao", "nojao", "patao", "peida", "peido", "peste", "picao", "pifia", 
