@@ -5,6 +5,7 @@ var coluna = 0;
 var fimDeJogo = false;
 var travado = false;
 
+// Sua lista refinada de 5 letras
 var xingos = [
     "antas", "antao", "babao", "bagos", "bebum", "besta", "bicha", "bicho",
     "bisca", "bobao", "bocao", "bosta", "brega", "bruta", "bruto", "falsa",
@@ -25,43 +26,37 @@ function removerAcentos(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+// Inicia direto com a lista local
 window.onload = function() {
-    fetch('https://raw.githubusercontent.com/TiagoSombra/palavras-pt-br/master/palavras.txt')
-    .then(res => res.text())
-    .then(data => {
-        dicionarioGeral = data.split('\n')
-            .filter(p => p.trim().length === 5)
-            .map(p => removerAcentos(p.trim()));
-        
-        console.log("Dicionário carregado com sucesso!");
-        iniciar();
-    })
-    .catch((err) => {
-        console.warn("Usando lista local (xingos) como reserva.");
-        dicionarioGeral = [...xingos];
-        iniciar();
-    });
+    iniciar();
 }
 
 function iniciar() {
+    // Sorteia uma palavra da sua lista e coloca em maiúsculas
     palavra = xingos[Math.floor(Math.random() * xingos.length)].toUpperCase();
     console.log("Palavra secreta:", palavra);
 
+    // Cria o tabuleiro
+    let board = document.getElementById("board");
+    board.innerHTML = ""; // Limpa caso reinicie
     for (let r = 0; r < tentativas; r++) {
         for (let c = 0; c < tamanhoPalavra; c++) {
             let tile = document.createElement("span");
             tile.id = r + "-" + c;
             tile.classList.add("tile");
-            document.getElementById("board").appendChild(tile);
+            board.appendChild(tile);
         }
     }
 
+    // Cria o teclado
     const layout = [
         ["Q","W","E","R","T","Y","U","I","O","P"],
         ["A","S","D","F","G","H","J","K","L"],
         ["Enter","Z","X","C","V","B","N","M","⌫"]
     ];
 
+    let keyboardContainer = document.getElementById("keyboard-container");
+    keyboardContainer.innerHTML = ""; // Limpa caso reinicie
     layout.forEach(row => {
         let rowDiv = document.createElement("div");
         rowDiv.classList.add("keyboard-row");
@@ -75,7 +70,7 @@ function iniciar() {
             keyTile.addEventListener("click", () => processInput({ code: keyTile.id }));
             rowDiv.appendChild(keyTile);
         });
-        document.getElementById("keyboard-container").appendChild(rowDiv);
+        keyboardContainer.appendChild(rowDiv);
     });
 
     document.addEventListener('keyup', processInput);
@@ -125,19 +120,15 @@ function update() {
         return;
     }
 
-    let tentativaLimpa = removerAcentos(tentativa);
-
-    if (!dicionarioGeral.includes(tentativaLimpa) && !xingos.includes(tentativaLimpa)) {
-        document.getElementById("answer").innerText = "Não está no dicionário!";
-        return;
-    }
-
+    // Removida a verificação de dicionário externo para evitar travamentos
     document.getElementById("answer").innerText = "";
     travado = true;
 
     let correct = 0;
     let letterCount = {};
-    for (let l of palavra) letterCount[l] = (letterCount[l] || 0) + 1;
+    // Prepara a contagem de letras da palavra secreta (removendo acentos para comparar)
+    let palavraSemAcento = removerAcentos(palavra).toUpperCase();
+    for (let l of palavraSemAcento) letterCount[l] = (letterCount[l] || 0) + 1;
 
     // Primeiro passo: Marcar as corretas
     for (let c = 0; c < tamanhoPalavra; c++) {
@@ -146,7 +137,7 @@ function update() {
 
         setTimeout(() => {
             tile.classList.add("flip");
-            if (palavra[c] === letra) {
+            if (palavraSemAcento[c] === letra) {
                 tile.classList.add("correct");
                 pintarTecla(letra, "correct");
                 correct++;
@@ -155,14 +146,14 @@ function update() {
         }, c * 150);
     }
 
-    // Segundo passo: Marcar presentes/ausentes e checar fim de jogo
+    // Segundo passo: Marcar presentes/ausentes
     setTimeout(() => {
         for (let c = 0; c < tamanhoPalavra; c++) {
             let tile = document.getElementById(fileira + '-' + c);
             let letra = tile.innerText;
             if (tile.classList.contains("correct")) continue;
 
-            if (palavra.includes(letra) && letterCount[letra] > 0) {
+            if (palavraSemAcento.includes(letra) && letterCount[letra] > 0) {
                 tile.classList.add("present");
                 pintarTecla(letra, "present");
                 letterCount[letra]--;
@@ -172,7 +163,6 @@ function update() {
             }
         }
 
-        // LÓGICA DE FIM DE JOGO MELHORADA
         if (correct === tamanhoPalavra || fileira === tentativas - 1) {
             fimDeJogo = true;
             if (correct === tamanhoPalavra) {
@@ -181,7 +171,6 @@ function update() {
                 document.getElementById("answer").innerText = "BURRO! ERA: " + palavra;
             }
 
-            // Aguarda a última animação e troca os elementos
             setTimeout(() => {
                 document.getElementById("keyboard-container").style.display = "none";
                 document.querySelector(".reset-btn").style.display = "block";
