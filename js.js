@@ -6,12 +6,15 @@ var fimDeJogo = false;
 var travado = false;
 
 var xingos = [
-    "bagos","bebum","besta","bicha","bisca","bosta","bunda","burro",
-    "cagao","corno","corna","cuzao","putao","doida","doido","grelo","ladra",
-    "merda","mijao","picao","porra","tezao","viado","viada","xibiu","calvo",
-    "calva","meiao","porco","porca","bobao","vacao","tosco","tosca","pifio",
-    "pifia","podre","verme","pobre","brega","falso","falsa","vazio","vazia",
-    "feiao","chato","chata","chupa"
+    "antas", "antao", "babao", "bagos", "bebum", "besta", "bicha", "bicho",
+    "bisca", "bobao", "bocao", "bosta", "brega", "bruta", "bruto", "falsa",
+    "bunda", "burra", "burro", "cagao", "calva", "calvo", "chata", "vazia",
+    "chato", "chupa", "corna", "corno", "cuzao", "doida", "doido", "vazio",
+    "falso", "feiao", "grelo", "ladra", "lerdo", "lesmo", "lixao", "verme",
+    "meiao", "merda", "mijao", "peste", "picao", "pifia", "pifio", "viada", 
+    "pobre", "podre", "porca", "porco", "porra", "putao", "viado", "xibiu",
+    "tezao", "tonto", "tosca", "tosco", "trapo", "troxa", "vacao", "vadio",
+    "vadia",
 ];
 
 xingos = [...new Set(xingos)];
