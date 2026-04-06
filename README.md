@@ -1,1 +1,1 @@
-segue link: https://lorrananeves.github.io/xingo/
+segue link: https://lorrananeves.github.io/clone-wordle/
