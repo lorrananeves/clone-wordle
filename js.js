@@ -136,13 +136,13 @@ function update() {
     let letterCount = {};
     for (let l of palavra) letterCount[l] = (letterCount[l] || 0) + 1;
 
+    // Primeiro passo: Marcar as corretas
     for (let c = 0; c < tamanhoPalavra; c++) {
         let tile = document.getElementById(fileira + '-' + c);
         let letra = tile.innerText;
 
         setTimeout(() => {
-            tile.classList.add("flip"); // Dispara a animação do CSS
-
+            tile.classList.add("flip");
             if (palavra[c] === letra) {
                 tile.classList.add("correct");
                 pintarTecla(letra, "correct");
@@ -152,6 +152,7 @@ function update() {
         }, c * 150);
     }
 
+    // Segundo passo: Marcar presentes/ausentes e checar fim de jogo
     setTimeout(() => {
         for (let c = 0; c < tamanhoPalavra; c++) {
             let tile = document.getElementById(fileira + '-' + c);
@@ -168,17 +169,24 @@ function update() {
             }
         }
 
-        if (correct === tamanhoPalavra) {
+        // LÓGICA DE FIM DE JOGO MELHORADA
+        if (correct === tamanhoPalavra || fileira === tentativas - 1) {
             fimDeJogo = true;
-            document.getElementById("answer").innerText = "BOA, GAZELA! 🏳️‍🌈";
+            if (correct === tamanhoPalavra) {
+                document.getElementById("answer").innerText = "BOA, GAZELA! 🏳️‍🌈";
+            } else {
+                document.getElementById("answer").innerText = "BURRO! ERA: " + palavra;
+            }
+
+            // Aguarda a última animação e troca os elementos
+            setTimeout(() => {
+                document.getElementById("keyboard-container").style.display = "none";
+                document.querySelector(".reset-btn").style.display = "block";
+            }, 1000);
         } else {
             fileira++;
             coluna = 0;
-            if (fileira === tentativas) {
-                fimDeJogo = true;
-                document.getElementById("answer").innerText = "BURRO! ERA: " + palavra;
-            }
+            travado = false;
         }
-        travado = false;
     }, 800);
 }
