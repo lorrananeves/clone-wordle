@@ -6,7 +6,7 @@ var fimDeJogo = false;
 var travado = false;
 
 var xingos = [
-    "sagaz","bagos","bebum","besta","bicha","bisca","bosta","bunda","burro",
+    "bagos","bebum","besta","bicha","bisca","bosta","bunda","burro",
     "cagao","corno","corna","cuzao","putao","doida","doido","grelo","ladra",
     "merda","mijao","picao","porra","tezao","viado","viada","xibiu","calvo",
     "calva","meiao","porco","porca","bobao","vacao","tosco","tosca","pifio",
@@ -23,15 +23,18 @@ function removerAcentos(str) {
 }
 
 window.onload = function() {
-    fetch('https://raw.githubusercontent.com/python-br/palavras/master/palavras.txt')
+    fetch('https://raw.githubusercontent.com/TiagoSombra/palavras-pt-br/master/palavras.txt')
     .then(res => res.text())
     .then(data => {
         dicionarioGeral = data.split('\n')
             .filter(p => p.trim().length === 5)
-            .map(p => removerAcentos(p));
+            .map(p => removerAcentos(p.trim()));
+        
+        console.log("Dicionário carregado com sucesso!");
         iniciar();
     })
-    .catch(() => {
+    .catch((err) => {
+        console.warn("Usando lista local (xingos) como reserva.");
         dicionarioGeral = [...xingos];
         iniciar();
     });
