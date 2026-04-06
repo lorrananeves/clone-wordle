@@ -15,7 +15,7 @@ var xingos = [
     "ladra", "lerda", "lerdo", "lesmo", "lixao", "meiao", "merda", 
     "mijao", "nojao", "patao", "peida", "peido", "peste", "picao", "pifia", 
     "pifio", "pobre", "podre", "porca", "porco", "porra", "putao", "ranco", 
-    "ranha", "ranho", "suina", "suino", "sujas", "sujos", "teima", 
+    "ranho", "suina", "suino", "sujas", "sujos", "teima", 
     "tensa", "tenso", "tezao", "tonta", "tonto", "tosca", "tosco", 
     "trapo", "troxa", "vadia", "vadio", "vazia", "vazio", "verme", 
     "viada", "viado", "xibiu",
