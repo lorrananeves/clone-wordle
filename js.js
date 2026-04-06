@@ -5,17 +5,20 @@ var coluna = 0;
 var fimDeJogo = false;
 var travado = false;
 
-// Sua lista refinada de 5 letras
+//lista refinada de 5 letras
 var xingos = [
-    "antas", "antao", "babao", "bagos", "bebum", "besta", "bicha", "bicho",
-    "bisca", "bobao", "bocao", "bosta", "brega", "bruta", "bruto", "falsa",
-    "bunda", "burra", "burro", "cagao", "calva", "calvo", "chata", "vazia",
-    "chato", "chupa", "corna", "corno", "cuzao", "doida", "doido", "vazio",
-    "falso", "feiao", "grelo", "ladra", "lerdo", "lesmo", "lixao", "verme",
-    "meiao", "merda", "mijao", "peste", "picao", "pifia", "pifio", "viada", 
-    "pobre", "podre", "porca", "porco", "porra", "putao", "viado", "xibiu",
-    "tezao", "tonto", "tosca", "tosco", "trapo", "troxa", "vacao", "vadio",
-    "vadia",
+    "antas", "antao", "azeda", "azedo", "babao", "bagos", "bebum", "besta", 
+    "bicha", "bicho", "birra", "bisca", "bobao", "bocao", "bosta", 
+    "brega", "bruta", "bruto", "bunda", "burra", "burro", "cagao", 
+    "calva", "calvo", "chata", "chato", "choco", "chupa", "corna", "corno", 
+    "cuzao", "doida", "doido", "falsa", "falso", "feiao", "fraco", "grelo", 
+    "ladra", "lerda", "lerdo", "lesmo", "lixao", "meiao", "merda", 
+    "mijao", "nojao", "patao", "peida", "peido", "peste", "picao", "pifia", 
+    "pifio", "pobre", "podre", "porca", "porco", "porra", "putao", "ranco", 
+    "ranha", "ranho", "suina", "suino", "sujas", "sujos", "teima", 
+    "tensa", "tenso", "tezao", "tonta", "tonto", "tosca", "tosco", 
+    "trapo", "troxa", "vadia", "vadio", "vazia", "vazio", "verme", 
+    "viada", "viado", "xibiu",
 ];
 
 xingos = [...new Set(xingos)];
