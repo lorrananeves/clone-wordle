@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <link rel="icon" type="image/png" href="favicon.jpg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Xingo - O Jogo de Palavras Proibidas</title>
+    <meta name="description" content="Desafie sua mente com o Xingo! Tente adivinhar a palavra de 5 letras em 6 tentativas. Um jogo divertido, minimalista e desafiador.">
+    <link rel="icon" type="image/jpg" href="favicon.jpg">
+
+    <meta property="og:title" content="Xingo - Jogo de Palavras">
+    <meta property="og:description" content="Será que você consegue descobrir o Xingo de hoje? Jogue agora!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lorrananeves.github.io/xingo/">
+    <meta property="og:image" content="https://lorrananeves.github.io/xingo/favicon.jpg">
+
     <link rel="stylesheet" href="style.css">
-    <title>XINGO</title>
 </head>
 <body>
     <header>
         <h1 id="title">XINGO</h1>
     </header>
 
-    <div id="board"></div>
-    <h2 id="answer"></h2>
-    <div id="keyboard-container"></div>
+    <p style="display:none">Xingo é um jogo de adivinhação de palavras inspirado no Wordle, com um vocabulário descontraído e desafiador.</p>
+
+    <main>
+        <div id="board"></div>
+        <h2 id="answer" aria-live="polite"></h2>
+        <div id="keyboard-container"></div>
+    </main>
 
     <button onclick="location.reload()" class="reset-btn">Jogar de novo</button>
 
