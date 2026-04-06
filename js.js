@@ -5,7 +5,7 @@ var coluna = 0;
 var fimDeJogo = false;
 var travado = false;
 
-//lista refinada de 5 letras
+// Lista de palavras refinada
 var xingos = [
     "antas", "antao", "azeda", "azedo", "babao", "bagos", "bebum", "besta", 
     "bicha", "bicho", "birra", "bisca", "bobao", "bocao", "bosta", 
@@ -21,27 +21,40 @@ var xingos = [
     "viada", "viado", "xibiu",
 ];
 
-xingos = [...new Set(xingos)];
-var dicionarioGeral = [];
 var palavra = "";
 
 function removerAcentos(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-// Inicia direto com a lista local
 window.onload = function() {
-    iniciar();
+    const hoje = new Date().toISOString().split('T')[0];
+    const jogoSalvo = JSON.parse(localStorage.getItem("xingo_status"));
+
+    // Verifica se o usuário já jogou hoje
+    if (jogoSalvo && jogoSalvo.data === hoje && jogoSalvo.finalizado) {
+        document.getElementById("modal-regras").style.display = "none";
+        exibirMensagemJaJogou(jogoSalvo.vitoria, jogoSalvo.palavra);
+    } else {
+        iniciar();
+    }
+
+    // Lógica do Modal
+    const modal = document.getElementById("modal-regras");
+    const botaoFechar = document.getElementById("fechar-modal");
+    botaoFechar.onclick = () => modal.style.display = "none";
+    window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
 }
 
 function iniciar() {
-    // Sorteia uma palavra da sua lista e coloca em maiúsculas
-    palavra = xingos[Math.floor(Math.random() * xingos.length)].toUpperCase();
-    console.log("Palavra secreta:", palavra);
+    // Gerar palavra do dia baseada na data para ser igual para todos
+    const hoje = new Date().toISOString().split('T')[0];
+    const semente = hoje.split('-').join('');
+    const indiceDodia = parseInt(semente) % xingos.length;
+    palavra = xingos[indiceDodia].toUpperCase();
 
-    // Cria o tabuleiro
     let board = document.getElementById("board");
-    board.innerHTML = ""; // Limpa caso reinicie
+    board.innerHTML = ""; 
     for (let r = 0; r < tentativas; r++) {
         for (let c = 0; c < tamanhoPalavra; c++) {
             let tile = document.createElement("span");
@@ -51,7 +64,6 @@ function iniciar() {
         }
     }
 
-    // Cria o teclado
     const layout = [
         ["Q","W","E","R","T","Y","U","I","O","P"],
         ["A","S","D","F","G","H","J","K","L"],
@@ -59,7 +71,7 @@ function iniciar() {
     ];
 
     let keyboardContainer = document.getElementById("keyboard-container");
-    keyboardContainer.innerHTML = ""; // Limpa caso reinicie
+    keyboardContainer.innerHTML = "";
     layout.forEach(row => {
         let rowDiv = document.createElement("div");
         rowDiv.classList.add("keyboard-row");
@@ -87,12 +99,10 @@ function processInput(e) {
             currTile.innerText = e.code.replace("Key", "");
             coluna++;
         }
-    } 
-    else if (e.code === "Backspace" && coluna > 0) {
+    } else if (e.code === "Backspace" && coluna > 0) {
         coluna--;
         document.getElementById(fileira + '-' + coluna).innerText = "";
-    } 
-    else if (e.code === "Enter") {
+    } else if (e.code === "Enter") {
         update();
     }
 }
@@ -103,11 +113,9 @@ function pintarTecla(letra, classe) {
     if (classe === "correct") {
         key.classList.remove("present");
         key.classList.add("correct");
-    } 
-    else if (classe === "present" && !key.classList.contains("correct")) {
+    } else if (classe === "present" && !key.classList.contains("correct")) {
         key.classList.add("present");
-    } 
-    else if (!key.classList.contains("correct") && !key.classList.contains("present")) {
+    } else if (!key.classList.contains("correct") && !key.classList.contains("present")) {
         key.classList.add("absent");
     }
 }
@@ -123,21 +131,17 @@ function update() {
         return;
     }
 
-    // Removida a verificação de dicionário externo para evitar travamentos
     document.getElementById("answer").innerText = "";
     travado = true;
 
     let correct = 0;
     let letterCount = {};
-    // Prepara a contagem de letras da palavra secreta (removendo acentos para comparar)
     let palavraSemAcento = removerAcentos(palavra).toUpperCase();
     for (let l of palavraSemAcento) letterCount[l] = (letterCount[l] || 0) + 1;
 
-    // Primeiro passo: Marcar as corretas
     for (let c = 0; c < tamanhoPalavra; c++) {
         let tile = document.getElementById(fileira + '-' + c);
         let letra = tile.innerText;
-
         setTimeout(() => {
             tile.classList.add("flip");
             if (palavraSemAcento[c] === letra) {
@@ -149,13 +153,11 @@ function update() {
         }, c * 150);
     }
 
-    // Segundo passo: Marcar presentes/ausentes
     setTimeout(() => {
         for (let c = 0; c < tamanhoPalavra; c++) {
             let tile = document.getElementById(fileira + '-' + c);
             let letra = tile.innerText;
             if (tile.classList.contains("correct")) continue;
-
             if (palavraSemAcento.includes(letra) && letterCount[letra] > 0) {
                 tile.classList.add("present");
                 pintarTecla(letra, "present");
@@ -168,15 +170,23 @@ function update() {
 
         if (correct === tamanhoPalavra || fileira === tentativas - 1) {
             fimDeJogo = true;
-            if (correct === tamanhoPalavra) {
-                document.getElementById("answer").innerText = "BOA, GAZELA! 🏳️‍🌈";
-            } else {
-                document.getElementById("answer").innerText = "BURRO! ERA: " + palavra;
-            }
+            const vitoria = (correct === tamanhoPalavra);
+            
+            // Salva o status no LocalStorage
+            const hoje = new Date().toISOString().split('T')[0];
+            localStorage.setItem("xingo_status", JSON.stringify({
+                data: hoje,
+                finalizado: true,
+                vitoria: vitoria,
+                palavra: palavra
+            }));
+
+            document.getElementById("answer").innerText = vitoria ? 
+                "Boa! Você é muito inteligente! 👍" : 
+                "Quase lá! A palavra era: " + palavra;
 
             setTimeout(() => {
                 document.getElementById("keyboard-container").style.display = "none";
-                document.querySelector(".reset-btn").style.display = "block";
             }, 1000);
         } else {
             fileira++;
@@ -184,4 +194,24 @@ function update() {
             travado = false;
         }
     }, 800);
+}
+
+function exibirMensagemJaJogou(vitoria, pal) {
+    const board = document.getElementById("board");
+    
+    // Remove o grid do board para o card ocupar o espaço todo
+    board.style.display = "block"; 
+    
+    board.innerHTML = `
+        <div class="status-container">
+            <div class="status-icon">${vitoria ? '🏆' : '⏰'}</div>
+            <h3>Desafio Concluído!</h3>
+            <p>A palavra de hoje era: <br><strong style="font-size: 1.8rem; letter-spacing: 3px;">${pal}</strong></p>
+            <hr style="border: 0; border-top: 1px solid #3a3a3c; margin: 20px 0;">
+            <p>Você já jogou hoje.<br>Volte amanhã para uma nova palavra!</p>
+        </div>
+    `;
+    
+    document.getElementById("keyboard-container").style.display = "none";
+    document.getElementById("answer").innerText = "";
 }

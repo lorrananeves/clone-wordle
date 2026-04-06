@@ -17,6 +17,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="modal-regras" class="modal">
+    <div class="modal-content">
+        <h2>Bem-vindo ao XINGO! 🎯</h2>
+        <p>O objetivo é adivinhar a **palavra secreta de 5 letras** em até 6 tentativas.</p>
+        <div class="exemplo-regras">
+            <p><span class="tile correct" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">A</span> Letra correta no lugar certo.</p>
+            <p><span class="tile present" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">B</span> Letra existe, mas no lugar errado.</p>
+            <p><span class="tile absent" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">C</span> Letra não faz parte da palavra.</p>
+        </div>
+        <p><strong>Por que é legal?</strong> Além de testar seu vocabulário, é um passatempo rápido e viciante para treinar o cérebro!</p>
+        <button id="fechar-modal" class="reset-btn" style="display:block; margin: 20px auto 0;">Bora Jogar!</button>
+    </div>
+</div>
     <header>
         <h1 id="title">XINGO</h1>
     </header>
