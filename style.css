@@ -1,110 +1,60 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    background-color: rgb(207, 127, 167);
-    background-size: cover;
-}
-
-header {
-    background-color: transparent;
-    width: 100%;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-hr{
-    width: 500px;
-}
-h1 {
+    background-color: #131213; 
+    color: white;
     margin: 0;
-    letter-spacing: 100px;
-    color: aliceblue;
-}
-h2 {
-    color: aliceblue;
-}
-#title{
-    font-size: 38px;
-    font-weight: bold;
-    letter-spacing: 2px;
 }
 
-#board{
+header { height: 80px; display: flex; justify-content: center; align-items: center; }
+#title { font-size: 40px; letter-spacing: 5px; }
+
+#board {
     width: 350px;
     height: 420px;
-    margin: 0 auto;
-    margin-top: 3px;
-    display: flex;
-    flex-wrap: wrap;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
 }
 
-.tile{
-    border: 2px solid lightgray;
-    width: 60px;
-    height: 60px;
-    margin: 2.5px;
-
-    color: white;
-    font-size: 36px;
+.tile {
+    border: 2px solid #3a3a3c;
+    width: 62px;
+    height: 62px;
+    font-size: 30px;
     font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+/* Animação de digitação */
+.tile:not(:empty) {
+    border-color: #565758;
+    transform: scale(1.05);
+}
+
+.keyboard-row { display: flex; justify-content: center; margin-bottom: 8px; }
+
+.key-tile, .enter-key-tile {
+    background-color: #818384;
+    border-radius: 4px;
+    margin: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    height: 58px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.keyboard-row {
-    width: 400px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-}
-.key-tile{
+.key-tile { width: 40px; }
+.enter-key-tile { width: 65px; }
 
- border: 1px solid lightgray;
- border-radius: 2px;
- background-color: #d3d6da;
- width: 36px;
- height: 50px;
- margin: 1px;
- gap: 3rem;
-
- border-radius: 2px;
- font-size: 20px;
- font-weight: bold;
- display: flex;
- justify-content: center;
- align-items: center;
-}
-
-.enter-key-tile{
-    background-color: #d3d6da;
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    width: 76px;
-    height: 50px;
-    margin: 1px;
-    border-radius: 2px;
-    font-size: 20px;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   }
-
-.correct{
-    background-color: #6aaa64;
-    color: white;
-    border-color: white;
-}
-
-.present{
-    background-color: #c9b458;
-    color: white;
-    border-color: white;
-}
-.absent{ 
-    background-color: #9e8092;
-    color: white;
-    border-color: white;
-}
+/* Cores do Jogo */
+.correct { background-color: #538d4e !important; border-color: #538d4e; }
+.present { background-color: #b59f3b !important; border-color: #b59f3b; }
+.absent { background-color: #3a3a3c !important; border-color: #3a3a3c; }

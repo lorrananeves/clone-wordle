@@ -1,193 +1,153 @@
 var tentativas = 6; 
 var tamanhoPalavra = 5; 
-
 var fileira = 0;
-var coluna = 0; //letra atual
-
+var coluna = 0;
 var fimDeJogo = false;
 
-var xingos =
-["sagaz", "bagos","bebum", "besta", "bicha", "bisca", "bosta", "bunda", "burro", "cagão", "burra", "carga", 
-"corno", "corna", "cuzao","putao", "doida", "doido", "grelo", "idiota", "ladra", "merda", "mijao", "otario", "otaria",
-"peido", "penis", "picao", "porra", "tezao", "trouxa", "viado", "viada", "xibiu", "calvo", "calva", "meiao", "merda", "porco", "porca", "bobao"]
+// lista curada para SORTEIO
+var xingos = [
+    "sagaz", "bagos", "bebum", "besta", "bicha", "bisca", "bosta", "bunda", "burro", 
+    "cagao", "corno", "corna", "cuzao", "putao", "doida", "doido", "grelo", "ladra", 
+    "merda", "mijao", "picao", "porra", "tezao", "viado", "viada", "xibiu", "calvo", 
+    "calva", "meiao", "porco", "porca", "bobao", "vacao", "tosco", "tosca", "pifio", 
+    "pifia", "podre", "verme", "pobre", "brega",  "falso", "falsa", "vazio", "vazia", 
+    "podre", "feiao", "chato", "chata", "chupa", "bunda",
+];
+var dicionarioGeral = [];
+var palavra = "";
 
-var listaDeTentativas = []
-
-listaDeTentativas = listaDeTentativas.concat(xingos);
-
-var palavra = xingos[Math.floor(Math.random()*xingos.length)].toUpperCase();
-console.log(palavra);
+// Função essencial para ignorar acentos na comparação
+function removerAcentos(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
 
 window.onload = function() {
-    iniciar();
+    // Carrega palavras do português para validação (Robustez)
+    fetch('https://raw.githubusercontent.com/python-br/palavras/master/palavras.txt')
+        .then(res => res.text())
+        .then(data => {
+            dicionarioGeral = data.split('\n')
+                .filter(p => p.length === 5)
+                .map(p => removerAcentos(p));
+            
+            iniciar();
+        });
 }
 
 function iniciar() {
-    for ( let r = 0; r < tentativas; r++) {
+    // Sorteia um xingo da sua lista
+    palavra = xingos[Math.floor(Math.random() * xingos.length)].toUpperCase();
+    console.log("Palavra secreta:", palavra);
+
+    // Criar o tabuleiro
+    for (let r = 0; r < tentativas; r++) {
         for (let c = 0; c < tamanhoPalavra; c++) {
             let tile = document.createElement("span");
             tile.id = r.toString() + "-" + c.toString();
             tile.classList.add("tile");
-            tile.innerText = "";
             document.getElementById("board").appendChild(tile);
         }
     }
-    let keyboard = [
+
+    // Criar o teclado
+    const layout = [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-        ["A", "S", "D", "F", "G", "H", "J", "K", "L",],
-        ["Enter", "Z", "X", "C", "V", "B", "N", "M", "⌫" ]
-    ]
-    for (let i= 0; i < keyboard.length; i++) {
-        let fileiraAtual = keyboard[i];
-        let keyboardRow = document.createElement("div");
-        keyboardRow.classList.add("keyboard-row");
+        ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+        ["Enter", "Z", "X", "C", "V", "B", "N", "M", "⌫"]
+    ];
 
-        for (let j = 0; j < fileiraAtual.length; j++) {
+    layout.forEach(row => {
+        let rowDiv = document.createElement("div");
+        rowDiv.classList.add("keyboard-row");
+        row.forEach(key => {
             let keyTile = document.createElement("div");
-
-            let key = fileiraAtual[j];
             keyTile.innerText = key;
-            if (key == 'Enter') {
-               keyTile.id = "Enter"; 
-            }
-        
-            else if (key == "⌫") {
-                keyTile.id = "Backspace";
-            }
-            else if ("A" <= key && key <= "Z") {
-                keyTile.id = "Key" + key;
-            }
-            keyTile.addEventListener("click", processKey);
+            keyTile.classList.add(key === "Enter" ? "enter-key-tile" : "key-tile");
+            
+            if (key === "⌫") keyTile.id = "Backspace";
+            else if (key === "Enter") keyTile.id = "Enter";
+            else keyTile.id = "Key" + key;
 
-            if (key == "Enter") {
-                keyTile.classList.add("enter-key-tile");
+            keyTile.addEventListener("click", () => processInput({ code: keyTile.id }));
+            rowDiv.appendChild(keyTile);
+        });
+        document.getElementById("keyboard-container").appendChild(rowDiv);
+    });
 
-            } else {
-                keyTile.classList.add("key-tile");
-            }
-            keyboardRow.appendChild(keyTile);
-
-        }
-        document.body.appendChild(keyboardRow);
-    }
-    document.addEventListener('keyup', (e) => {
-        processInput(e);
-    })
-}
-
-function processKey() {
-    e = { "code" : this.id };
-    processInput(e);
+    document.addEventListener('keyup', processInput);
 }
 
 function processInput(e) {
-    if (fimDeJogo) return; 
+    if (fimDeJogo) return;
 
     if ("KeyA" <= e.code && e.code <= "KeyZ") {
         if (coluna < tamanhoPalavra) {
-            let currTile = document.getElementById(fileira.toString() + '-' + coluna.toString());
-            if (currTile.innerText == "") {
-                currTile.innerText = e.code[3];
-                coluna += 1;
-            }
+            let currTile = document.getElementById(fileira + '-' + coluna);
+            currTile.innerText = e.code[3];
+            coluna++;
         }
-    }
-    else if (e.code == "Backspace") {
-        if (0 < coluna && coluna <= tamanhoPalavra) {
-            coluna -=1;
-        }
-        let currTile = document.getElementById(fileira.toString() + '-' + coluna.toString());
-        currTile.innerText = "";
-    }
-
-    else if (e.code == "Enter") {
+    } else if (e.code === "Backspace" && coluna > 0) {
+        coluna--;
+        document.getElementById(fileira + '-' + coluna).innerText = "";
+    } else if (e.code === "Enter" && coluna === tamanhoPalavra) {
         update();
-    }
-
-    if (!fimDeJogo && fileira == tentativas) {
-        fimDeJogo = true;
-        document.getElementById("answer").innerText = palavra;
     }
 }
 
 function update() {
     let tentativa = "";
-    document.getElementById("answer").innerText = "";
-
     for (let c = 0; c < tamanhoPalavra; c++) {
-        let currTile = document.getElementById(fileira.toString() + '-' + c.toString());
-        let letter = currTile.innerText;
-
-        tentativa += letter;
+        tentativa += document.getElementById(fileira + '-' + c).innerText;
     }
 
-    tentativa = tentativa.toLowerCase();
-    console.log(tentativa);
+    let tentativaLimpa = removerAcentos(tentativa);
 
-    if (!listaDeTentativas.includes(tentativa)) {
-        document.getElementById("answer").innerText = "não existe em nosso dicionario";
+    // Validação Robusta: Aceita qualquer palavra do dicionário BR
+    if (!dicionarioGeral.includes(tentativaLimpa) && !xingos.includes(tentativaLimpa)) {
+        document.getElementById("answer").innerText = "Não está no dicionário!";
         return;
     }
 
+    document.getElementById("answer").innerText = "";
     let correct = 0;
-    
     let letterCount = {};
+    for (let l of palavra) letterCount[l] = (letterCount[l] || 0) + 1;
 
-    for (let i = 0; i < palavra.length; i++) {
-        let letter = palavra[i];
-        if (letterCount[letter]) {
-            letterCount[letter] += 1;
-        }
-        else {
-            letterCount[letter] = 1;
+    // Primeira passada: Verdes (Corretas)
+    for (let c = 0; c < tamanhoPalavra; c++) {
+        let tile = document.getElementById(fileira + '-' + c);
+        let letra = tile.innerText;
+        if (palavra[c] === letra) {
+            tile.classList.add("correct");
+            document.getElementById("Key" + letra).classList.add("correct");
+            correct++;
+            letterCount[letra]--;
         }
     }
-    console.log(letterCount)
 
+    // Segunda passada: Amarelas (Presentes) e Cinzas (Ausentes)
     for (let c = 0; c < tamanhoPalavra; c++) {
-        let currTile = document.getElementById(fileira.toString() + '-' + c.toString());
-        let letter = currTile.innerText;
+        let tile = document.getElementById(fileira + '-' + c);
+        if (tile.classList.contains("correct")) continue;
 
-        //tá na posição correta?
-        if (palavra[c] == letter) {
-            currTile.classList.add("correct");
-
-            let keyTile = document.getElementById("Key" + letter);
-            keyTile.classList.remove("present");
-            keyTile.classList.add("correct");
-
-            correct += 1;
-            letterCount[letter] -= 1;
+        let letra = tile.innerText;
+        if (palavra.includes(letra) && letterCount[letra] > 0) {
+            tile.classList.add("present");
+            letterCount[letra]--;
+        } else {
+            tile.classList.add("absent");
         }
-        if (correct == tamanhoPalavra) {
+    }
+
+    if (correct === tamanhoPalavra) {
+        fimDeJogo = true;
+        document.getElementById("answer").innerText = "BOA, GAZELA! 🏳️‍🌈";
+    } else {
+        fileira++;
+        coluna = 0;
+        if (fileira === tentativas) {
             fimDeJogo = true;
-            startConfetti();
+            document.getElementById("answer").innerText = "BURRO! ERA: " + palavra;
         }
     }
-    console.log(letterCount);
-
-    for (let c = 0; c < tamanhoPalavra; c++) {
-        let currTile = document.getElementById(fileira.toString() + '-' + c.toString());
-        let letter = currTile.innerText;
-
-        if (!currTile.classList.contains("correct")) {
-
-            if (palavra.includes(letter) && letterCount[letter] > 0) {
-                currTile.classList.add("present");
-                let keyTile = document.getElementById("Key" + letter);
-                if (!keyTile.classList.contains("correct")) {
-                    keyTile.classList.add("present");
-                }        
-                letterCount[letter] -= 1;
-            }
-            else {
-                currTile.classList.add("absent");
-                let keyTile = document.getElementById("Key" + letter);
-                keyTile.classList.add("absent")
-            }
-        } 
-    }
-
-fileira += 1;
-coluna = 0;
 }
