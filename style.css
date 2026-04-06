@@ -1,57 +1,62 @@
 body {
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-text-align: center;
-background-color: #131213;
-color: white;
-margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background-color: #131213;
+    color: white;
+    margin: 0;
 }
 
 header { height: 80px; display: flex; justify-content: center; align-items: center; }
 #title { font-size: 40px; letter-spacing: 5px; }
 
 #board {
-width: 350px;
-height: 420px;
-margin: 20px auto;
-display: grid;
-grid-template-columns: repeat(5, 1fr);
-gap: 5px;
+    width: 350px;
+    height: 420px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
 }
 
 .tile {
-border: 2px solid #3a3a3c;
-width: 62px;
-height: 62px;
-font-size: 30px;
-font-weight: bold;
-display: flex;
-justify-content: center;
-align-items: center;
-text-transform: uppercase;
-transition: transform 0.3s, background-color 0.3s;
+    border: 2px solid #3a3a3c;
+    width: 62px;
+    height: 62px;
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
 }
 
 .tile:not(:empty) {
-border-color: #565758;
-transform: scale(1.05);
+    border-color: #565758;
 }
 
+/* Animação Corrigida */
 .tile.flip {
-transform: rotateX(90deg);
+    animation: flip-cell 0.6s ease-in forwards;
+}
+
+@keyframes flip-cell {
+    0% { transform: rotateX(0); }
+    50% { transform: rotateX(90deg); } /* A letra "deita" */
+    100% { transform: rotateX(0); } /* A letra "levanta" já com a cor nova */
 }
 
 .keyboard-row { display: flex; justify-content: center; margin-bottom: 8px; }
 
 .key-tile, .enter-key-tile {
-background-color: #818384;
-border-radius: 4px;
-margin: 3px;
-cursor: pointer;
-font-weight: bold;
-height: 58px;
-display: flex;
-justify-content: center;
-align-items: center;
+    background-color: #818384;
+    border-radius: 4px;
+    margin: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    height: 58px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .key-tile { width: 40px; }
@@ -60,3 +65,13 @@ align-items: center;
 .correct { background-color: #538d4e !important; border-color: #538d4e; }
 .present { background-color: #b59f3b !important; border-color: #b59f3b; }
 .absent { background-color: #3a3a3c !important; border-color: #3a3a3c; }
+
+.reset-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #565758;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

@@ -15,7 +15,6 @@ var xingos = [
 ];
 
 xingos = [...new Set(xingos)];
-
 var dicionarioGeral = [];
 var palavra = "";
 
@@ -24,19 +23,15 @@ function removerAcentos(str) {
 }
 
 window.onload = function() {
-    // Primeiro carrega o dicionário externo para robustez
     fetch('https://raw.githubusercontent.com/python-br/palavras/master/palavras.txt')
     .then(res => res.text())
     .then(data => {
         dicionarioGeral = data.split('\n')
             .filter(p => p.trim().length === 5)
             .map(p => removerAcentos(p));
-        
-        // SÓ INICIA AQUI
         iniciar();
     })
     .catch(() => {
-        console.warn("Fallback: Usando lista local");
         dicionarioGeral = [...xingos];
         iniciar();
     });
@@ -44,9 +39,8 @@ window.onload = function() {
 
 function iniciar() {
     palavra = xingos[Math.floor(Math.random() * xingos.length)].toUpperCase();
-    console.log("Dica para a Dev:", palavra);
+    console.log("Palavra secreta:", palavra);
 
-    // Tabuleiro
     for (let r = 0; r < tentativas; r++) {
         for (let c = 0; c < tamanhoPalavra; c++) {
             let tile = document.createElement("span");
@@ -56,7 +50,6 @@ function iniciar() {
         }
     }
 
-    // Teclado
     const layout = [
         ["Q","W","E","R","T","Y","U","I","O","P"],
         ["A","S","D","F","G","H","J","K","L"],
@@ -84,11 +77,10 @@ function iniciar() {
 
 function processInput(e) {
     if (fimDeJogo || travado) return;
-
     if ("KeyA" <= e.code && e.code <= "KeyZ") {
         if (coluna < tamanhoPalavra) {
             let currTile = document.getElementById(fileira + '-' + coluna);
-            currTile.innerText = e.code[3] || e.code.replace("Key", "");
+            currTile.innerText = e.code.replace("Key", "");
             coluna++;
         }
     } 
@@ -141,13 +133,13 @@ function update() {
     let letterCount = {};
     for (let l of palavra) letterCount[l] = (letterCount[l] || 0) + 1;
 
-    // Lógica de cores com animação
     for (let c = 0; c < tamanhoPalavra; c++) {
         let tile = document.getElementById(fileira + '-' + c);
         let letra = tile.innerText;
 
         setTimeout(() => {
-            tile.classList.add("flip");
+            tile.classList.add("flip"); // Dispara a animação do CSS
+
             if (palavra[c] === letra) {
                 tile.classList.add("correct");
                 pintarTecla(letra, "correct");
