@@ -15,7 +15,8 @@ const state = {
  * Inicializa o jogo verificando o estado atual e configurando o ambiente.
  */
 function init() {
-    const hoje = new Date().toISOString().split('T')[0];
+    const agora = new Date();
+    const hoje = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
     const salvo = storage.obterProgresso();
 
     // Prevenção de gestos de zoom/scroll excessivo no mobile
