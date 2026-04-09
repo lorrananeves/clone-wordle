@@ -18,17 +18,19 @@ function init() {
     const hoje = new Date().toISOString().split('T')[0];
     const salvo = storage.obterProgresso();
 
-    // Configuração do fechamento do modal inicial
+    // Prevenção de gestos de zoom/scroll excessivo no mobile
+    document.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+
     const botaoFechar = document.getElementById("fechar-modal");
     if (botaoFechar) {
         botaoFechar.onclick = () => ui.elements.modal.style.display = "none";
     }
 
-    // Se o usuário já finalizou o desafio de hoje, exibe as estatísticas direto
     if (salvo && salvo.data === hoje && salvo.finalizado) {
         ui.elements.modal.style.display = "none";
-        const stats = storage.obterEstatisticas();
-        ui.mostrarStatusFinal(salvo.vitoria, salvo.palavra, stats);
+        ui.mostrarStatusFinal(salvo.vitoria, salvo.palavra, storage.obterEstatisticas());
         return;
     }
 
@@ -47,8 +49,7 @@ function configurarPalavraDoDia(dataStr) {
     for (let i = 0; i < semente.length; i++) {
         hash = (hash << 5) - hash + semente.charCodeAt(i);
     }
-    const indice = Math.abs(hash) % XINGOS.length;
-    state.palavra = XINGOS[indice].toUpperCase();
+    state.palavra = XINGOS[Math.abs(hash) % XINGOS.length].toUpperCase();
 }
 
 /**
@@ -101,7 +102,13 @@ function handleInput(e) {
 
     if ("KeyA" <= e.code && e.code <= "KeyZ") {
         if (state.coluna < TAMANHO_PALAVRA) {
-            state.tiles[state.fileira][state.coluna].innerText = e.code.replace("Key", "");
+            let tile = state.tiles[state.fileira][state.coluna];
+            tile.innerText = e.code.replace("Key", "");
+            
+            // Feedback Visual POP
+            tile.classList.add("pop");
+            setTimeout(() => tile.classList.remove("pop"), 100);
+
             state.coluna++;
         }
     } else if (e.code === "Backspace" && state.coluna > 0) {
@@ -126,7 +133,6 @@ function validarTentativa() {
         ui.exibirMensagem("Completa a palavra, gênio.");
         return;
     }
-
     processarResultado(tentativa);
 }
 
@@ -138,14 +144,12 @@ function processarResultado(tentativa) {
     let correct = 0;
     const palavraLimpa = state.palavra.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     let letterCount = {};
-    
     for (let l of palavraLimpa) letterCount[l] = (letterCount[l] || 0) + 1;
 
     // Primeiro pass: Encontrar letras corretas (Verde)
     for (let c = 0; c < TAMANHO_PALAVRA; c++) {
         let tile = state.tiles[state.fileira][c];
         let letra = tile.innerText;
-
         setTimeout(() => {
             tile.classList.add("flip");
             if (palavraLimpa[c] === letra) {
@@ -162,7 +166,6 @@ function processarResultado(tentativa) {
         for (let c = 0; c < TAMANHO_PALAVRA; c++) {
             let tile = state.tiles[state.fileira][c];
             if (tile.classList.contains("correct")) continue;
-
             let letra = tile.innerText;
             if (palavraLimpa.includes(letra) && letterCount[letra] > 0) {
                 tile.classList.add("present");
@@ -173,7 +176,6 @@ function processarResultado(tentativa) {
                 ui.atualizarTecla(letra, "absent");
             }
         }
-
         verificarFimDeJogo(correct);
     }, 800);
 }
@@ -185,8 +187,6 @@ function verificarFimDeJogo(correct) {
     if (correct === TAMANHO_PALAVRA || state.fileira === TENTATIVAS - 1) {
         state.fimDeJogo = true;
         const vitoria = (correct === TAMANHO_PALAVRA);
-        
-        // Persistência de dados
         storage.salvarProgresso(vitoria, state.palavra);
         storage.atualizarEstatisticas(vitoria, state.fileira);
         
@@ -203,5 +203,4 @@ function verificarFimDeJogo(correct) {
     }
 }
 
-// Inicia o motor do jogo
 init();
