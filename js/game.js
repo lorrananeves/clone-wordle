@@ -11,37 +11,49 @@ const state = {
     tiles: [] 
 };
 
+/**
+ * Inicializa o jogo verificando o estado atual e configurando o ambiente.
+ */
 function init() {
     const hoje = new Date().toISOString().split('T')[0];
     const salvo = storage.obterProgresso();
 
-    // Configurar Modal
+    // Configuração do fechamento do modal inicial
     const botaoFechar = document.getElementById("fechar-modal");
     if (botaoFechar) {
         botaoFechar.onclick = () => ui.elements.modal.style.display = "none";
     }
 
+    // Se o usuário já finalizou o desafio de hoje, exibe as estatísticas direto
     if (salvo && salvo.data === hoje && salvo.finalizado) {
         ui.elements.modal.style.display = "none";
-        ui.mostrarStatusFinal(salvo.vitoria, salvo.palavra);
+        const stats = storage.obterEstatisticas();
+        ui.mostrarStatusFinal(salvo.vitoria, salvo.palavra, stats);
         return;
     }
 
     configurarPalavraDoDia(hoje);
     criarTabuleiro();
-    renderTeclado(); // Adicionado para desenhar o teclado
+    renderTeclado();
     document.addEventListener('keyup', handleInput);
 }
 
+/**
+ * Gera a palavra do dia baseada em um hash da data atual.
+ */
 function configurarPalavraDoDia(dataStr) {
     const semente = dataStr.split('-').join('');
     let hash = 0;
     for (let i = 0; i < semente.length; i++) {
         hash = (hash << 5) - hash + semente.charCodeAt(i);
     }
-    state.palavra = XINGOS[Math.abs(hash) % XINGOS.length].toUpperCase();
+    const indice = Math.abs(hash) % XINGOS.length;
+    state.palavra = XINGOS[indice].toUpperCase();
 }
 
+/**
+ * Monta a grade do jogo no DOM e salva as referências no estado.
+ */
 function criarTabuleiro() {
     ui.elements.board.innerHTML = "";
     for (let r = 0; r < TENTATIVAS; r++) {
@@ -55,6 +67,9 @@ function criarTabuleiro() {
     }
 }
 
+/**
+ * Renderiza o teclado virtual e atribui os eventos de clique.
+ */
 function renderTeclado() {
     const layout = [
         ["Q","W","E","R","T","Y","U","I","O","P"],
@@ -78,6 +93,9 @@ function renderTeclado() {
     });
 }
 
+/**
+ * Gerencia as entradas do teclado físico e virtual.
+ */
 function handleInput(e) {
     if (state.fimDeJogo || state.travado) return;
 
@@ -94,6 +112,9 @@ function handleInput(e) {
     }
 }
 
+/**
+ * Verifica se a palavra foi preenchida antes de processar.
+ */
 function validarTentativa() {
     let tentativa = "";
     for (let c = 0; c < TAMANHO_PALAVRA; c++) {
@@ -102,12 +123,16 @@ function validarTentativa() {
 
     if (tentativa.length < TAMANHO_PALAVRA) {
         ui.triggerShake();
+        ui.exibirMensagem("Completa a palavra, gênio.");
         return;
     }
 
     processarResultado(tentativa);
 }
 
+/**
+ * Compara a tentativa com a palavra do dia e aplica os estilos.
+ */
 function processarResultado(tentativa) {
     state.travado = true;
     let correct = 0;
@@ -116,7 +141,7 @@ function processarResultado(tentativa) {
     
     for (let l of palavraLimpa) letterCount[l] = (letterCount[l] || 0) + 1;
 
-    // Lógica de cores e animação (Simplified for brevity)
+    // Primeiro pass: Encontrar letras corretas (Verde)
     for (let c = 0; c < TAMANHO_PALAVRA; c++) {
         let tile = state.tiles[state.fileira][c];
         let letra = tile.innerText;
@@ -132,6 +157,7 @@ function processarResultado(tentativa) {
         }, c * 150);
     }
 
+    // Segundo pass: Encontrar letras presentes ou ausentes
     setTimeout(() => {
         for (let c = 0; c < TAMANHO_PALAVRA; c++) {
             let tile = state.tiles[state.fileira][c];
@@ -148,16 +174,34 @@ function processarResultado(tentativa) {
             }
         }
 
-        if (correct === TAMANHO_PALAVRA || state.fileira === TENTATIVAS - 1) {
-            state.fimDeJogo = true;
-            storage.salvarProgresso(correct === TAMANHO_PALAVRA, state.palavra);
-            ui.exibirMensagem(correct === TAMANHO_PALAVRA ? "Boa! 👍" : "A palavra era: " + state.palavra);
-        } else {
-            state.fileira++;
-            state.coluna = 0;
-            state.travado = false;
-        }
+        verificarFimDeJogo(correct);
     }, 800);
 }
 
+/**
+ * Finaliza o jogo ou prepara para a próxima linha.
+ */
+function verificarFimDeJogo(correct) {
+    if (correct === TAMANHO_PALAVRA || state.fileira === TENTATIVAS - 1) {
+        state.fimDeJogo = true;
+        const vitoria = (correct === TAMANHO_PALAVRA);
+        
+        // Persistência de dados
+        storage.salvarProgresso(vitoria, state.palavra);
+        storage.atualizarEstatisticas(vitoria, state.fileira);
+        
+        const stats = storage.obterEstatisticas();
+        if (vitoria) stats.ultimoAcerto = state.fileira + 1;
+
+        setTimeout(() => {
+            ui.mostrarStatusFinal(vitoria, state.palavra, stats);
+        }, 1500);
+    } else {
+        state.fileira++;
+        state.coluna = 0;
+        state.travado = false;
+    }
+}
+
+// Inicia o motor do jogo
 init();
