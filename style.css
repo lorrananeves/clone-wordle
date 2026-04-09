@@ -14,9 +14,20 @@ body {
     touch-action: manipulation; /* Evita zoom acidental no mobile */
 }
 
-header { height: 60px; display: flex; justify-content: center; align-items: center; }
-#title { font-size: 32px; letter-spacing: 5px; margin: 10px 0; }
+header { 
+    height: 60px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
 
+#title { 
+    font-size: 32px; 
+    letter-spacing: 5px; 
+    margin: 10px 0;
+}
+
+/* Área Principal do Jogo */
 main {
     flex-grow: 1;
     display: flex;
@@ -76,9 +87,20 @@ main {
     40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 
-/* Teclado */
-#keyboard-container { width: 100%; max-width: 500px; padding-bottom: 20px; }
-.keyboard-row { display: flex; justify-content: center; margin-bottom: 8px; }
+/* Teclado Virtual com Respiro Lateral */
+#keyboard-container { 
+    width: 100%; 
+    max-width: 500px; 
+    padding: 0 12px 20px 12px; /* Adicionado respiro lateral de 12px */
+    box-sizing: border-box;    /* Garante que o padding não quebre a largura */
+}
+
+.keyboard-row { 
+    display: flex; 
+    justify-content: center; 
+    width: 100%;
+    margin-bottom: 8px; 
+}
 
 .key-tile, .enter-key-tile {
     background-color: #818384;
@@ -91,8 +113,10 @@ main {
     justify-content: center;
     align-items: center;
     user-select: none;
+    -webkit-tap-highlight-color: transparent; /* Remove brilho de toque no iOS */
 }
 
+/* Feedback tátil no teclado */
 .key-tile:active, .enter-key-tile:active {
     background-color: #565758 !important;
     transform: scale(0.95);
@@ -140,15 +164,15 @@ main {
 
 .reset-btn:hover { background: #357a38; transform: scale(1.05); }
 
-/* Responsividade Crítica */
+/* Responsividade Crítica para Telas Pequenas */
 @media (max-height: 700px) {
     #title { font-size: 24px; margin: 5px 0; }
     .tile { font-size: 1.5rem; }
-    .key-tile, .enter-key-tile { height: 45px; }
+    .key-tile, .enter-key-tile { height: 48px; }
     #board { gap: 4px; padding: 5px; }
 }
 
-@media (max-width: 360px) {
-    .key-tile { margin: 1px; }
-    .enter-key-tile { font-size: 0.7rem; }
+@media (max-width: 380px) {
+    #keyboard-container { padding: 0 6px 15px 6px; } /* Ajuste fino para telas ultra-finas */
+    .key-tile, .enter-key-tile { margin: 2px; }
 }
