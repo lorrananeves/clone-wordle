@@ -11,12 +11,11 @@ const state = {
     tiles: [] 
 };
 
-/**
- * Inicializa o jogo verificando o estado atual e configurando o ambiente.
- */
 function init() {
+    // Gerar data local (AAAA-MM-DD)
     const agora = new Date();
     const hoje = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
+    
     const salvo = storage.obterProgresso();
 
     // Prevenção de gestos de zoom/scroll excessivo no mobile
@@ -29,9 +28,11 @@ function init() {
         botaoFechar.onclick = () => ui.elements.modal.style.display = "none";
     }
 
+    // Verifica se o progresso salvo pertence ao dia de hoje
     if (salvo && salvo.data === hoje && salvo.finalizado) {
         ui.elements.modal.style.display = "none";
-        ui.mostrarStatusFinal(salvo.vitoria, salvo.palavra, storage.obterEstatisticas());
+        const stats = storage.obterEstatisticas();
+        ui.mostrarStatusFinal(salvo.vitoria, salvo.palavra, stats);
         return;
     }
 
@@ -109,7 +110,6 @@ function handleInput(e) {
             // Feedback Visual POP
             tile.classList.add("pop");
             setTimeout(() => tile.classList.remove("pop"), 100);
-
             state.coluna++;
         }
     } else if (e.code === "Backspace" && state.coluna > 0) {
@@ -188,6 +188,7 @@ function verificarFimDeJogo(correct) {
     if (correct === TAMANHO_PALAVRA || state.fileira === TENTATIVAS - 1) {
         state.fimDeJogo = true;
         const vitoria = (correct === TAMANHO_PALAVRA);
+        
         storage.salvarProgresso(vitoria, state.palavra);
         storage.atualizarEstatisticas(vitoria, state.fileira);
         

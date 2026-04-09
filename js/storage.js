@@ -1,7 +1,13 @@
 export const storage = {
+    // Utilitário interno para gerar a data local formatada (AAAA-MM-DD)
+    _getHojeLocal() {
+        const agora = new Date();
+        return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
+    },
+
     salvarProgresso(vitoria, palavra) {
         const dados = {
-            data: new Date().toISOString().split('T')[0],
+            data: this._getHojeLocal(),
             finalizado: true,
             vitoria,
             palavra
@@ -43,8 +49,7 @@ export const storage = {
             distribuicao: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
         };
         try {
-            const salvo = JSON.parse(localStorage.getItem("xingo_stats"));
-            return salvo || padrao;
+            return JSON.parse(localStorage.getItem("xingo_stats")) || padrao;
         } catch { return padrao; }
     }
 };
