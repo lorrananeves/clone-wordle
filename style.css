@@ -1,3 +1,4 @@
+/* Configurações Globais e Reset */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
@@ -7,9 +8,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between; /* Distribui o espaço entre topo, meio e base */
+    justify-content: space-between;
     height: 100vh;
-    overflow: hidden; /* Evita scroll no mobile para parecer um app */
+    overflow: hidden; /* Evita scroll no mobile */
 }
 
 header { 
@@ -25,7 +26,7 @@ header {
     margin: 10px 0;
 }
 
-/* Container principal para centralizar o tabuleiro verticalmente */
+/* Área Principal do Jogo */
 main {
     flex-grow: 1;
     display: flex;
@@ -45,6 +46,7 @@ main {
     max-width: 90vw;
 }
 
+/* Estilo das Células (Tiles) */
 .tile {
     border: 2px solid #3a3a3c;
     aspect-ratio: 1 / 1;
@@ -57,6 +59,7 @@ main {
     transition: transform 0.3s;
 }
 
+/* Animações */
 .tile.flip {
     animation: flip-cell 0.6s ease-in forwards;
 }
@@ -67,7 +70,24 @@ main {
     100% { transform: rotateX(0); }
 }
 
-/* Teclado e Botão */
+/* Feedback visual de erro (Shake) */
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Teclado Virtual */
 #keyboard-container {
     width: 100%;
     max-width: 500px;
@@ -90,44 +110,20 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: background-color 0.2s;
 }
 
 .key-tile { width: 40px; flex: 1; max-width: 45px; }
 .enter-key-tile { width: 65px; flex: 1.5; }
 
-/* Botão de Reiniciar Oculto */
-.reset-btn {
-    display: none; /* Escondido por padrão */
-    margin-bottom: 50px;
-    padding: 15px 40px;
-    background: #538d4e;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    font-weight: bold;
-    animation: fadeIn 0.8s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Cores do Jogo */
+/* Cores de Feedback (Estados das Letras) */
 .correct { background-color: #538d4e !important; border-color: #538d4e; }
 .present { background-color: #b59f3b !important; border-color: #b59f3b; }
 .absent { background-color: #3a3a3c !important; border-color: #3a3a3c; }
 
-@media (max-width: 480px) {
-    #board { width: 300px; }
-    .key-tile, .enter-key-tile { height: 45px; font-size: 0.8rem; }
-}
-
-/* Estilos do Modal */
+/* Modais e Status */
 .modal {
-    display: flex; /* Exibe ao carregar */
+    display: flex;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -139,44 +135,25 @@ main {
     justify-content: center;
 }
 
-.modal-content {
+.modal-content, .status-container {
     background-color: #1e1e1e;
     padding: 30px;
     border-radius: 15px;
+    border: 1px solid #3a3a3c;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    animation: fadeIn 0.5s ease-in;
+    line-height: 1.6;
+}
+
+.modal-content {
     width: 80%;
     max-width: 400px;
-    border: 1px solid #3a3a3c;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-
-.exemplo-regras {
-    text-align: left;
-    margin: 20px 0;
-    font-size: 0.9rem;
-}
-
-.exemplo-regras p {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
 }
 
 .status-container {
-    background-color: #1e1e1e;
-    padding: 30px;
-    border-radius: 15px;
-    border: 1px solid #3a3a3c;
-    /* Largura fixa para não esticar */
     width: 320px; 
-    /* Garante que não ultrapasse telas pequenas */
     max-width: 85vw; 
-    /* Centraliza horizontalmente */
     margin: 40px auto; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    animation: fadeIn 0.5s ease-in;
-    /* Garante que o texto não quebre estranho */
-    line-height: 1.6;
 }
 
 .status-icon {
@@ -190,17 +167,42 @@ main {
     font-size: 1.5rem;
 }
 
-.status-container p {
-    font-size: 1.1rem;
-    margin: 10px 0;
+.status-container strong {
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    color: #b59f3b;
 }
 
-.status-icon {
-    font-size: 3rem;
+/* Utilitários */
+.exemplo-regras {
+    text-align: left;
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+
+.exemplo-regras p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 10px;
 }
 
-.status-container h3 {
-    margin: 10px 0;
-    color: #538d4e;
+.reset-btn {
+    display: block;
+    margin: 20px auto 0;
+    padding: 12px 30px;
+    background: #538d4e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    #board { width: 300px; }
+    .key-tile, .enter-key-tile { height: 45px; font-size: 0.8rem; }
+    #title { font-size: 26px; }
 }
