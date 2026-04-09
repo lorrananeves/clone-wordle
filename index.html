@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Xingo - O Jogo de Palavras Proibidas</title>
     <meta name="description" content="Desafie sua mente com o Xingo! Tente adivinhar a palavra de 5 letras em 6 tentativas. Um jogo divertido, minimalista e desafiador.">
     <link rel="icon" type="image/jpg" href="favicon.jpg">
@@ -18,18 +17,19 @@
 </head>
 <body>
     <div id="modal-regras" class="modal">
-    <div class="modal-content">
-        <h2>Bem-vindo ao XINGO! 🤬</h2>
-        <p>O objetivo é adivinhar o xingamento secreto de 5 letras em até 6 tentativas.</p>
-        <div class="exemplo-regras">
-            <p><span class="tile correct" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">A</span> Letra correta no lugar certo.</p>
-            <p><span class="tile present" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">B</span> Letra existe, mas no lugar errado.</p>
-            <p><span class="tile absent" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">C</span> Letra não faz parte da palavra.</p>
-        </div>
+        <div class="modal-content">
+            <h2>Bem-vindo ao XINGO! 🤬</h2>
+            <p>O objetivo é adivinhar o xingamento secreto de 5 letras em até 6 tentativas.</p>
+            <div class="exemplo-regras">
+                <p><span class="tile correct" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">A</span> Letra correta no lugar certo.</p>
+                <p><span class="tile present" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">B</span> Letra existe, mas no lugar errado.</p>
+                <p><span class="tile absent" style="display:inline-flex; width:30px; height:30px; font-size:1rem;">C</span> Letra não faz parte da palavra.</p>
+            </div>
         <p><strong>Por que é legal?</strong> Além de testar seu repertório de baixaria, é o passatempo perfeito para soltar os cachorros e treinar o cérebro com as palavras que sua mãe não gostaria de ouvir!</p>
-        <button id="fechar-modal" class="reset-btn" style="display:block; margin: 20px auto 0;">Bora Jogar!</button>
+            <button id="fechar-modal" class="reset-btn" style="display:block; margin: 20px auto 0;">Bora Jogar!</button>
+        </div>
     </div>
-</div>
+
     <header>
         <h1 id="title">XINGO</h1>
     </header>
@@ -42,6 +42,6 @@
         <div id="keyboard-container"></div>
     </main>
 
-    <script src="./js.js"></script>
+    <script type="module" src="./js/game.js"></script>
 </body>
 </html>
