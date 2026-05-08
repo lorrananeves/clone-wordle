@@ -1,3 +1,4 @@
+export const TENTATIVAS = 6;
 export const TAMANHO_PALAVRA = 5;
 
 export const XINGOS = [
