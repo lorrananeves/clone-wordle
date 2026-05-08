@@ -432,10 +432,11 @@ function verificarFimDeJogo(correct) {
         setTimeout(() => {
 
             ui.mostrarStatusFinal(
-                vitoria,
-                state.palavra,
-                stats
-            );
+            vitoria,
+            state.palavra,
+            stats,
+            state.fileira + 1
+        );
 
             const shareBtn =
                 document.getElementById(

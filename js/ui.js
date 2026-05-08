@@ -25,7 +25,12 @@ export const ui = {
         }
     },
 
-    mostrarStatusFinal(vitoria, palavra, stats) {
+    mostrarStatusFinal(
+        vitoria,
+        palavra,
+        stats,
+        tentativa
+    ) {
     const winPct = stats.jogos > 0
         ? Math.round((stats.vitorias / stats.jogos) * 100)
         : 0;
@@ -35,29 +40,52 @@ export const ui = {
     let distHtml = "";
 
     for (let i = 1; i <= 6; i++) {
-        const valor = stats.distribuicao[i];
-        const larguraBarra = (valor / maxDist) * 100;
 
-        const corBarra =
-            (vitoria && i === stats.ultimoAcerto)
-                ? "#538d4e"
-                : "#3a3a3c";
+    const valor = stats.distribuicao[i];
 
-        distHtml += `
-            <div class="dist-row">
-                <span class="dist-index">${i}</span>
+    const larguraBarra =
+        (valor / maxDist) * 100;
 
-                <div class="dist-bar-bg">
-                    <div
-                        class="dist-bar"
-                        style="width: ${Math.max(larguraBarra, 8)}%; background: ${corBarra};"
-                    >
-                        <span class="dist-value">${valor}</span>
-                    </div>
+    const corBarra =
+        (vitoria && i === stats.ultimoAcerto)
+            ? "#538d4e"
+            : "#3a3a3c";
+
+    distHtml += `
+        <div class="dist-row">
+
+            <span class="dist-index">
+                ${i}
+            </span>
+
+            <div class="dist-bar-bg">
+
+                <div
+                    class="dist-bar"
+                    style="
+                        width: ${Math.max(larguraBarra, 8)}%;
+                        background: ${corBarra};
+                    "
+                >
+
+                    <span class="dist-value">
+                        ${valor}
+                    </span>
+
                 </div>
+
             </div>
-        `;
-    }
+
+        </div>
+    `;
+}
+
+const fraseFinal =
+    this.obterMensagemFinal(
+        vitoria,
+        tentativa
+    );
+    
 
     this.elements.board.classList.add("board-status");
 
@@ -125,6 +153,10 @@ export const ui = {
                     ${palavra}
                 </p>
 
+                <p class="frase-final">
+                    ${fraseFinal}
+                </p>
+
                 <p class="proximo-xingo">
                     Próximo Xingo à meia-noite.
                 </p>
@@ -155,5 +187,64 @@ export const ui = {
     setTimeout(() => {
         toast.remove();
     }, 2000);
+    },
+
+obterMensagemFinal(vitoria, tentativa) {
+
+    if (!vitoria) {
+
+        const derrotas = [
+            "Vergonha nacional.",
+            "Seu repertório tá triste.",
+            "A internet esperava mais."
+        ];
+
+        return derrotas[
+            Math.floor(
+                Math.random() * derrotas.length
+            )
+        ];
     }
+
+    const mensagens = {
+
+        1: [
+            "Mandou bem.",
+            "Calma aí, profissional."
+        ],
+
+        2: [
+            "Xingando com eficiência.",
+            "Tá treinando bastante hein."
+        ],
+
+        3: [
+            "Mandou bem.",
+            "Tá aceitável."
+        ],
+
+        4: [
+            "No sufoco, mas foi.",
+            "Quase virou meme."
+        ],
+
+        5: [
+            "Foi por pouco.",
+            "Passou raspando."
+        ],
+
+        6: [
+            "Vitória culposa.",
+            "Nem você acreditou."
+        ]
+    };
+
+    const lista =
+    mensagens[tentativa] ||
+    mensagens[6];
+
+    return lista[
+        Math.floor(Math.random() * lista.length)
+    ];
+}
 };

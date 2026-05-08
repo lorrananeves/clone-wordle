@@ -1,4 +1,6 @@
-/* Configurações Globais */
+/* =============================================
+   CONFIGURAÇÕES GLOBAIS
+   ============================================= */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
@@ -8,26 +10,31 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    height: 100vh;
-    overflow: hidden;
-    touch-action: manipulation; /* Evita zoom acidental no mobile */
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    touch-action: manipulation;
 }
 
-header { 
-    height: 60px; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
+/* =============================================
+   HEADER
+   ============================================= */
+header {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#title { 
-    font-size: 32px; 
-    letter-spacing: 5px; 
+#title {
+    font-size: 32px;
+    letter-spacing: 5px;
     margin: 10px 0;
 }
 
-/* Área Principal do Jogo */
+/* =============================================
+   ÁREA PRINCIPAL DO JOGO
+   ============================================= */
 main {
     flex-grow: 1;
     display: flex;
@@ -37,17 +44,22 @@ main {
     width: 100%;
 }
 
+/* =============================================
+   TABULEIRO
+   ============================================= */
 #board {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 5px;
-    padding: 10px;
+    padding: 10px 0;
     box-sizing: border-box;
     width: 350px;
     max-width: 90vw;
 }
 
-/* Estilo das Células */
+/* =============================================
+   TILES DO TABULEIRO
+   ============================================= */
 .tile {
     border: 2px solid #3a3a3c;
     aspect-ratio: 1 / 1;
@@ -60,26 +72,34 @@ main {
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* Animação de Digitação (Pop) */
+/* Animação de digitação */
 .tile.pop {
     animation: pop 0.1s ease-in-out;
     border-color: #565758;
 }
 
 @keyframes pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
 
-.tile.flip { animation: flip-cell 0.6s ease-in forwards; }
+/* Animação de flip */
+.tile.flip {
+    animation: flip-cell 0.6s ease-in forwards;
+}
+
 @keyframes flip-cell {
-    0% { transform: rotateX(0); }
-    50% { transform: rotateX(90deg); }
+    0%   { transform: rotateX(0); }
+    50%  { transform: rotateX(90deg); }
     100% { transform: rotateX(0); }
 }
 
-.shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+/* Animação de erro */
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
 @keyframes shake {
     10%, 90% { transform: translate3d(-1px, 0, 0); }
     20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -87,124 +107,138 @@ main {
     40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 
-/* Teclado Virtual com Respiro Lateral */
-#keyboard-container { 
-    width: 100%; 
-    max-width: 500px; 
-    padding: 0 12px 20px 12px; /* Adicionado respiro lateral de 12px */
-    box-sizing: border-box;    /* Garante que o padding não quebre a largura */
+/* =============================================
+   CORES DE FEEDBACK
+   (Aplicadas via JS após o flip — especificidade
+   aumentada para dispensar !important)
+   ============================================= */
+.tile.correct,
+.key-tile.correct,
+.enter-key-tile.correct {
+    background-color: #538d4e;
+    border-color: #538d4e;
 }
 
-.keyboard-row { 
-    display: flex; 
-    justify-content: center; 
+.tile.present,
+.key-tile.present,
+.enter-key-tile.present {
+    background-color: #b59f3b;
+    border-color: #b59f3b;
+}
+
+.tile.absent,
+.key-tile.absent,
+.enter-key-tile.absent {
+    background-color: #3a3a3c;
+    border-color: #3a3a3c;
+}
+
+/* =============================================
+   TECLADO VIRTUAL
+   ============================================= */
+#keyboard-container {
     width: 100%;
-    margin-bottom: 8px; 
+    max-width: 500px;
+    padding: 0 12px 20px 12px;
+    box-sizing: border-box;
 }
 
-.key-tile, .enter-key-tile {
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.key-tile,
+.enter-key-tile {
     background-color: #818384;
     border-radius: 4px;
     margin: 3px;
     cursor: pointer;
+    font-size: 0.85rem; /* FIX: font-size ausente na versão original */
     font-weight: bold;
     height: 58px;
     display: flex;
     justify-content: center;
     align-items: center;
     user-select: none;
-    -webkit-tap-highlight-color: transparent; /* Remove brilho de toque no iOS */
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.15s, transform 0.1s;
 }
 
-/* Feedback tátil no teclado */
-.key-tile:active, .enter-key-tile:active {
-    background-color: #565758 !important;
+.key-tile {
+    width: 40px;
+    flex: 1;
+    max-width: 45px;
+}
+
+.enter-key-tile {
+    width: 65px;
+    flex: 1.5;
+}
+
+/* Feedback tátil */
+.key-tile:active,
+.enter-key-tile:active {
+    background-color: #565758;
     transform: scale(0.95);
 }
 
-.key-tile { width: 40px; flex: 1; max-width: 45px; }
-.enter-key-tile { width: 65px; flex: 1.5; }
-
-/* Cores de Feedback */
-.correct { background-color: #538d4e !important; border-color: #538d4e; }
-.present { background-color: #b59f3b !important; border-color: #b59f3b; }
-.absent { background-color: #3a3a3c !important; border-color: #3a3a3c; }
-
-/* Modais e Stats */
+/* =============================================
+   MODAIS
+   ============================================= */
 .modal {
     display: flex;
     position: fixed;
     z-index: 1000;
-    left: 0; top: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.85);
-    align-items: center; justify-content: center;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
 }
 
-.modal-content, .status-container {
+.modal-content {
     background-color: #1e1e1e;
     padding: 25px;
     border-radius: 15px;
     border: 1px solid #3a3a3c;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
     line-height: 1.5;
 }
 
-.status-container { width: 320px; max-width: 85vw; }
-
-.reset-btn {
-    padding: 12px 30px;
-    background: #538d4e;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-.reset-btn:hover { background: #357a38; transform: scale(1.05); }
-
-/* Responsividade Crítica para Telas Pequenas */
-@media (max-height: 700px) {
-    #title { font-size: 24px; margin: 5px 0; }
-    .tile { font-size: 1.5rem; }
-    .key-tile, .enter-key-tile { height: 48px; }
-    #board { gap: 4px; padding: 5px; }
-}
-
-@media (max-width: 380px) {
-    #keyboard-container { padding: 0 6px 15px 6px; } /* Ajuste fino para telas ultra-finas */
-    .key-tile, .enter-key-tile { margin: 2px; }
-}
-
-.hidden {
-    display: none;
-}
-
-.centralizar-btn {
-    display: block;
-    margin: 20px auto 0;
-}
-
-/* Tiles de exemplo do modal */
-
-.exemplo-tile {
-    display: inline-flex;
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
-}
-
-/* Status final */
-
-.board-status {
-    display: flex;
-    flex-direction: column;
-}
-
+/* =============================================
+   STATUS / ESTATÍSTICAS
+   ============================================= */
 .status-wrapper {
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.status-container {
+    width: min(420px, 92vw);
+    background-color: #1e1e1e;
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid #3a3a3c;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    line-height: 1.5;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.board-status {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
 }
 
 .stats-title {
@@ -213,7 +247,36 @@ main {
     font-size: 1.2rem;
 }
 
+.stats-resumo {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 20px 0;
+    text-align: center;
+    flex-wrap: wrap;
+}
 
+.stats-item {
+    flex: 1;
+    min-width: 70px;
+}
+
+.stats-number {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    display: block;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stats-label {
+    font-size: clamp(0.65rem, 2vw, 0.8rem);
+    text-transform: uppercase;
+    word-break: break-word;
+}
+
+/* =============================================
+   DISTRIBUIÇÃO DE TENTATIVAS
+   ============================================= */
 .dist-title {
     text-align: left;
     font-size: 1rem;
@@ -263,9 +326,13 @@ main {
     color: white;
 }
 
+/* =============================================
+   PALAVRA FINAL
+   ============================================= */
 .palavra-container {
     border-top: 1px solid #3a3a3c;
     padding-top: 20px;
+    padding-bottom: 10px;
 }
 
 .palavra-label {
@@ -288,31 +355,30 @@ main {
     color: #818384;
 }
 
-.stats-resumo {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 20px 0;
-    text-align: center;
-    flex-wrap: wrap;
+.frase-final {
+    font-size: 1rem;
+    color: #bdbdbd;
+    margin-top: 15px;
+    font-style: italic;
 }
 
-.stats-item {
-    flex: 1;
-    min-width: 70px;
+/* =============================================
+   BOTÕES
+   ============================================= */
+.reset-btn {
+    padding: 12px 30px;
+    background: #538d4e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
-.stats-number {
-    font-size: clamp(1.5rem, 5vw, 2rem);
-    display: block;
-    line-height: 1;
-    margin-bottom: 8px;
-}
-
-.stats-label {
-    font-size: clamp(0.65rem, 2vw, 0.8rem);
-    text-transform: uppercase;
-    word-break: break-word;
+.reset-btn:hover {
+    background: #357a38;
+    transform: scale(1.05);
 }
 
 .share-btn {
@@ -320,11 +386,24 @@ main {
     margin-top: 20px;
 }
 
-.status-container {
-    width: min(320px, 90vw);
-    box-sizing: border-box;
+.centralizar-btn {
+    display: block;
+    margin: 20px auto 0;
 }
 
+/* =============================================
+   TILES DE EXEMPLO (modal de instruções)
+   ============================================= */
+.exemplo-tile {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+}
+
+/* =============================================
+   TOAST
+   ============================================= */
 .toast {
     position: fixed;
     bottom: 30px;
@@ -340,40 +419,39 @@ main {
     animation: toastFade 2s ease forwards;
 }
 
-.stats-resumo {
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.stats-item {
-    min-width: 70px;
-}
-
 @keyframes toastFade {
-
-    0% {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-
-    15% {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-
-    85% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
+    0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
 }
 
-/* Ajustes extras para celular pequeno */
+/* =============================================
+   UTILITÁRIOS
+   ============================================= */
+.hidden {
+    display: none;
+}
+
+/* =============================================
+   RESPONSIVIDADE
+   ============================================= */
+@media (max-height: 700px) {
+    #title { font-size: 24px; margin: 5px 0; }
+    .tile { font-size: 1.5rem; }
+    .key-tile, .enter-key-tile { height: 48px; }
+    #board { gap: 4px; padding: 5px; }
+}
 
 @media (max-width: 380px) {
+    #keyboard-container {
+        padding: 0 6px 15px 6px;
+    }
+
+    .key-tile,
+    .enter-key-tile {
+        margin: 2px;
+    }
 
     .status-container {
         padding: 20px 16px;
@@ -381,7 +459,7 @@ main {
 
     .stats-title,
     .dist-title {
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 
     .palavra-final {
@@ -392,5 +470,17 @@ main {
     .dist-row {
         font-size: 0.8rem;
     }
-    
+}
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#keyboard-container {
+    overflow: hidden;
 }
