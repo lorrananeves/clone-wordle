@@ -14,7 +14,6 @@ const state = {
 
 function init() {
 
-    // Gerar data local (AAAA-MM-DD)
     const agora = new Date();
 
     const hoje =
@@ -26,7 +25,6 @@ function init() {
 
     const salvo = storage.obterProgresso();
 
-    // Prevenção de zoom no mobile
     document.addEventListener('touchstart', (e) => {
         if (e.touches.length > 1) {
             e.preventDefault();
@@ -42,7 +40,6 @@ function init() {
         };
     }
 
-    // Verifica progresso salvo
     if (
         salvo &&
         salvo.data === hoje &&
@@ -408,8 +405,21 @@ function verificarFimDeJogo(correct) {
 
         state.fimDeJogo = true;
 
-        const vitoria =
-            (correct === TAMANHO_PALAVRA);
+        const vitoria = (correct === TAMANHO_PALAVRA);
+        if (window.gtag) {
+
+            if (vitoria) {
+
+                gtag('event', 'win_game', {
+                    tentativas: state.fileira + 1
+                });
+
+            } else {
+
+                gtag('event', 'lose_game');
+
+            }
+        }
 
         storage.salvarProgresso(
             vitoria,
@@ -432,11 +442,11 @@ function verificarFimDeJogo(correct) {
         setTimeout(() => {
 
             ui.mostrarStatusFinal(
-            vitoria,
-            state.palavra,
-            stats,
-            state.fileira + 1
-        );
+                vitoria,
+                state.palavra,
+                stats,
+                state.fileira + 1
+            );
 
             const shareBtn =
                 document.getElementById(
@@ -474,6 +484,10 @@ https://lorrananeves.github.io/xingo/`;
                             )
                         ) {
 
+                            if (window.gtag) {
+                                gtag('event', 'share_result');
+                            }
+
                             await navigator.share({
                                 title: "XINGO",
                                 text: resultadoTexto
@@ -481,12 +495,16 @@ https://lorrananeves.github.io/xingo/`;
 
                         } else {
 
-                            await navigator.clipboard
-                                .writeText(
-                                    resultadoTexto
-                                );
+                            if (window.gtag) {
+                                gtag('event', 'copy_result');
+                            }
 
-                            ui.mostrarToast("Resultado copiado!");
+                            await navigator.clipboard
+                                .writeText(resultadoTexto);
+
+                            ui.mostrarToast(
+                                "Resultado copiado!"
+                            );
                         }
 
                     } catch (erro) {
@@ -498,21 +516,30 @@ https://lorrananeves.github.io/xingo/`;
 
                         try {
 
-                            await navigator.clipboard
-                                .writeText(
-                                    resultadoTexto
-                                );
+                            if (window.gtag) {
+                                gtag('event', 'copy_result');
+                            }
 
-                            ui.mostrarToast("Resultado copiado!");
+                            await navigator.clipboard
+                                .writeText(resultadoTexto);
+
+                            ui.mostrarToast(
+                                "Resultado copiado!"
+                            );
+
                         } catch {
 
-                            ui.mostrarToast("Não foi possível compartilhar.");
+                            ui.mostrarToast(
+                                "Não foi possível compartilhar."
+                            );
                         }
                     }
                 };
             }
 
         }, 1500);
+
+        state.fileira++;
 
     } else {
 
@@ -522,21 +549,33 @@ https://lorrananeves.github.io/xingo/`;
     }
 }
 
-if ("serviceWorker" in navigator) {
+if ('serviceWorker' in navigator) {
 
-    window.addEventListener("load", () => {
+    navigator.serviceWorker
+        .register("./service-worker.js")
+        .then(() => {
 
-        navigator.serviceWorker
-            .register("/service-worker.js")
-            .then(() => {
-                console.log("Service Worker registrado");
-            })
-            .catch((erro) => {
-                console.error(
-                    "Erro no Service Worker:",
-                    erro
-                );
-            });
-    });
+            console.log(
+                "Service Worker registrado"
+            );
+
+        })
+        .catch((erro) => {
+
+            console.error(
+                "Erro no Service Worker:",
+                erro
+            );
+        });
 }
+
+window.addEventListener('appinstalled', () => {
+
+    if (window.gtag) {
+
+        gtag('event', 'pwa_installed');
+
+    }
+});
+
 init();
