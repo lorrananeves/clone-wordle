@@ -521,4 +521,21 @@ https://lorrananeves.github.io/xingo/`;
     }
 }
 
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", () => {
+
+        navigator.serviceWorker
+            .register("/service-worker.js")
+            .then(() => {
+                console.log("Service Worker registrado");
+            })
+            .catch((erro) => {
+                console.error(
+                    "Erro no Service Worker:",
+                    erro
+                );
+            });
+    });
+}
 init();
