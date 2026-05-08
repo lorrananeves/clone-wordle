@@ -340,6 +340,15 @@ main {
     animation: toastFade 2s ease forwards;
 }
 
+.stats-resumo {
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.stats-item {
+    min-width: 70px;
+}
+
 @keyframes toastFade {
 
     0% {

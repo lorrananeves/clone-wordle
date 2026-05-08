@@ -71,20 +71,40 @@ export const ui = {
             <div class="stats-resumo">
 
                 <div class="stats-item">
-                    <b class="stats-number">${stats.jogos}</b>
-                    <span class="stats-label">Jogos</span>
+                    <b class="stats-number">
+                        ${stats.jogos}
+                    </b>
+                    <span class="stats-label">
+                        Jogos
+                    </span>
                 </div>
 
                 <div class="stats-item">
-                    <b class="stats-number">${winPct}</b>
-                    <span class="stats-label">% Vitórias</span>
+                    <b class="stats-number">
+                        ${winPct}
+                    </b>
+                    <span class="stats-label">
+                        % Vitórias
+                    </span>
                 </div>
 
                 <div class="stats-item">
-                    <b class="stats-number">${stats.sequenciaAtual}</b>
-                    <span class="stats-label">Sequência</span>
+                    <b class="stats-number">
+                        ${stats.sequenciaAtual}
+                    </b>
+                    <span class="stats-label">
+                        🔥 Atual
+                    </span>
                 </div>
 
+                <div class="stats-item">
+                    <b class="stats-number">
+                        ${stats.melhorSequencia}
+                    </b>
+                    <span class="stats-label">
+                        🏆 Recorde
+                    </span>
+                </div>
             </div>
 
             <h3 class="dist-title">

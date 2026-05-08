@@ -23,21 +23,63 @@ export const storage = {
 
     atualizarEstatisticas(vitoria, tentativaFinal) {
         const stats = this.obterEstatisticas();
-        
+
+        const hoje = new Date();
+
+        const hojeStr = this._getHojeLocal();
+
+        const ultimoJogo = stats.ultimoJogo
+            ? new Date(stats.ultimoJogo)
+            : null;
+
+        // Diferença em dias
+        let diferencaDias = 0;
+
+        if (ultimoJogo) {
+
+            const diffMs =
+                hoje - ultimoJogo;
+
+            diferencaDias =
+                Math.floor(
+                    diffMs / (1000 * 60 * 60 * 24)
+                );
+        }
+
+        // Se ficou mais de 1 dia sem jogar
+        if (diferencaDias > 1) {
+            stats.sequenciaAtual = 0;
+        }
+
         stats.jogos++;
         if (vitoria) {
             stats.vitorias++;
-            stats.sequenciaAtual++;
-            if (stats.sequenciaAtual > stats.melhorSequencia) {
-                stats.melhorSequencia = stats.sequenciaAtual;
+
+            // Só aumenta streak se ainda não jogou hoje
+            if (stats.ultimoJogo !== hojeStr) {
+                stats.sequenciaAtual++;
             }
-            // tentativaFinal vem de 0 a 5, então salvamos de 1 a 6
-            stats.distribuicao[tentativaFinal + 1]++;
+
+            if (
+                stats.sequenciaAtual >
+                stats.melhorSequencia
+            ) {
+                stats.melhorSequencia =
+                    stats.sequenciaAtual;
+            }
+
+            stats.distribuicao[
+                tentativaFinal + 1
+            ]++;
         } else {
             stats.sequenciaAtual = 0;
         }
 
-        localStorage.setItem("xingo_stats", JSON.stringify(stats));
+        stats.ultimoJogo = hojeStr;
+        localStorage.setItem(
+            "xingo_stats",
+            JSON.stringify(stats)
+        );
     },
 
     obterEstatisticas() {
@@ -46,6 +88,7 @@ export const storage = {
             vitorias: 0,
             sequenciaAtual: 0,
             melhorSequencia: 0,
+            ultimoJogo: null,
             distribuicao: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
         };
         try {
