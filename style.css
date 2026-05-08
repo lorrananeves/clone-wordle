@@ -176,3 +176,171 @@ main {
     #keyboard-container { padding: 0 6px 15px 6px; } /* Ajuste fino para telas ultra-finas */
     .key-tile, .enter-key-tile { margin: 2px; }
 }
+
+.hidden {
+    display: none;
+}
+
+.centralizar-btn {
+    display: block;
+    margin: 20px auto 0;
+}
+
+/* Tiles de exemplo do modal */
+
+.exemplo-tile {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+}
+
+/* Status final */
+
+.board-status {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.stats-title {
+    margin-top: 0;
+    letter-spacing: 1px;
+    font-size: 1.2rem;
+}
+
+
+.dist-title {
+    text-align: left;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.dist-container {
+    margin-bottom: 25px;
+}
+
+.dist-row {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    font-size: 0.9rem;
+    font-family: sans-serif;
+}
+
+.dist-index {
+    width: 20px;
+    font-weight: bold;
+}
+
+.dist-bar-bg {
+    flex-grow: 1;
+    background: #121213;
+    height: 20px;
+    border-radius: 2px;
+    margin-left: 5px;
+}
+
+.dist-bar {
+    height: 100%;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    box-sizing: border-box;
+    transition: width 0.5s ease-out;
+}
+
+.dist-value {
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: white;
+}
+
+.palavra-container {
+    border-top: 1px solid #3a3a3c;
+    padding-top: 20px;
+}
+
+.palavra-label {
+    margin: 0;
+    color: #818384;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.palavra-final {
+    margin: 5px 0 20px 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 4px;
+}
+
+.proximo-xingo {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #818384;
+}
+
+.stats-resumo {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 20px 0;
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+.stats-item {
+    flex: 1;
+    min-width: 70px;
+}
+
+.stats-number {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    display: block;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stats-label {
+    font-size: clamp(0.65rem, 2vw, 0.8rem);
+    text-transform: uppercase;
+    word-break: break-word;
+}
+
+/* Corrige largura do card */
+
+.status-container {
+    width: min(320px, 90vw);
+    box-sizing: border-box;
+}
+
+/* Ajustes extras para celular pequeno */
+
+@media (max-width: 380px) {
+
+    .status-container {
+        padding: 20px 16px;
+    }
+
+    .stats-title,
+    .dist-title {
+        font-size: 1.5rem;
+    }
+
+    .palavra-final {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+    }
+
+    .dist-row {
+        font-size: 0.8rem;
+    }
+}
