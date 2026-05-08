@@ -109,6 +109,10 @@ export const ui = {
                     Próximo Xingo à meia-noite.
                 </p>
 
+                <button id="share-btn" class="reset-btn share-btn">
+                    Compartilhar
+                </button>
+
             </div>
 
         </div>
@@ -117,5 +121,19 @@ export const ui = {
     if (this.elements.keyboard) {
         this.elements.keyboard.style.display = "none";
     }
+    },
+    mostrarToast(texto) {
+
+    const toast = document.createElement("div");
+
+    toast.className = "toast";
+
+    toast.innerText = texto;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 2000);
     }
 };

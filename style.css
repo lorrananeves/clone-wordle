@@ -315,11 +315,51 @@ main {
     word-break: break-word;
 }
 
-/* Corrige largura do card */
+.share-btn {
+    width: 100%;
+    margin-top: 20px;
+}
 
 .status-container {
     width: min(320px, 90vw);
     box-sizing: border-box;
+}
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d2d2d;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    z-index: 9999;
+    opacity: 0;
+    animation: toastFade 2s ease forwards;
+}
+
+@keyframes toastFade {
+
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+
+    15% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    85% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
 }
 
 /* Ajustes extras para celular pequeno */
@@ -343,4 +383,5 @@ main {
     .dist-row {
         font-size: 0.8rem;
     }
+    
 }
