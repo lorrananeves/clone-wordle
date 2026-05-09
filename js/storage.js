@@ -5,6 +5,23 @@ export const storage = {
         return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
     },
 
+    salvarPalavraDoDia(palavra) {
+        const dadosSalvos =
+            this.obterProgresso() || {};
+
+        const dados = {
+            ...dadosSalvos,
+            data: this._getHojeLocal(),
+            finalizado: false,
+            palavra
+        };
+
+        localStorage.setItem(
+            "xingo_status",
+            JSON.stringify(dados)
+        );
+    },
+
     salvarProgresso(vitoria, palavra) {
         const dados = {
             data: this._getHojeLocal(),

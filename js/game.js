@@ -43,8 +43,25 @@ function init() {
     if (
         salvo &&
         salvo.data === hoje &&
-        salvo.finalizado
+        salvo.palavra
     ) {
+
+        state.palavra =
+            salvo.palavra.toUpperCase();
+
+        if (!salvo.finalizado) {
+
+            criarTabuleiro();
+
+            renderTeclado();
+
+            document.addEventListener(
+                'keyup',
+                handleInput
+            );
+
+            return;
+        }
 
         ui.elements.modal.style.display = "none";
 
@@ -60,6 +77,7 @@ function init() {
     }
 
     configurarPalavraDoDia(hoje);
+    storage.salvarPalavraDoDia(state.palavra);
 
     criarTabuleiro();
 
