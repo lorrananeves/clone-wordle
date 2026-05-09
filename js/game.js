@@ -96,12 +96,44 @@ function configurarPalavraDoDia(dataStr) {
         ].toUpperCase();
 }
 
+function obterDescricaoTile(linha, coluna, letra = "", resultado = "") {
+
+    const posicao =
+        `Linha ${linha + 1}, coluna ${coluna + 1}`;
+
+    if (!letra) {
+        return `${posicao}, vazio`;
+    }
+
+    if (!resultado) {
+        return `${posicao}, letra ${letra}`;
+    }
+
+    return `${posicao}, letra ${letra}, ${resultado}`;
+}
+
+function obterDescricaoResultado(resultado) {
+
+    const descricoes = {
+        correct: "correta no lugar certo",
+        present: "existe na palavra em outro lugar",
+        absent: "não existe na palavra"
+    };
+
+    return descricoes[resultado] || "";
+}
+
 /**
  * Cria tabuleiro.
  */
 function criarTabuleiro() {
 
     ui.elements.board.innerHTML = "";
+    ui.elements.board.setAttribute("role", "grid");
+    ui.elements.board.setAttribute(
+        "aria-label",
+        "Tabuleiro do Xingo"
+    );
 
     for (let r = 0; r < TENTATIVAS; r++) {
 
@@ -117,6 +149,13 @@ function criarTabuleiro() {
                 document.createElement("span");
 
             tile.classList.add("tile");
+            tile.setAttribute("role", "gridcell");
+            tile.setAttribute("aria-rowindex", r + 1);
+            tile.setAttribute("aria-colindex", c + 1);
+            tile.setAttribute(
+                "aria-label",
+                obterDescricaoTile(r, c)
+            );
 
             ui.elements.board.appendChild(tile);
 
@@ -208,6 +247,15 @@ function handleInput(e) {
             tile.innerText =
                 e.code.replace("Key", "");
 
+            tile.setAttribute(
+                "aria-label",
+                obterDescricaoTile(
+                    state.fileira,
+                    state.coluna,
+                    tile.innerText
+                )
+            );
+
             tile.classList.add("pop");
 
             setTimeout(() => {
@@ -229,6 +277,18 @@ function handleInput(e) {
         ][
             state.coluna
         ].innerText = "";
+
+        state.tiles[
+            state.fileira
+        ][
+            state.coluna
+        ].setAttribute(
+            "aria-label",
+            obterDescricaoTile(
+                state.fileira,
+                state.coluna
+            )
+        );
 
     } else if (e.code === "Enter") {
 
@@ -381,6 +441,15 @@ function processarResultado(tentativa) {
 
         setTimeout(() => {
             tile.classList.add(resultados[c]);
+            tile.setAttribute(
+                "aria-label",
+                obterDescricaoTile(
+                    state.fileira,
+                    c,
+                    letra,
+                    obterDescricaoResultado(resultados[c])
+                )
+            );
             ui.atualizarTecla(
                 letra,
                 resultados[c]
