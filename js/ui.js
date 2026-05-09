@@ -19,7 +19,13 @@ export const ui = {
     atualizarTecla(letra, classe) {
         const key = document.getElementById("Key" + letra);
         if (key) {
-            // Remove classes antigas para não acumular cores
+            if (key.classList.contains("correct")) return;
+
+            if (
+                key.classList.contains("present") &&
+                classe === "absent"
+            ) return;
+
             key.classList.remove("present", "absent");
             key.classList.add(classe);
         }

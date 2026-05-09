@@ -84,14 +84,15 @@ function configurarPalavraDoDia(dataStr) {
     for (let i = 0; i < semente.length; i++) {
 
         hash =
-            (hash << 5) -
-            hash +
-            semente.charCodeAt(i);
+            (
+                hash * 31 +
+                semente.charCodeAt(i)
+            ) % 1000000007;
     }
 
     state.palavra =
         XINGOS[
-            Math.abs(hash) % XINGOS.length
+            hash % XINGOS.length
         ].toUpperCase();
 }
 
@@ -280,7 +281,11 @@ function processarResultado(tentativa) {
 
     let correct = 0;
 
-    let resultadoLinha = [];
+    const resultados =
+        Array(TAMANHO_PALAVRA).fill(null);
+
+    const resultadoLinha =
+        Array(TAMANHO_PALAVRA).fill("");
 
     const palavraLimpa =
         state.palavra
@@ -308,89 +313,89 @@ function processarResultado(tentativa) {
 
         let letra = tile.innerText;
 
-        setTimeout(() => {
+        if (
+            palavraLimpa[c] === letra
+        ) {
 
-            tile.classList.add("flip");
+            resultados[c] = "correct";
 
-            if (
-                palavraLimpa[c] === letra
-            ) {
+            resultadoLinha[c] = "🟩";
 
-                tile.classList.add("correct");
+            correct++;
 
-                resultadoLinha[c] = "🟩";
-
-                ui.atualizarTecla(
-                    letra,
-                    "correct"
-                );
-
-                correct++;
-
-                letterCount[letra]--;
-            }
-
-        }, c * 150);
+            letterCount[letra]--;
+        }
     }
 
     // Letras presentes/ausentes
-    setTimeout(() => {
+    for (
+        let c = 0;
+        c < TAMANHO_PALAVRA;
+        c++
+    ) {
 
-        for (
-            let c = 0;
-            c < TAMANHO_PALAVRA;
-            c++
+        if (
+            resultados[c] === "correct"
+        ) continue;
+
+        let letra =
+            state.tiles[
+                state.fileira
+            ][c].innerText;
+
+        if (
+            palavraLimpa.includes(letra) &&
+            letterCount[letra] > 0
         ) {
 
-            let tile =
-                state.tiles[
-                    state.fileira
-                ][c];
+            resultados[c] = "present";
 
-            if (
-                tile.classList.contains(
-                    "correct"
-                )
-            ) continue;
+            resultadoLinha[c] = "🟨";
 
-            let letra = tile.innerText;
+            letterCount[letra]--;
 
-            if (
-                palavraLimpa.includes(letra) &&
-                letterCount[letra] > 0
-            ) {
+        } else {
 
-                tile.classList.add("present");
+            resultados[c] = "absent";
 
-                resultadoLinha[c] = "🟨";
-
-                ui.atualizarTecla(
-                    letra,
-                    "present"
-                );
-
-                letterCount[letra]--;
-
-            } else {
-
-                tile.classList.add("absent");
-
-                resultadoLinha[c] = "⬛";
-
-                ui.atualizarTecla(
-                    letra,
-                    "absent"
-                );
-            }
+            resultadoLinha[c] = "⬛";
         }
+    }
 
+    for (
+        let c = 0;
+        c < TAMANHO_PALAVRA;
+        c++
+    ) {
+
+        const tile =
+            state.tiles[
+                state.fileira
+            ][c];
+
+        const letra = tile.innerText;
+
+        setTimeout(() => {
+            tile.classList.add("flip");
+        }, c * 150);
+
+        setTimeout(() => {
+            tile.classList.add(resultados[c]);
+            ui.atualizarTecla(
+                letra,
+                resultados[c]
+            );
+        }, c * 150 + 300);
+    }
+
+    setTimeout(() => {
         state.tentativas.push(
             resultadoLinha.join("")
         );
 
         verificarFimDeJogo(correct);
 
-    }, 800);
+    }, (TAMANHO_PALAVRA - 1) * 150 + 650);
 }
 
 /**
@@ -433,11 +438,6 @@ function verificarFimDeJogo(correct) {
 
         const stats =
             storage.obterEstatisticas();
-
-        if (vitoria) {
-            stats.ultimoAcerto =
-                state.fileira + 1;
-        }
 
         setTimeout(() => {
 

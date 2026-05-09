@@ -71,8 +71,12 @@ export const storage = {
             stats.distribuicao[
                 tentativaFinal + 1
             ]++;
+
+            stats.ultimoAcerto =
+                tentativaFinal + 1;
         } else {
             stats.sequenciaAtual = 0;
+            stats.ultimoAcerto = null;
         }
 
         stats.ultimoJogo = hojeStr;
@@ -89,10 +93,25 @@ export const storage = {
             sequenciaAtual: 0,
             melhorSequencia: 0,
             ultimoJogo: null,
+            ultimoAcerto: null,
             distribuicao: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
         };
         try {
-            return JSON.parse(localStorage.getItem("xingo_stats")) || padrao;
+            const salvo =
+                JSON.parse(
+                    localStorage.getItem("xingo_stats")
+                );
+
+            if (!salvo) return padrao;
+
+            return {
+                ...padrao,
+                ...salvo,
+                distribuicao: {
+                    ...padrao.distribuicao,
+                    ...salvo.distribuicao
+                }
+            };
         } catch { return padrao; }
     }
 };
