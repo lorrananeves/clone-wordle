@@ -5,49 +5,104 @@ export const storage = {
         return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
     },
 
-    salvarPalavraDoDia(palavra) {
+    _obterProgressos() {
+        try {
+            return JSON.parse(
+                localStorage.getItem("xingo_status_por_data")
+            ) || {};
+        } catch { return {}; }
+    },
+
+    _salvarProgressos(progressos) {
+        localStorage.setItem(
+            "xingo_status_por_data",
+            JSON.stringify(progressos)
+        );
+    },
+
+    salvarPalavraDoDia(palavra, data = this._getHojeLocal()) {
         const dadosSalvos =
-            this.obterProgresso() || {};
+            this.obterProgresso(data) || {};
 
         const dados = {
             ...dadosSalvos,
-            data: this._getHojeLocal(),
+            data,
             finalizado: false,
             palavra
         };
 
-        localStorage.setItem(
-            "xingo_status",
-            JSON.stringify(dados)
-        );
+        const progressos =
+            this._obterProgressos();
+
+        progressos[data] = dados;
+
+        this._salvarProgressos(progressos);
     },
 
-    salvarProgresso(vitoria, palavra) {
+    salvarProgresso(
+        vitoria,
+        palavra,
+        data = this._getHojeLocal(),
+        tentativa = null
+    ) {
         const dados = {
-            data: this._getHojeLocal(),
+            data,
             finalizado: true,
             vitoria,
-            palavra
+            palavra,
+            tentativa
         };
+
+        const progressos =
+            this._obterProgressos();
+
+        progressos[data] = dados;
+
+        this._salvarProgressos(progressos);
         localStorage.setItem("xingo_status", JSON.stringify(dados));
     },
 
-    obterProgresso() {
+    obterProgresso(data = this._getHojeLocal()) {
         try {
-            return JSON.parse(localStorage.getItem("xingo_status"));
+            const progressos =
+                this._obterProgressos();
+
+            if (progressos[data]) {
+                return progressos[data];
+            }
+
+            const legado =
+                JSON.parse(
+                    localStorage.getItem("xingo_status")
+                );
+
+            if (legado && legado.data === data) {
+                return legado;
+            }
+
+            return null;
         } catch { return null; }
     },
 
-    atualizarEstatisticas(vitoria, tentativaFinal) {
+    atualizarEstatisticas(
+        vitoria,
+        tentativaFinal,
+        data = this._getHojeLocal()
+    ) {
         const stats = this.obterEstatisticas();
 
-        const hoje = new Date();
+        if (stats.jogosPorData[data]) return;
 
-        const hojeStr = this._getHojeLocal();
+        const dataJogo =
+            new Date(`${data}T00:00:00`);
 
         const ultimoJogo = stats.ultimoJogo
-            ? new Date(stats.ultimoJogo)
+            ? new Date(`${stats.ultimoJogo}T00:00:00`)
             : null;
+
+        const jogoMaisRecente =
+            !stats.ultimoJogo ||
+            data >= stats.ultimoJogo;
 
         // Diferença em dias
         let diferencaDias = 0;
@@ -55,7 +110,7 @@ export const storage = {
         if (ultimoJogo) {
 
             const diffMs =
-                hoje - ultimoJogo;
+                dataJogo - ultimoJogo;
 
             diferencaDias =
                 Math.floor(
@@ -64,7 +119,10 @@ export const storage = {
         }
 
         // Se ficou mais de 1 dia sem jogar
-        if (diferencaDias > 1) {
+        if (
+            diferencaDias > 1 &&
+            (!stats.ultimoJogo || data > stats.ultimoJogo)
+        ) {
             stats.sequenciaAtual = 0;
         }
 
@@ -72,8 +130,10 @@ export const storage = {
         if (vitoria) {
             stats.vitorias++;
 
-            // Só aumenta streak se ainda não jogou hoje
-            if (stats.ultimoJogo !== hojeStr) {
+            if (
+                !stats.ultimoJogo ||
+                data > stats.ultimoJogo
+            ) {
                 stats.sequenciaAtual++;
             }
 
@@ -89,14 +149,26 @@ export const storage = {
                 tentativaFinal + 1
             ]++;
 
-            stats.ultimoAcerto =
-                tentativaFinal + 1;
+            if (jogoMaisRecente) {
+                stats.ultimoAcerto =
+                    tentativaFinal + 1;
+            }
         } else {
-            stats.sequenciaAtual = 0;
-            stats.ultimoAcerto = null;
+            if (jogoMaisRecente) {
+                stats.sequenciaAtual = 0;
+                stats.ultimoAcerto = null;
+            }
         }
 
-        stats.ultimoJogo = hojeStr;
+        stats.jogosPorData[data] = true;
+
+        if (
+            !stats.ultimoJogo ||
+            data > stats.ultimoJogo
+        ) {
+            stats.ultimoJogo = data;
+        }
+
         localStorage.setItem(
             "xingo_stats",
             JSON.stringify(stats)
@@ -111,6 +183,7 @@ export const storage = {
             melhorSequencia: 0,
             ultimoJogo: null,
             ultimoAcerto: null,
+            jogosPorData: {},
             distribuicao: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
         };
         try {
@@ -124,6 +197,10 @@ export const storage = {
             return {
                 ...padrao,
                 ...salvo,
+                jogosPorData: {
+                    ...padrao.jogosPorData,
+                    ...salvo.jogosPorData
+                },
                 distribuicao: {
                     ...padrao.distribuicao,
                     ...salvo.distribuicao

@@ -10,9 +10,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     touch-action: manipulation;
 }
 
@@ -20,28 +21,32 @@ body {
    HEADER
    ============================================= */
 header {
-    height: 60px;
+    flex: 0 0 clamp(38px, 7dvh, 56px);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 #title {
-    font-size: 32px;
+    font-size: clamp(22px, 4.8dvh, 32px);
     letter-spacing: 5px;
-    margin: 10px 0;
+    margin: 0;
 }
 
 /* =============================================
    ÁREA PRINCIPAL DO JOGO
    ============================================= */
 main {
-    flex-grow: 1;
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
+    gap: clamp(4px, 1dvh, 10px);
+    padding-bottom: max(2px, env(safe-area-inset-bottom));
+    overflow: hidden;
 }
 
 /* =============================================
@@ -50,11 +55,14 @@ main {
 #board {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    padding: 10px 0;
+    flex: 0 1 auto;
+    gap: clamp(3px, 0.7dvh, 5px);
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: clamp(8px, 2dvh, 18px) 0;
     box-sizing: border-box;
-    width: 350px;
-    max-width: 90vw;
+    width: min(350px, 90vw, 40dvh);
+    max-width: 100%;
 }
 
 /* =============================================
@@ -63,7 +71,7 @@ main {
 .tile {
     border: 2px solid #3a3a3c;
     aspect-ratio: 1 / 1;
-    font-size: 2rem;
+    font-size: clamp(1.35rem, 5dvh, 2rem);
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -137,9 +145,11 @@ main {
    TECLADO VIRTUAL
    ============================================= */
 #keyboard-container {
+    flex: 0 0 auto;
+    margin-top: auto;
     width: 100%;
     max-width: 500px;
-    padding: 0 12px 20px 12px;
+    padding: 0 12px;
     box-sizing: border-box;
 }
 
@@ -147,18 +157,18 @@ main {
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: clamp(2px, 0.6dvh, 6px);
 }
 
 .key-tile,
 .enter-key-tile {
     background-color: #818384;
     border-radius: 4px;
-    margin: 3px;
+    margin: clamp(1px, 0.45dvh, 3px);
     cursor: pointer;
     font-size: 0.85rem; /* FIX: font-size ausente na versão original */
     font-weight: bold;
-    height: 58px;
+    height: clamp(32px, 6.4dvh, 54px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -203,11 +213,24 @@ main {
 
 .modal-content {
     background-color: #1e1e1e;
-    padding: 25px;
+    width: min(420px, 92vw);
+    max-height: calc(100dvh - 24px);
+    overflow: hidden;
+    padding: clamp(16px, 3dvh, 25px);
     border-radius: 15px;
     border: 1px solid #3a3a3c;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-    line-height: 1.5;
+    line-height: 1.35;
+    font-size: clamp(0.82rem, 2dvh, 1rem);
+}
+
+.modal-content h2 {
+    margin: 0 0 clamp(8px, 1.6dvh, 16px);
+    font-size: clamp(1.2rem, 3.2dvh, 1.5rem);
+}
+
+.modal-content p {
+    margin: clamp(8px, 1.6dvh, 16px) 0;
 }
 
 /* =============================================
@@ -223,55 +246,72 @@ main {
 .status-container {
     width: min(420px, 92vw);
     background-color: #1e1e1e;
-    padding: 25px;
+    height: min(
+        100%,
+        calc(100dvh - clamp(38px, 7dvh, 56px) - clamp(30px, 5dvh, 36px) - 18px)
+    );
+    max-height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: clamp(10px, 2dvh, 18px);
     border-radius: 15px;
     border: 1px solid #3a3a3c;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-    line-height: 1.5;
+    line-height: 1.28;
     box-sizing: border-box;
     margin: 0 auto;
 }
 
 .board-status {
     width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 0;
+    margin: 0;
 }
 
 .stats-title {
     margin-top: 0;
+    margin-bottom: clamp(4px, 1dvh, 10px);
     letter-spacing: 1px;
-    font-size: 1.2rem;
+    font-size: clamp(1.05rem, 2.4dvh, 1.3rem);
+    flex: 0 0 auto;
 }
 
 .stats-resumo {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
-    margin: 20px 0;
+    gap: clamp(4px, 1.2vw, 10px);
+    margin: clamp(6px, 1.3dvh, 12px) 0;
     text-align: center;
-    flex-wrap: wrap;
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
 }
 
 .stats-item {
     flex: 1;
-    min-width: 70px;
+    min-width: 0;
 }
 
 .stats-number {
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: clamp(1.45rem, 5vw, 2.05rem);
     display: block;
     line-height: 1;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .stats-label {
-    font-size: clamp(0.65rem, 2vw, 0.8rem);
+    font-size: clamp(0.68rem, 2.2vw, 0.86rem);
     text-transform: uppercase;
     word-break: break-word;
+    line-height: 1.05;
 }
 
 /* =============================================
@@ -279,20 +319,22 @@ main {
    ============================================= */
 .dist-title {
     text-align: left;
-    font-size: 1rem;
-    margin-bottom: 15px;
+    font-size: clamp(0.9rem, 2dvh, 1.05rem);
+    margin: clamp(6px, 1.2dvh, 12px) 0 clamp(5px, 1dvh, 10px);
     letter-spacing: 1px;
+    flex: 0 0 auto;
 }
 
 .dist-container {
-    margin-bottom: 25px;
+    flex: 0 0 auto;
+    margin-bottom: clamp(4px, 1dvh, 10px);
 }
 
 .dist-row {
     display: flex;
     align-items: center;
-    margin: 8px 0;
-    font-size: 0.9rem;
+    margin: clamp(2px, 0.55dvh, 5px) 0;
+    font-size: clamp(0.8rem, 1.8dvh, 0.95rem);
     font-family: sans-serif;
 }
 
@@ -304,7 +346,7 @@ main {
 .dist-bar-bg {
     flex-grow: 1;
     background: #121213;
-    height: 20px;
+    height: clamp(15px, 2.6dvh, 20px);
     border-radius: 2px;
     margin-left: 5px;
 }
@@ -322,7 +364,7 @@ main {
 
 .dist-value {
     font-weight: bold;
-    font-size: 0.75rem;
+    font-size: clamp(0.68rem, 1.55dvh, 0.8rem);
     color: white;
 }
 
@@ -331,42 +373,67 @@ main {
    ============================================= */
 .palavra-container {
     border-top: 1px solid #3a3a3c;
-    padding-top: 20px;
-    padding-bottom: 10px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: clamp(8px, 1.4dvh, 14px);
+    padding-bottom: 0;
 }
 
 .palavra-label {
     margin: 0;
     color: #818384;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 1.7dvh, 0.9rem);
 }
 
 .palavra-final {
-    margin: 5px 0 20px 0;
-    font-size: 1.8rem;
+    margin: 4px 0 clamp(6px, 1.1dvh, 12px) 0;
+    font-size: clamp(1.45rem, 3.6dvh, 2rem);
     font-weight: bold;
     letter-spacing: 4px;
 }
 
 .proximo-xingo {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: clamp(0.78rem, 1.7dvh, 0.9rem);
     color: #818384;
 }
 
 .frase-final {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 1.9dvh, 1rem);
     color: #bdbdbd;
-    margin-top: 15px;
+    margin: clamp(4px, 0.8dvh, 8px) 0 0;
     font-style: italic;
+    line-height: 1.2;
+}
+
+.status-actions {
+    margin-top: auto;
+    padding-top: clamp(6px, 1dvh, 10px);
+    flex: 0 0 auto;
+}
+
+.convite-ontem {
+    margin-top: 0;
+    margin-bottom: clamp(6px, 1dvh, 10px);
+    padding-top: clamp(6px, 1dvh, 10px);
+    border-top: 1px solid #3a3a3c;
+}
+
+.convite-ontem-texto {
+    margin: 0 0 clamp(6px, 1dvh, 10px);
+    color: #d7dadc;
+    font-size: clamp(0.8rem, 1.75dvh, 0.95rem);
+    line-height: 1.22;
 }
 
 /* =============================================
    BOTÕES
    ============================================= */
 .reset-btn {
-    padding: 12px 30px;
+    padding: clamp(9px, 1.7dvh, 12px) 30px;
     background: #538d4e;
     color: white;
     border: none;
@@ -383,7 +450,16 @@ main {
 
 .share-btn {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 0;
+}
+
+.ontem-btn {
+    width: 100%;
+    background: #818384;
+}
+
+.ontem-btn:hover {
+    background: #6b6d70;
 }
 
 .centralizar-btn {
@@ -419,6 +495,23 @@ main {
     animation: toastFade 2s ease forwards;
 }
 
+#answer {
+    flex: 0 0 clamp(22px, 4dvh, 34px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    margin: 0;
+    padding: 0 12px;
+    font-size: clamp(0.9rem, 2.5dvh, 1.2rem);
+    line-height: 1.1;
+}
+
+#answer:empty {
+    flex-basis: 0;
+    padding: 0;
+}
+
 @keyframes toastFade {
     0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
     15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -437,15 +530,104 @@ main {
    RESPONSIVIDADE
    ============================================= */
 @media (max-height: 700px) {
-    #title { font-size: 24px; margin: 5px 0; }
-    .tile { font-size: 1.5rem; }
-    .key-tile, .enter-key-tile { height: 48px; }
-    #board { gap: 4px; padding: 5px; }
+    .key-tile,
+    .enter-key-tile {
+        margin: 2px;
+    }
+}
+
+@media (max-height: 520px) {
+    header {
+        flex-basis: 34px;
+    }
+
+    #title {
+        font-size: 20px;
+    }
+
+    main {
+        gap: 2px;
+        padding-bottom: 2px;
+    }
+
+    #board {
+        width: min(350px, 90vw, 33dvh);
+        gap: 2px;
+        padding: 4px 0;
+    }
+
+    .tile {
+        font-size: 1.15rem;
+    }
+
+    #answer {
+        flex-basis: 18px;
+        font-size: 0.8rem;
+    }
+
+    .keyboard-row {
+        margin-bottom: 2px;
+    }
+
+    .key-tile,
+    .enter-key-tile {
+        height: 28px;
+        margin: 1px;
+        font-size: 0.72rem;
+    }
+
+    .status-container {
+        padding: 8px;
+        line-height: 1.15;
+    }
+
+    .stats-title {
+        margin-bottom: 3px;
+        font-size: 0.82rem;
+    }
+
+    .stats-number {
+        font-size: 1rem;
+    }
+
+    .stats-label,
+    .palavra-label,
+    .proximo-xingo {
+        font-size: 0.58rem;
+    }
+
+    .dist-title {
+        margin: 3px 0;
+        font-size: 0.68rem;
+    }
+
+    .dist-bar-bg {
+        height: 11px;
+    }
+
+    .palavra-final {
+        font-size: 1rem;
+        margin-bottom: 3px;
+    }
+
+    .frase-final {
+        font-size: 0.66rem;
+    }
+
+    .convite-ontem-texto {
+        font-size: 0.64rem;
+    }
+
+    .reset-btn {
+        padding-top: 6px;
+        padding-bottom: 6px;
+        font-size: 0.72rem;
+    }
 }
 
 @media (max-width: 380px) {
     #keyboard-container {
-        padding: 0 6px 15px 6px;
+        padding: 0 6px;
     }
 
     .key-tile,
@@ -474,6 +656,7 @@ main {
 
 html, body {
     overflow-x: hidden;
+    overflow-y: hidden;
     max-width: 100%;
 }
 

@@ -35,7 +35,8 @@ export const ui = {
         vitoria,
         palavra,
         stats,
-        tentativa
+        tentativa,
+        conviteOntem = null
     ) {
     const winPct = stats.jogos > 0
         ? Math.round((stats.vitorias / stats.jogos) * 100)
@@ -91,6 +92,21 @@ const fraseFinal =
         vitoria,
         tentativa
     );
+
+const conviteOntemHtml =
+    conviteOntem
+        ? `
+                <div class="convite-ontem">
+                    <p class="convite-ontem-texto">
+                        ${conviteOntem.texto}
+                    </p>
+
+                    <button id="jogar-ontem-btn" class="reset-btn ontem-btn">
+                        Jogar palavra de ontem
+                    </button>
+                </div>
+        `
+        : "";
     
 
     this.elements.board.classList.add("board-status");
@@ -164,12 +180,18 @@ const fraseFinal =
                 </p>
 
                 <p class="proximo-xingo">
-                    Próximo Xingo à meia-noite.
+                    ${conviteOntem
+                        ? "Próximo Xingo à meia-noite."
+                        : "Próximo Xingo disponível amanhã."}
                 </p>
 
-                <button id="share-btn" class="reset-btn share-btn">
-                    Compartilhar
-                </button>
+                <div class="status-actions">
+                    ${conviteOntemHtml}
+
+                    <button id="share-btn" class="reset-btn share-btn">
+                        Compartilhar
+                    </button>
+                </div>
 
             </div>
 

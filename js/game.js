@@ -8,22 +8,14 @@ const state = {
     fimDeJogo: false,
     travado: false,
     palavra: "",
+    dataJogo: "",
     tiles: [],
     tentativas: []
 };
 
 function init() {
 
-    const agora = new Date();
-
-    const hoje =
-        `${agora.getFullYear()}-${
-            String(agora.getMonth() + 1).padStart(2, '0')
-        }-${
-            String(agora.getDate()).padStart(2, '0')
-        }`;
-
-    const salvo = storage.obterProgresso();
+    const hoje = obterDataLocal();
 
     document.addEventListener('touchstart', (e) => {
         if (e.touches.length > 1) {
@@ -40,9 +32,23 @@ function init() {
         };
     }
 
+    iniciarJogo(hoje);
+
+    document.addEventListener(
+        'keyup',
+        handleInput
+    );
+}
+
+function iniciarJogo(dataStr) {
+
+    const salvo =
+        storage.obterProgresso(dataStr);
+
+    resetarEstado(dataStr);
+
     if (
         salvo &&
-        salvo.data === hoje &&
         salvo.palavra
     ) {
 
@@ -55,11 +61,6 @@ function init() {
 
             renderTeclado();
 
-            document.addEventListener(
-                'keyup',
-                handleInput
-            );
-
             return;
         }
 
@@ -70,23 +71,108 @@ function init() {
         ui.mostrarStatusFinal(
             salvo.vitoria,
             salvo.palavra,
-            stats
+            {
+                ...stats,
+                ultimoAcerto:
+                    salvo.tentativa ||
+                    stats.ultimoAcerto
+            },
+            salvo.tentativa,
+            obterConviteOntem(salvo.vitoria)
         );
+
+        configurarBotaoOntem();
 
         return;
     }
 
-    configurarPalavraDoDia(hoje);
-    storage.salvarPalavraDoDia(state.palavra);
+    configurarPalavraDoDia(dataStr);
+    storage.salvarPalavraDoDia(
+        state.palavra,
+        dataStr
+    );
 
     criarTabuleiro();
 
     renderTeclado();
+}
 
-    document.addEventListener(
-        'keyup',
-        handleInput
+function resetarEstado(dataStr) {
+
+    state.fileira = 0;
+    state.coluna = 0;
+    state.fimDeJogo = false;
+    state.travado = false;
+    state.palavra = "";
+    state.dataJogo = dataStr;
+    state.tiles = [];
+    state.tentativas = [];
+
+    ui.elements.board.classList.remove("board-status");
+    ui.elements.answer.innerText = "";
+
+    if (ui.elements.keyboard) {
+        ui.elements.keyboard.style.display = "";
+    }
+}
+
+function obterConviteOntem(vitoria) {
+
+    const hoje = obterDataLocal();
+    const ontem = alterarData(hoje, -1);
+
+    if (state.dataJogo !== hoje) return null;
+
+    const progressoOntem =
+        storage.obterProgresso(ontem);
+
+    if (
+        progressoOntem &&
+        progressoOntem.finalizado
+    ) return null;
+
+    return {
+        data: ontem,
+        texto: vitoria
+            ? "Acertou, boa. Tente o feito com a palavra de ontem também."
+            : "Que pena, perdeu. Tente a de ontem pra ver se consegue descobrir."
+    };
+}
+
+function configurarBotaoOntem() {
+
+    const botaoOntem =
+        document.getElementById("jogar-ontem-btn");
+
+    if (!botaoOntem) return;
+
+    botaoOntem.onclick = () => {
+        iniciarJogo(alterarData(obterDataLocal(), -1));
+    };
+}
+
+function obterDataLocal(data = new Date()) {
+
+    return `${data.getFullYear()}-${
+        String(data.getMonth() + 1).padStart(2, '0')
+    }-${
+        String(data.getDate()).padStart(2, '0')
+    }`;
+}
+
+function alterarData(dataStr, diferencaDias) {
+
+    const data = criarDataUtc(dataStr);
+
+    data.setUTCDate(
+        data.getUTCDate() + diferencaDias
     );
+
+    return `${data.getUTCFullYear()}-${
+        String(data.getUTCMonth() + 1).padStart(2, '0')
+    }-${
+        String(data.getUTCDate()).padStart(2, '0')
+    }`;
 }
 
 /**
@@ -94,24 +180,72 @@ function init() {
  */
 function configurarPalavraDoDia(dataStr) {
 
-    const semente =
-        dataStr.split('-').join('');
+    const indiceDia =
+        obterIndiceDia(dataStr);
 
-    let hash = 0;
+    const ciclo =
+        Math.floor(indiceDia / XINGOS.length);
 
-    for (let i = 0; i < semente.length; i++) {
+    const posicao =
+        indiceDia % XINGOS.length;
 
-        hash =
-            (
-                hash * 31 +
-                semente.charCodeAt(i)
-            ) % 1000000007;
-    }
+    const ordem =
+        obterOrdemDoCiclo(ciclo);
 
     state.palavra =
-        XINGOS[
-            hash % XINGOS.length
-        ].toUpperCase();
+        XINGOS[ordem[posicao]].toUpperCase();
+}
+
+function obterIndiceDia(dataStr) {
+
+    const inicio =
+        criarDataUtc("2024-01-01");
+
+    const data =
+        criarDataUtc(dataStr);
+
+    return Math.floor(
+        (data - inicio) / 86400000
+    );
+}
+
+function criarDataUtc(dataStr) {
+
+    const [ano, mes, dia] =
+        dataStr.split('-').map(Number);
+
+    return new Date(
+        Date.UTC(ano, mes - 1, dia)
+    );
+}
+
+function obterOrdemDoCiclo(ciclo) {
+
+    const ordem =
+        XINGOS.map((_, indice) => indice);
+
+    let semente =
+        (ciclo + 1) * 2654435761;
+
+    for (
+        let i = ordem.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        semente =
+            (semente * 1664525 + 1013904223) %
+            4294967296;
+
+        const j =
+            semente % (i + 1);
+
+        const temporario = ordem[i];
+        ordem[i] = ordem[j];
+        ordem[j] = temporario;
+    }
+
+    return ordem;
 }
 
 function obterDescricaoTile(linha, coluna, letra = "", resultado = "") {
@@ -515,12 +649,15 @@ function verificarFimDeJogo(correct) {
 
         storage.salvarProgresso(
             vitoria,
-            state.palavra
+            state.palavra,
+            state.dataJogo,
+            state.fileira + 1
         );
 
         storage.atualizarEstatisticas(
             vitoria,
-            state.fileira
+            state.fileira,
+            state.dataJogo
         );
 
         const stats =
@@ -531,9 +668,15 @@ function verificarFimDeJogo(correct) {
             ui.mostrarStatusFinal(
                 vitoria,
                 state.palavra,
-                stats,
-                state.fileira + 1
+                {
+                    ...stats,
+                    ultimoAcerto: state.fileira + 1
+                },
+                state.fileira + 1,
+                obterConviteOntem(vitoria)
             );
+
+            configurarBotaoOntem();
 
             const shareBtn =
                 document.getElementById(
@@ -546,9 +689,7 @@ function verificarFimDeJogo(correct) {
                     async () => {
 
                     const numeroJogo =
-                        Math.floor(
-                            Date.now() / 86400000
-                        );
+                        obterIndiceDia(state.dataJogo) + 1;
 
                     const resultadoTexto =
 `XINGO #${numeroJogo}
