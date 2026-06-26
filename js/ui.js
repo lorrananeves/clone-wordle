@@ -53,7 +53,8 @@ export const ui = {
         palavra,
         stats,
         tentativa,
-        conviteOntem = null
+        conviteOntem = null,
+        conviteOutroJogo = null
     ) {
         const winPct = stats.jogos > 0
             ? Math.round((stats.vitorias / stats.jogos) * 100)
@@ -61,9 +62,12 @@ export const ui = {
 
         const maxDist = Math.max(...Object.values(stats.distribuicao), 1);
 
+        // Número de linhas da distribuição é dinâmico (6 para Xingo, 7 para Xingão)
+        const numTentativas = Math.max(...Object.keys(stats.distribuicao).map(Number));
+
         let distHtml = "";
 
-        for (let i = 1; i <= 6; i++) {
+        for (let i = 1; i <= numTentativas; i++) {
 
             const valor = stats.distribuicao[i];
 
@@ -121,6 +125,20 @@ export const ui = {
                     <button id="jogar-ontem-btn" class="reset-btn ontem-btn">
                         Jogar palavra de ontem
                     </button>
+                </div>
+        `
+                : "";
+
+        const conviteOutroJogoHtml =
+            conviteOutroJogo
+                ? `
+                <div class="convite-outro-jogo">
+                    <p class="convite-outro-jogo-texto">
+                        ${this._esc(conviteOutroJogo.texto)}
+                    </p>
+                    <a href="${this._esc(conviteOutroJogo.url)}" class="reset-btn outro-jogo-btn">
+                        ${this._esc(conviteOutroJogo.rotulo)}
+                    </a>
                 </div>
         `
                 : "";
@@ -202,6 +220,8 @@ export const ui = {
                 </p>
 
                 <div class="status-actions">
+                    ${conviteOutroJogoHtml}
+
                     ${conviteOntemHtml}
 
                     <button id="share-btn" class="reset-btn share-btn">

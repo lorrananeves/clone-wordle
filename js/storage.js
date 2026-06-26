@@ -5,17 +5,26 @@ export const storage = {
         return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
     },
 
-    _obterProgressos() {
+    // ns = namespace: "xingo" (5 letras) ou "xingo6" (6 letras)
+    _chaveProgressos(ns) {
+        return `${ns}_status_por_data`;
+    },
+
+    _chaveStats(ns) {
+        return `${ns}_stats`;
+    },
+
+    _obterProgressos(ns = "xingo") {
         try {
             return JSON.parse(
-                localStorage.getItem("xingo_status_por_data")
+                localStorage.getItem(this._chaveProgressos(ns))
             ) || {};
         } catch { return {}; }
     },
 
-    _salvarProgressos(progressos) {
+    _salvarProgressos(progressos, ns = "xingo") {
         localStorage.setItem(
-            "xingo_status_por_data",
+            this._chaveProgressos(ns),
             JSON.stringify(progressos)
         );
     },
@@ -23,7 +32,8 @@ export const storage = {
     salvarProgresso(
         vitoria,
         data = this._getHojeLocal(),
-        tentativa = null
+        tentativa = null,
+        ns = "xingo"
     ) {
         const dados = {
             data,
@@ -33,17 +43,17 @@ export const storage = {
         };
 
         const progressos =
-            this._obterProgressos();
+            this._obterProgressos(ns);
 
         progressos[data] = dados;
 
-        this._salvarProgressos(progressos);
+        this._salvarProgressos(progressos, ns);
     },
 
-    obterProgresso(data = this._getHojeLocal()) {
+    obterProgresso(data = this._getHojeLocal(), ns = "xingo") {
         try {
             const progressos =
-                this._obterProgressos();
+                this._obterProgressos(ns);
 
             if (progressos[data]) {
                 return progressos[data];
@@ -56,9 +66,10 @@ export const storage = {
     atualizarEstatisticas(
         vitoria,
         tentativaFinal,
-        data = this._getHojeLocal()
+        data = this._getHojeLocal(),
+        ns = "xingo"
     ) {
-        const stats = this.obterEstatisticas();
+        const stats = this.obterEstatisticas(ns);
 
         if (stats.jogosPorData[data]) return;
 
@@ -140,12 +151,17 @@ export const storage = {
         }
 
         localStorage.setItem(
-            "xingo_stats",
+            this._chaveStats(ns),
             JSON.stringify(stats)
         );
     },
 
-    obterEstatisticas() {
+    obterEstatisticas(ns = "xingo", tentativas = 6) {
+        const distribuicaoPadrao = {};
+        for (let i = 1; i <= tentativas; i++) {
+            distribuicaoPadrao[i] = 0;
+        }
+
         const padrao = {
             jogos: 0,
             vitorias: 0,
@@ -154,12 +170,12 @@ export const storage = {
             ultimoJogo: null,
             ultimoAcerto: null,
             jogosPorData: {},
-            distribuicao: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
+            distribuicao: distribuicaoPadrao
         };
         try {
             const salvo =
                 JSON.parse(
-                    localStorage.getItem("xingo_stats")
+                    localStorage.getItem(this._chaveStats(ns))
                 );
 
             if (!salvo) return padrao;

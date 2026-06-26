@@ -1,25 +1,31 @@
-const CACHE_NAME = "xingo-cache-v12";
+const CACHE_NAME = "xingo-cache-v13";
 
 // Recursos que devem ser pre-cacheados no install
 const FILES_TO_CACHE = [
     "./",
     "./index.html",
+    "./xingao.html",
     "./style.css",
     "./favicon.jpg",
     "./manifest.json",
+    "./sitemap.xml",
     "./js/game.js",
+    "./js/game6.js",
     "./js/ui.js",
     "./js/storage.js",
-    "./js/constants.js"
+    "./js/constants.js",
+    "./js/constants6.js"
 ];
 
 // Recursos estáticos que mudam a cada deploy (JS/CSS) — usa stale-while-revalidate
 const STALE_WHILE_REVALIDATE = [
     "./style.css",
     "./js/game.js",
+    "./js/game6.js",
     "./js/ui.js",
     "./js/storage.js",
-    "./js/constants.js"
+    "./js/constants.js",
+    "./js/constants6.js"
 ];
 
 self.addEventListener("install", (event) => {

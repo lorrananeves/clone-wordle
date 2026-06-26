@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XINGO — Jogo Diário de Palavras e Xingamentos</title>
+    <title>XINGÃO — Jogo Diário de Xingamentos de 6 Letras</title>
 
-    <meta name="description" content="Desafie sua mente com o Xingo! Tente adivinhar a palavra de 5 letras em 6 tentativas. Um jogo divertido, minimalista e desafiador.">
+    <meta name="description" content="Desafie sua mente com o Xingão! Tente adivinhar o xingamento de 6 letras em 7 tentativas. Mais longo, mais difícil, mais brabo.">
 
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
 
-    <meta property="og:title" content="Xingo - Jogo de Palavras">
-    <meta property="og:description" content="Será que você consegue descobrir o Xingo de hoje? Jogue agora!">
+    <meta property="og:title" content="Xingão - Jogo de Palavras 6 Letras">
+    <meta property="og:description" content="Será que você consegue descobrir o Xingão de hoje? 6 letras, 7 tentativas. Jogue agora!">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://lorrananeves.github.io/xingo/">
+    <meta property="og:url" content="https://lorrananeves.github.io/xingo/xingao.html">
     <meta property="og:image" content="https://lorrananeves.github.io/xingo/icons/icon-512.png">
     <link rel="manifest" href="manifest.json">
     <link rel="sitemap" type="application/xml" href="sitemap.xml">
@@ -38,15 +38,24 @@
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "wo3g0xxakg");
     </script>
+
+    <style>
+        /* Tabuleiro de 6 colunas — sobrescreve o padrão de 5 do style.css */
+        #board {
+            grid-template-columns: repeat(var(--colunas, 6), 1fr);
+            width: min(390px, 95vw, 44dvh);
+        }
+    </style>
 </head>
 
 <body>
     <div id="modal-regras" class="modal">
         <div class="modal-content">
-            <h2>Bem-vindo ao XINGO! 🤬</h2>
+            <h2>Bem-vindo ao XINGÃO! 🤬🤬</h2>
 
             <p>
-                O objetivo é adivinhar o xingamento secreto de 5 letras em até 6 tentativas.
+                O objetivo é adivinhar o xingamento secreto de <strong>6 letras</strong> em até 6 tentativas.
+                Mais longo, mais pesado, mais brabo.
             </p>
 
             <div class="exemplo-regras">
@@ -67,11 +76,15 @@
             </div>
 
             <p>
-                <strong>Por que é legal?</strong>
-                Além de testar seu repertório de baixaria,
-                é o passatempo perfeito para soltar os cachorros
-                e treinar o cérebro com as palavras que sua mãe
-                não gostaria de ouvir!
+                <strong>Por que é mais difícil?</strong>
+                Seis letras exigem mais raciocínio, mais vocabulário de baixaria
+                e mais resistência à vergonha alheia.
+            </p>
+
+            <p style="text-align:center; margin-top: 4px;">
+                <a href="./index.html" style="color: #818384; font-size: 0.85rem;">
+                    ← Jogar versão de 5 letras
+                </a>
             </p>
 
             <button id="fechar-modal" class="reset-btn centralizar-btn">
@@ -82,12 +95,12 @@
 
     <header>
         <button id="btn-regras" class="header-btn" aria-label="Ver regras" title="Regras">?</button>
-        <h1 id="title">XINGO</h1>
-        <a href="./xingao.html" class="header-btn" aria-label="Jogar Xingão" title="Jogar Xingão (6 letras)">6↗</a>
+        <h1 id="title">XINGÃO</h1>
+        <a href="./index.html" class="header-btn" aria-label="Jogar Xingo" title="Jogar Xingo (5 letras)">5↗</a>
     </header>
 
     <p class="hidden">
-        Xingo é um jogo de adivinhação de palavras inspirado no Wordle,
+        Xingão é um jogo de adivinhação de palavras de 6 letras inspirado no Wordle,
         com um vocabulário descontraído e desafiador.
     </p>
 
@@ -99,6 +112,6 @@
         <div id="keyboard-container"></div>
     </main>
 
-    <script type="module" src="./js/game.js"></script>
+    <script type="module" src="./js/game6.js"></script>
 </body>
 </html>

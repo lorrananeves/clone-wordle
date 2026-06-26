@@ -1,6 +1,9 @@
-import { XINGOS, TENTATIVAS, TAMANHO_PALAVRA } from './constants.js';
+import { XINGOS, TENTATIVAS, TAMANHO_PALAVRA } from './constants6.js';
 import { storage } from './storage.js';
 import { ui } from './ui.js';
+
+// Namespace isolado para o Xingão (6 letras) — não mistura dados com o jogo de 5 letras
+const NS = "xingo6";
 
 const state = {
     fileira: 0,
@@ -52,7 +55,7 @@ function init() {
 function iniciarJogo(dataStr) {
 
     const salvo =
-        storage.obterProgresso(dataStr);
+        storage.obterProgresso(dataStr, NS);
 
     resetarEstado(dataStr);
 
@@ -63,7 +66,7 @@ function iniciarJogo(dataStr) {
 
         ui.elements.modal.style.display = "none";
 
-        const stats = storage.obterEstatisticas();
+        const stats = storage.obterEstatisticas(NS, TENTATIVAS);
 
         ui.mostrarStatusFinal(
             salvo.vitoria,
@@ -116,7 +119,7 @@ function obterConviteOntem(vitoria) {
     if (state.dataJogo !== hoje) return null;
 
     const progressoOntem =
-        storage.obterProgresso(ontem);
+        storage.obterProgresso(ontem, NS);
 
     if (
         progressoOntem &&
@@ -138,19 +141,19 @@ function obterConviteOutroJogo() {
     // Só mostra o convite se estiver jogando o jogo de hoje
     if (state.dataJogo !== hoje) return null;
 
-    const progressoXingao =
-        storage.obterProgresso(hoje, "xingo6");
+    const progressoXingo =
+        storage.obterProgresso(hoje, "xingo");
 
-    // Se já jogou o Xingão hoje, não mostra o convite
+    // Se já jogou o Xingo de 5 letras hoje, não mostra o convite
     if (
-        progressoXingao &&
-        progressoXingao.finalizado
+        progressoXingo &&
+        progressoXingo.finalizado
     ) return null;
 
     return {
-        url: "./xingao.html",
-        rotulo: "Jogar XINGÃO (6 letras)",
-        texto: "Já jogou o de 5 letras — agora tenta o XINGÃO com 6 letras. Tá preparado?"
+        url: "./index.html",
+        rotulo: "Jogar XINGO (5 letras)",
+        texto: "Já jogou o XINGÃO — agora tenta o de 5 letras. Mais fácil? Talvez."
     };
 }
 
@@ -239,8 +242,9 @@ function obterOrdemDoCiclo(ciclo) {
     const ordem =
         XINGOS.map((_, indice) => indice);
 
+    // Semente diferente da do jogo de 5 letras para sequências independentes
     let semente =
-        (ciclo + 1) * 2654435761;
+        (ciclo + 7) * 2654435761;
 
     for (
         let i = ordem.length - 1;
@@ -291,7 +295,7 @@ function obterDescricaoResultado(resultado) {
 }
 
 /**
- * Cria tabuleiro.
+ * Cria tabuleiro com 6 colunas.
  */
 function criarTabuleiro() {
 
@@ -299,7 +303,13 @@ function criarTabuleiro() {
     ui.elements.board.setAttribute("role", "grid");
     ui.elements.board.setAttribute(
         "aria-label",
-        "Tabuleiro do Xingo"
+        "Tabuleiro do Xingão"
+    );
+
+    // Ajusta o grid para 6 colunas via variável CSS
+    ui.elements.board.style.setProperty(
+        "--colunas",
+        TAMANHO_PALAVRA
     );
 
     for (let r = 0; r < TENTATIVAS; r++) {
@@ -663,13 +673,13 @@ function verificarFimDeJogo(correct) {
 
             if (vitoria) {
 
-                gtag('event', 'win_game', {
+                gtag('event', 'win_xingao', {
                     tentativas: fileiraDaVez + 1
                 });
 
             } else {
 
-                gtag('event', 'lose_game');
+                gtag('event', 'lose_xingao');
 
             }
         }
@@ -677,17 +687,19 @@ function verificarFimDeJogo(correct) {
         storage.salvarProgresso(
             vitoria,
             state.dataJogo,
-            fileiraDaVez + 1
+            fileiraDaVez + 1,
+            NS
         );
 
         storage.atualizarEstatisticas(
             vitoria,
             fileiraDaVez,
-            state.dataJogo
+            state.dataJogo,
+            NS
         );
 
         const stats =
-            storage.obterEstatisticas();
+            storage.obterEstatisticas(NS, TENTATIVAS);
 
         setTimeout(() => {
 
@@ -719,7 +731,7 @@ function verificarFimDeJogo(correct) {
                         obterIndiceDia(state.dataJogo) + 1;
 
                     const resultadoTexto =
-`XINGO #${numeroJogo}
+`XINGÃO #${numeroJogo}
 
 ${state.tentativas.join("\n")}
 
@@ -728,7 +740,7 @@ ${vitoria
     : "💀 Tomei um pau."
 }
 
-https://lorrananeves.github.io/xingo/`;
+https://lorrananeves.github.io/xingo/xingao.html`;
 
                     try {
 
@@ -740,18 +752,18 @@ https://lorrananeves.github.io/xingo/`;
                         ) {
 
                             if (window.gtag) {
-                                gtag('event', 'share_result');
+                                gtag('event', 'share_xingao');
                             }
 
                             await navigator.share({
-                                title: "XINGO",
+                                title: "XINGÃO",
                                 text: resultadoTexto
                             });
 
                         } else {
 
                             if (window.gtag) {
-                                gtag('event', 'copy_result');
+                                gtag('event', 'copy_xingao');
                             }
 
                             await navigator.clipboard
@@ -772,7 +784,7 @@ https://lorrananeves.github.io/xingo/`;
                         try {
 
                             if (window.gtag) {
-                                gtag('event', 'copy_result');
+                                gtag('event', 'copy_xingao');
                             }
 
                             await navigator.clipboard

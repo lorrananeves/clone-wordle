@@ -25,12 +25,45 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    padding: 0 8px;
+    box-sizing: border-box;
 }
 
 #title {
     font-size: clamp(22px, 4.8dvh, 32px);
     letter-spacing: 5px;
     margin: 0;
+    flex: 1;
+    text-align: center;
+}
+
+.header-btn {
+    flex: 0 0 auto;
+    width: clamp(30px, 5.5dvh, 40px);
+    height: clamp(30px, 5.5dvh, 40px);
+    background: transparent;
+    border: 1px solid #565758;
+    border-radius: 6px;
+    color: white;
+    font-size: clamp(0.72rem, 1.8dvh, 0.9rem);
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    letter-spacing: 0;
+    transition: background-color 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.header-btn:hover {
+    background: #2a2a2c;
+    border-color: #818384;
 }
 
 /* =============================================
@@ -54,7 +87,7 @@ main {
    ============================================= */
 #board {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(var(--colunas, 5), 1fr);
     flex: 0 1 auto;
     gap: clamp(3px, 0.7dvh, 5px);
     margin-top: auto;
@@ -427,6 +460,33 @@ main {
     color: #d7dadc;
     font-size: clamp(0.8rem, 1.75dvh, 0.95rem);
     line-height: 1.22;
+}
+
+/* Convite para o outro jogo (Xingo ↔ Xingão) */
+.convite-outro-jogo {
+    margin-top: 0;
+    margin-bottom: clamp(6px, 1dvh, 10px);
+    padding-top: clamp(6px, 1dvh, 10px);
+    border-top: 1px solid #3a3a3c;
+}
+
+.convite-outro-jogo-texto {
+    margin: 0 0 clamp(6px, 1dvh, 10px);
+    color: #d7dadc;
+    font-size: clamp(0.8rem, 1.75dvh, 0.95rem);
+    line-height: 1.22;
+}
+
+.outro-jogo-btn {
+    width: 100%;
+    background: #3b82d4;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.outro-jogo-btn:hover {
+    background: #2563b0;
 }
 
 /* =============================================
