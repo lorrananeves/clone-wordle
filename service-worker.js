@@ -1,4 +1,4 @@
-const CACHE_NAME = "xingo-cache-v13";
+const CACHE_NAME = "xingo-cache-v14";
 
 // Recursos que devem ser pre-cacheados no install
 const FILES_TO_CACHE = [
@@ -60,6 +60,10 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
 
     const url = new URL(event.request.url);
+
+    // Ignora requisições externas (analytics, CDNs) — deixa o browser lidar diretamente
+    if (url.origin !== self.location.origin) return;
+
     const isStale = STALE_WHILE_REVALIDATE.some(
         (path) => url.pathname.endsWith(path.replace(".", ""))
     );
@@ -69,12 +73,14 @@ self.addEventListener("fetch", (event) => {
         event.respondWith(
             caches.open(CACHE_NAME).then((cache) => {
                 return cache.match(event.request).then((cached) => {
-                    const networkFetch = fetch(event.request).then((response) => {
-                        if (response && response.status === 200) {
-                            cache.put(event.request, response.clone());
-                        }
-                        return response;
-                    });
+                    const networkFetch = fetch(event.request)
+                        .then((response) => {
+                            if (response && response.status === 200) {
+                                cache.put(event.request, response.clone());
+                            }
+                            return response;
+                        })
+                        .catch(() => cached); // falha de rede: mantém o cache existente
                     return cached || networkFetch;
                 });
             })
@@ -82,13 +88,10 @@ self.addEventListener("fetch", (event) => {
         return;
     }
 
-    // Cache-first para os demais recursos (index.html, imagens, manifest)
+    // Cache-first para os demais recursos do mesmo domínio (index.html, imagens, manifest)
     event.respondWith(
-
         caches.match(event.request)
-            .then((response) => {
-
-                return response || fetch(event.request);
-            })
+            .then((response) => response || fetch(event.request))
+            .catch(() => caches.match(event.request))
     );
 });

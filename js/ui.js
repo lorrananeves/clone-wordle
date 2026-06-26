@@ -60,54 +60,6 @@ export const ui = {
             ? Math.round((stats.vitorias / stats.jogos) * 100)
             : 0;
 
-        const maxDist = Math.max(...Object.values(stats.distribuicao), 1);
-
-        // Número de linhas da distribuição é dinâmico (6 para Xingo, 7 para Xingão)
-        const numTentativas = Math.max(...Object.keys(stats.distribuicao).map(Number));
-
-        let distHtml = "";
-
-        for (let i = 1; i <= numTentativas; i++) {
-
-            const valor = stats.distribuicao[i];
-
-            const larguraBarra =
-                (valor / maxDist) * 100;
-
-            const corBarra =
-                (vitoria && i === stats.ultimoAcerto)
-                    ? "#538d4e"
-                    : "#3a3a3c";
-
-            distHtml += `
-        <div class="dist-row">
-
-            <span class="dist-index">
-                ${this._esc(i)}
-            </span>
-
-            <div class="dist-bar-bg">
-
-                <div
-                    class="dist-bar"
-                    style="
-                        width: ${this._esc(Math.max(larguraBarra, 8))}%;
-                        background: ${this._esc(corBarra)};
-                    "
-                >
-
-                    <span class="dist-value">
-                        ${this._esc(valor)}
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-    `;
-        }
-
         const fraseFinal =
             this.obterMensagemFinal(
                 vitoria,
@@ -189,14 +141,6 @@ export const ui = {
                         🏆 Recorde
                     </span>
                 </div>
-            </div>
-
-            <h3 class="dist-title">
-                DISTRIBUIÇÃO
-            </h3>
-
-            <div class="dist-container">
-                ${distHtml}
             </div>
 
             <div class="palavra-container">
