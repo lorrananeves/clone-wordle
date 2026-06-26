@@ -47,22 +47,10 @@ function iniciarJogo(dataStr) {
 
     resetarEstado(dataStr);
 
-    if (
-        salvo &&
-        salvo.palavra
-    ) {
+    // A palavra é sempre derivada deterministicamente da data — nunca lida do storage
+    configurarPalavraDoDia(dataStr);
 
-        state.palavra =
-            salvo.palavra.toUpperCase();
-
-        if (!salvo.finalizado) {
-
-            criarTabuleiro();
-
-            renderTeclado();
-
-            return;
-        }
+    if (salvo && salvo.finalizado) {
 
         ui.elements.modal.style.display = "none";
 
@@ -70,7 +58,7 @@ function iniciarJogo(dataStr) {
 
         ui.mostrarStatusFinal(
             salvo.vitoria,
-            salvo.palavra,
+            state.palavra,
             {
                 ...stats,
                 ultimoAcerto:
@@ -85,12 +73,6 @@ function iniciarJogo(dataStr) {
 
         return;
     }
-
-    configurarPalavraDoDia(dataStr);
-    storage.salvarPalavraDoDia(
-        state.palavra,
-        dataStr
-    );
 
     criarTabuleiro();
 
@@ -523,7 +505,12 @@ function processarResultado(tentativa) {
                 state.fileira
             ][c];
 
-        let letra = tile.innerText;
+        // Normaliza a letra digitada para remover acentos antes de comparar
+        let letra = tile.innerText
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+
+        tile.innerText = letra;
 
         if (
             palavraLimpa[c] === letra
@@ -553,7 +540,9 @@ function processarResultado(tentativa) {
         let letra =
             state.tiles[
                 state.fileira
-            ][c].innerText;
+            ][c].innerText
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
 
         if (
             palavraLimpa.includes(letra) &&
@@ -632,12 +621,17 @@ function verificarFimDeJogo(correct) {
         state.fimDeJogo = true;
 
         const vitoria = (correct === TAMANHO_PALAVRA);
+        const fileiraDaVez = state.fileira;
+
+        // Avança fileira antes do setTimeout para não corromper o estado
+        state.fileira++;
+
         if (window.gtag) {
 
             if (vitoria) {
 
                 gtag('event', 'win_game', {
-                    tentativas: state.fileira + 1
+                    tentativas: fileiraDaVez + 1
                 });
 
             } else {
@@ -649,14 +643,13 @@ function verificarFimDeJogo(correct) {
 
         storage.salvarProgresso(
             vitoria,
-            state.palavra,
             state.dataJogo,
-            state.fileira + 1
+            fileiraDaVez + 1
         );
 
         storage.atualizarEstatisticas(
             vitoria,
-            state.fileira,
+            fileiraDaVez,
             state.dataJogo
         );
 
@@ -670,9 +663,9 @@ function verificarFimDeJogo(correct) {
                 state.palavra,
                 {
                     ...stats,
-                    ultimoAcerto: state.fileira + 1
+                    ultimoAcerto: fileiraDaVez + 1
                 },
-                state.fileira + 1,
+                fileiraDaVez + 1,
                 obterConviteOntem(vitoria)
             );
 
@@ -766,8 +759,6 @@ https://lorrananeves.github.io/xingo/`;
             }
 
         }, 1500);
-
-        state.fileira++;
 
     } else {
 

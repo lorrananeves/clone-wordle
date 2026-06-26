@@ -1,10 +1,27 @@
 export const ui = {
-    // Cache dos elementos para performance
-    elements: {
-        board: document.getElementById("board"),
-        answer: document.getElementById("answer"),
-        keyboard: document.getElementById("keyboard-container"),
-        modal: document.getElementById("modal-regras")
+    // Elementos inicializados de forma lazy para evitar acesso ao DOM antes do carregamento
+    _elements: null,
+
+    get elements() {
+        if (!this._elements) {
+            this._elements = {
+                board: document.getElementById("board"),
+                answer: document.getElementById("answer"),
+                keyboard: document.getElementById("keyboard-container"),
+                modal: document.getElementById("modal-regras")
+            };
+        }
+        return this._elements;
+    },
+
+    // Escapa HTML para evitar XSS ao inserir valores dinâmicos em innerHTML
+    _esc(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
     },
 
     exibirMensagem(texto) {
@@ -38,31 +55,31 @@ export const ui = {
         tentativa,
         conviteOntem = null
     ) {
-    const winPct = stats.jogos > 0
-        ? Math.round((stats.vitorias / stats.jogos) * 100)
-        : 0;
+        const winPct = stats.jogos > 0
+            ? Math.round((stats.vitorias / stats.jogos) * 100)
+            : 0;
 
-    const maxDist = Math.max(...Object.values(stats.distribuicao), 1);
+        const maxDist = Math.max(...Object.values(stats.distribuicao), 1);
 
-    let distHtml = "";
+        let distHtml = "";
 
-    for (let i = 1; i <= 6; i++) {
+        for (let i = 1; i <= 6; i++) {
 
-    const valor = stats.distribuicao[i];
+            const valor = stats.distribuicao[i];
 
-    const larguraBarra =
-        (valor / maxDist) * 100;
+            const larguraBarra =
+                (valor / maxDist) * 100;
 
-    const corBarra =
-        (vitoria && i === stats.ultimoAcerto)
-            ? "#538d4e"
-            : "#3a3a3c";
+            const corBarra =
+                (vitoria && i === stats.ultimoAcerto)
+                    ? "#538d4e"
+                    : "#3a3a3c";
 
-    distHtml += `
+            distHtml += `
         <div class="dist-row">
 
             <span class="dist-index">
-                ${i}
+                ${this._esc(i)}
             </span>
 
             <div class="dist-bar-bg">
@@ -70,13 +87,13 @@ export const ui = {
                 <div
                     class="dist-bar"
                     style="
-                        width: ${Math.max(larguraBarra, 8)}%;
-                        background: ${corBarra};
+                        width: ${this._esc(Math.max(larguraBarra, 8))}%;
+                        background: ${this._esc(corBarra)};
                     "
                 >
 
                     <span class="dist-value">
-                        ${valor}
+                        ${this._esc(valor)}
                     </span>
 
                 </div>
@@ -85,20 +102,20 @@ export const ui = {
 
         </div>
     `;
-}
+        }
 
-const fraseFinal =
-    this.obterMensagemFinal(
-        vitoria,
-        tentativa
-    );
+        const fraseFinal =
+            this.obterMensagemFinal(
+                vitoria,
+                tentativa
+            );
 
-const conviteOntemHtml =
-    conviteOntem
-        ? `
+        const conviteOntemHtml =
+            conviteOntem
+                ? `
                 <div class="convite-ontem">
                     <p class="convite-ontem-texto">
-                        ${conviteOntem.texto}
+                        ${this._esc(conviteOntem.texto)}
                     </p>
 
                     <button id="jogar-ontem-btn" class="reset-btn ontem-btn">
@@ -106,12 +123,11 @@ const conviteOntemHtml =
                     </button>
                 </div>
         `
-        : "";
-    
+                : "";
 
-    this.elements.board.classList.add("board-status");
+        this.elements.board.classList.add("board-status");
 
-    this.elements.board.innerHTML = `
+        this.elements.board.innerHTML = `
         <div class="status-container status-wrapper">
 
             <h2 class="stats-title">
@@ -122,7 +138,7 @@ const conviteOntemHtml =
 
                 <div class="stats-item">
                     <b class="stats-number">
-                        ${stats.jogos}
+                        ${this._esc(stats.jogos)}
                     </b>
                     <span class="stats-label">
                         Jogos
@@ -131,7 +147,7 @@ const conviteOntemHtml =
 
                 <div class="stats-item">
                     <b class="stats-number">
-                        ${winPct}
+                        ${this._esc(winPct)}
                     </b>
                     <span class="stats-label">
                         % Vitórias
@@ -140,7 +156,7 @@ const conviteOntemHtml =
 
                 <div class="stats-item">
                     <b class="stats-number">
-                        ${stats.sequenciaAtual}
+                        ${this._esc(stats.sequenciaAtual)}
                     </b>
                     <span class="stats-label">
                         🔥 Atual
@@ -149,7 +165,7 @@ const conviteOntemHtml =
 
                 <div class="stats-item">
                     <b class="stats-number">
-                        ${stats.melhorSequencia}
+                        ${this._esc(stats.melhorSequencia)}
                     </b>
                     <span class="stats-label">
                         🏆 Recorde
@@ -172,11 +188,11 @@ const conviteOntemHtml =
                 </p>
 
                 <p class="palavra-final">
-                    ${palavra}
+                    ${this._esc(palavra)}
                 </p>
 
                 <p class="frase-final">
-                    ${fraseFinal}
+                    ${this._esc(fraseFinal)}
                 </p>
 
                 <p class="proximo-xingo">
@@ -198,81 +214,82 @@ const conviteOntemHtml =
         </div>
     `;
 
-    if (this.elements.keyboard) {
-        this.elements.keyboard.style.display = "none";
-    }
+        if (this.elements.keyboard) {
+            this.elements.keyboard.style.display = "none";
+        }
     },
+
     mostrarToast(texto) {
 
-    const toast = document.createElement("div");
+        const toast = document.createElement("div");
 
-    toast.className = "toast";
+        toast.className = "toast";
 
-    toast.innerText = texto;
+        toast.innerText = texto;
 
-    document.body.appendChild(toast);
+        document.body.appendChild(toast);
 
-    setTimeout(() => {
-        toast.remove();
-    }, 2000);
+        setTimeout(() => {
+            toast.remove();
+        }, 2000);
     },
 
-obterMensagemFinal(vitoria, tentativa) {
+    obterMensagemFinal(vitoria, tentativa) {
 
-    if (!vitoria) {
+        if (!vitoria) {
 
-        const derrotas = [
-            "Vergonha nacional.",
-            "Seu repertório tá triste.",
-            "A internet esperava mais."
-        ];
+            const derrotas = [
+                "Vergonha nacional.",
+                "Seu repertório tá triste.",
+                "A internet esperava mais."
+            ];
 
-        return derrotas[
-            Math.floor(
-                Math.random() * derrotas.length
-            )
+            return derrotas[
+                Math.floor(
+                    Math.random() * derrotas.length
+                )
+            ];
+        }
+
+        const mensagens = {
+
+            1: [
+                "Mandou bem.",
+                "Calma aí, profissional."
+            ],
+
+            2: [
+                "Xingando com eficiência.",
+                "Tá treinando bastante hein."
+            ],
+
+            3: [
+                "Mandou bem.",
+                "Tá aceitável."
+            ],
+
+            4: [
+                "No sufoco, mas foi.",
+                "Quase virou meme."
+            ],
+
+            5: [
+                "Foi por pouco.",
+                "Passou raspando."
+            ],
+
+            6: [
+                "Vitória culposa.",
+                "Nem você acreditou."
+            ]
+        };
+
+        const lista =
+            mensagens[tentativa] ||
+            mensagens[6];
+
+        return lista[
+            Math.floor(Math.random() * lista.length)
         ];
     }
-
-    const mensagens = {
-
-        1: [
-            "Mandou bem.",
-            "Calma aí, profissional."
-        ],
-
-        2: [
-            "Xingando com eficiência.",
-            "Tá treinando bastante hein."
-        ],
-
-        3: [
-            "Mandou bem.",
-            "Tá aceitável."
-        ],
-
-        4: [
-            "No sufoco, mas foi.",
-            "Quase virou meme."
-        ],
-
-        5: [
-            "Foi por pouco.",
-            "Passou raspando."
-        ],
-
-        6: [
-            "Vitória culposa.",
-            "Nem você acreditou."
-        ]
-    };
-
-    const lista =
-    mensagens[tentativa] ||
-    mensagens[6];
-
-    return lista[
-        Math.floor(Math.random() * lista.length)
-    ];
-}
 };

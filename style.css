@@ -13,7 +13,7 @@ body {
     height: 100vh;
     height: 100dvh;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
     touch-action: manipulation;
 }
 
@@ -656,7 +656,7 @@ main {
 
 html, body {
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
     max-width: 100%;
 }
 

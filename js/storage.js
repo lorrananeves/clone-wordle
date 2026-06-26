@@ -20,28 +20,8 @@ export const storage = {
         );
     },
 
-    salvarPalavraDoDia(palavra, data = this._getHojeLocal()) {
-        const dadosSalvos =
-            this.obterProgresso(data) || {};
-
-        const dados = {
-            ...dadosSalvos,
-            data,
-            finalizado: false,
-            palavra
-        };
-
-        const progressos =
-            this._obterProgressos();
-
-        progressos[data] = dados;
-
-        this._salvarProgressos(progressos);
-    },
-
     salvarProgresso(
         vitoria,
-        palavra,
         data = this._getHojeLocal(),
         tentativa = null
     ) {
@@ -49,7 +29,6 @@ export const storage = {
             data,
             finalizado: true,
             vitoria,
-            palavra,
             tentativa
         };
 
@@ -59,7 +38,6 @@ export const storage = {
         progressos[data] = dados;
 
         this._salvarProgressos(progressos);
-        localStorage.setItem("xingo_status", JSON.stringify(dados));
     },
 
     obterProgresso(data = this._getHojeLocal()) {
@@ -69,15 +47,6 @@ export const storage = {
 
             if (progressos[data]) {
                 return progressos[data];
-            }
-
-            const legado =
-                JSON.parse(
-                    localStorage.getItem("xingo_status")
-                );
-
-            if (legado && legado.data === data) {
-                return legado;
             }
 
             return null;
@@ -93,11 +62,12 @@ export const storage = {
 
         if (stats.jogosPorData[data]) return;
 
+        // Usa UTC para evitar erro de fuso horário ao calcular diferença de dias
         const dataJogo =
-            new Date(`${data}T00:00:00`);
+            new Date(`${data}T00:00:00Z`);
 
         const ultimoJogo = stats.ultimoJogo
-            ? new Date(`${stats.ultimoJogo}T00:00:00`)
+            ? new Date(`${stats.ultimoJogo}T00:00:00Z`)
             : null;
 
         const jogoMaisRecente =
