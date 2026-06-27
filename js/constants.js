@@ -37,4 +37,9 @@ export const XINGOS = [
     "velha", "velho", "verme", "vesgo",
     "viada", "viado", "vilão", "visgo", "xibiu",
     "xotas", "zonza", "zonzo",
-];
+].filter((p, i, arr) => {
+    // Remove duplicatas e garante exatamente 5 letras base (sem diacríticos)
+    if (arr.indexOf(p) !== i) return false;
+    const limpa = p.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return limpa.length === 5;
+});

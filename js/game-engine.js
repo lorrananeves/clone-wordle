@@ -597,6 +597,74 @@ export function criarJogo(config) {
     // ─── Fim de jogo ──────────────────────────────────────────────────────────
 
     /**
+     * Configura o handler do botão de compartilhar.
+     * Extraído de verificarFimDeJogo para reduzir o tamanho dessa função.
+     */
+    async function configurarBotaoCompartilhar(vitoria) {
+
+        const numeroJogo = obterIndiceDia(state.dataJogo) + 1;
+
+        const resultadoTexto =
+`${TITULO_JOGO} #${numeroJogo}
+
+${state.tentativas.join("\n")}
+
+${vitoria
+    ? "🔥 Brabo demais."
+    : "💀 Tomei um pau."
+}
+
+${URL_JOGO}`;
+
+        try {
+
+            // Usa a Web Share API quando disponível (sem detecção de userAgent)
+            if (navigator.share) {
+
+                if (window.gtag) {
+                    gtag('event', EVENTO_SHARE);
+                }
+
+                await navigator.share({
+                    title: TITULO_JOGO,
+                    text: resultadoTexto
+                });
+
+                ui.mostrarToast("Resultado compartilhado!");
+
+            } else {
+
+                if (window.gtag) {
+                    gtag('event', EVENTO_COPY);
+                }
+
+                await navigator.clipboard.writeText(resultadoTexto);
+
+                ui.mostrarToast("Resultado copiado!");
+            }
+
+        } catch (erro) {
+
+            console.error("Erro ao compartilhar:", erro);
+
+            try {
+
+                if (window.gtag) {
+                    gtag('event', EVENTO_COPY);
+                }
+
+                await navigator.clipboard.writeText(resultadoTexto);
+
+                ui.mostrarToast("Resultado copiado!");
+
+            } catch {
+
+                ui.mostrarToast("Não foi possível compartilhar.");
+            }
+        }
+    }
+
+    /**
      * Finaliza jogo.
      */
     function verificarFimDeJogo(correct) {
@@ -647,70 +715,8 @@ export function criarJogo(config) {
                 const shareBtn = document.getElementById("share-btn");
 
                 if (shareBtn) {
-                    shareBtn.onclick = async () => {
-
-                        const numeroJogo =
-                            obterIndiceDia(state.dataJogo) + 1;
-
-                        const resultadoTexto =
-`${TITULO_JOGO} #${numeroJogo}
-
-${state.tentativas.join("\n")}
-
-${vitoria
-    ? "🔥 Brabo demais."
-    : "💀 Tomei um pau."
-}
-
-${URL_JOGO}`;
-
-                        try {
-
-                            // Usa a Web Share API quando disponível (sem detecção de userAgent)
-                            if (navigator.share) {
-
-                                if (window.gtag) {
-                                    gtag('event', EVENTO_SHARE);
-                                }
-
-                                await navigator.share({
-                                    title: TITULO_JOGO,
-                                    text: resultadoTexto
-                                });
-
-                                ui.mostrarToast("Resultado compartilhado!");
-
-                            } else {
-
-                                if (window.gtag) {
-                                    gtag('event', EVENTO_COPY);
-                                }
-
-                                await navigator.clipboard.writeText(resultadoTexto);
-
-                                ui.mostrarToast("Resultado copiado!");
-                            }
-
-                        } catch (erro) {
-
-                            console.error("Erro ao compartilhar:", erro);
-
-                            try {
-
-                                if (window.gtag) {
-                                    gtag('event', EVENTO_COPY);
-                                }
-
-                                await navigator.clipboard.writeText(resultadoTexto);
-
-                                ui.mostrarToast("Resultado copiado!");
-
-                            } catch {
-
-                                ui.mostrarToast("Não foi possível compartilhar.");
-                            }
-                        }
-                    };
+                    shareBtn.onclick = () =>
+                        configurarBotaoCompartilhar(vitoria);
                 }
 
             }, 1500);

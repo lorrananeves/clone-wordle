@@ -229,7 +229,7 @@ export const ui = {
             ],
 
             3: [
-                "Mandou bem.",
+                "Quase sem precisar pensar.",
                 "Tá aceitável."
             ],
 
