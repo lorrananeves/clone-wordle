@@ -1,4 +1,4 @@
-const CACHE_NAME = "xingo-cache-v16";
+const CACHE_NAME = "xingo-cache-v17";
 
 // Recursos que devem ser pre-cacheados no install
 const FILES_TO_CACHE = [
@@ -6,7 +6,8 @@ const FILES_TO_CACHE = [
     "./index.html",
     "./xingao.html",
     "./style.css",
-    "./favicon.jpg",
+    "./icons/icon-192.png",
+    "./icons/icon-512.png",
     "./manifest.json",
     "./sitemap.xml",
     "./js/game.js",

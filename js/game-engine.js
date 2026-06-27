@@ -621,6 +621,8 @@ export function criarJogo(config) {
                     obterConviteOutroJogo()
                 );
 
+                // configurarBotaoOntem() é chamado aqui, dentro do setTimeout,
+                // porque o botão só existe no DOM após mostrarStatusFinal renderizar o HTML.
                 configurarBotaoOntem();
 
                 const shareBtn = document.getElementById("share-btn");
