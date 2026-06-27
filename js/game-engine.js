@@ -657,6 +657,8 @@ ${URL_JOGO}`;
                                     text: resultadoTexto
                                 });
 
+                                ui.mostrarToast("Resultado compartilhado!");
+
                             } else {
 
                                 if (window.gtag) {

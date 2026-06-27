@@ -186,6 +186,8 @@ export const ui = {
         const toast = document.createElement("div");
 
         toast.className = "toast";
+        toast.setAttribute("role", "status");
+        toast.setAttribute("aria-live", "polite");
 
         toast.innerText = texto;
 

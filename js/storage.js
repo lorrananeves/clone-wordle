@@ -29,6 +29,9 @@ export const storage = {
         );
     },
 
+    // Nota: os parâmetros com default `this._getHojeLocal()` funcionam corretamente
+    // enquanto o método for sempre chamado como `storage.salvarProgresso(...)`.
+    // Evite desestruturar o objeto storage, pois isso quebraria o `this` nos defaults.
     salvarProgresso(
         vitoria,
         data = this._getHojeLocal(),
@@ -50,6 +53,7 @@ export const storage = {
         this._salvarProgressos(progressos, ns);
     },
 
+    // Mesmo aviso: não desestruture o objeto storage ao usar este método.
     obterProgresso(data = this._getHojeLocal(), ns = "xingo") {
         try {
             const progressos =
