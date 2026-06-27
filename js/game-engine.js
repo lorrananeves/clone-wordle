@@ -84,6 +84,16 @@ export function criarJogo(config) {
             };
         }
 
+        // Fecha o modal com Escape
+        document.addEventListener('keydown', (e) => {
+            if (
+                e.key === 'Escape' &&
+                ui.elements.modal.style.display === 'flex'
+            ) {
+                ui.elements.modal.style.display = 'none';
+            }
+        });
+
         iniciarJogo(hoje);
 
         document.addEventListener('keyup', handleInput);
@@ -115,7 +125,8 @@ export function criarJogo(config) {
                 },
                 salvo.tentativa,
                 obterConviteOntem(salvo.vitoria),
-                obterConviteOutroJogo()
+                obterConviteOutroJogo(),
+                TITULO_JOGO
             );
 
             configurarBotaoOntem();
@@ -465,6 +476,13 @@ export function criarJogo(config) {
             ui.triggerShake();
             ui.exibirMensagem("Completa a palavra, gênio.");
 
+            // Limpa a mensagem após 2s para não ficar presa na tela
+            setTimeout(() => {
+                if (ui.elements.answer.innerText === "Completa a palavra, gênio.") {
+                    ui.elements.answer.innerText = "";
+                }
+            }, 2000);
+
             return;
         }
 
@@ -618,7 +636,8 @@ export function criarJogo(config) {
                     { ...stats, ultimoAcerto: fileiraDaVez + 1 },
                     fileiraDaVez + 1,
                     obterConviteOntem(vitoria),
-                    obterConviteOutroJogo()
+                    obterConviteOutroJogo(),
+                    TITULO_JOGO
                 );
 
                 // configurarBotaoOntem() é chamado aqui, dentro do setTimeout,

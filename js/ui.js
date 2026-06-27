@@ -54,7 +54,8 @@ export const ui = {
         stats,
         tentativa,
         conviteOntem = null,
-        conviteOutroJogo = null
+        conviteOutroJogo = null,
+        nomeJogo = "Xingo"
     ) {
         const winPct = stats.jogos > 0
             ? Math.round((stats.vitorias / stats.jogos) * 100)
@@ -158,7 +159,7 @@ export const ui = {
                 </p>
 
                 <p class="proximo-xingo">
-                    Próximo Xingo disponível amanhã.
+                    Próximo ${this._esc(nomeJogo)} disponível amanhã.
                 </p>
 
                 <div class="status-actions">
