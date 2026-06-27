@@ -20,28 +20,4 @@ const { init } = criarJogo({
     EVENTO_COPY: "copy_xingao"
 });
 
-if ('serviceWorker' in navigator) {
-
-    navigator.serviceWorker
-        .register("./service-worker.js")
-        .then(() => {
-
-            console.log("Service Worker registrado");
-
-        })
-        .catch((erro) => {
-
-            console.error("Erro no Service Worker:", erro);
-        });
-}
-
-window.addEventListener('appinstalled', () => {
-
-    if (window.gtag) {
-
-        gtag('event', 'pwa_installed');
-
-    }
-});
-
 init();

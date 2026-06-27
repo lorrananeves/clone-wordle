@@ -399,11 +399,14 @@ export function criarJogo(config) {
     /**
      * Input físico e virtual.
      */
+    // Padrão para identificar teclas de letra (KeyA–KeyZ) de forma explícita
+    const TECLA_LETRA = /^Key[A-Z]$/;
+
     function handleInput(e) {
 
         if (state.fimDeJogo || state.travado) return;
 
-        if ("KeyA" <= e.code && e.code <= "KeyZ") {
+        if (TECLA_LETRA.test(e.code)) {
 
             if (state.coluna < TAMANHO_PALAVRA) {
 
@@ -471,6 +474,11 @@ export function criarJogo(config) {
     /**
      * Processa resultado.
      */
+    // Constantes de temporização das animações de flip
+    const FLIP_DELAY_POR_COLUNA = 150; // ms entre início do flip de cada coluna
+    const FLIP_DURACAO = 300;          // ms até a cor aparecer (metade do flip)
+    const POS_FLIP_ESPERA = 350;       // ms extras após o último flip antes de verificar fim
+
     function processarResultado(tentativa) {
 
         state.travado = true;
@@ -545,7 +553,7 @@ export function criarJogo(config) {
 
             setTimeout(() => {
                 tile.classList.add("flip");
-            }, c * 150);
+            }, c * FLIP_DELAY_POR_COLUNA);
 
             setTimeout(() => {
                 tile.classList.add(resultados[c]);
@@ -559,13 +567,13 @@ export function criarJogo(config) {
                     )
                 );
                 ui.atualizarTecla(letra, resultados[c]);
-            }, c * 150 + 300);
+            }, c * FLIP_DELAY_POR_COLUNA + FLIP_DURACAO);
         }
 
         setTimeout(() => {
             state.tentativas.push(resultadoLinha.join(""));
             verificarFimDeJogo(correct);
-        }, (TAMANHO_PALAVRA - 1) * 150 + 650);
+        }, (TAMANHO_PALAVRA - 1) * FLIP_DELAY_POR_COLUNA + FLIP_DURACAO + POS_FLIP_ESPERA);
     }
 
     // ─── Fim de jogo ──────────────────────────────────────────────────────────

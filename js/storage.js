@@ -81,6 +81,8 @@ export const storage = {
             ? new Date(`${stats.ultimoJogo}T00:00:00Z`)
             : null;
 
+        // Comparação de strings funciona corretamente aqui porque o formato
+        // AAAA-MM-DD é lexicograficamente ordenável (ex: "2025-01-10" > "2024-12-31")
         const jogoMaisRecente =
             !stats.ultimoJogo ||
             data >= stats.ultimoJogo;

@@ -158,9 +158,7 @@ export const ui = {
                 </p>
 
                 <p class="proximo-xingo">
-                    ${conviteOntem
-                        ? "Próximo Xingo à meia-noite."
-                        : "Próximo Xingo disponível amanhã."}
+                    Próximo Xingo disponível amanhã.
                 </p>
 
                 <div class="status-actions">
