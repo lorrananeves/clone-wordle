@@ -1,4 +1,4 @@
-const CACHE_NAME = "xingo-cache-v14";
+const CACHE_NAME = "xingo-cache-v15";
 
 // Recursos que devem ser pre-cacheados no install
 const FILES_TO_CACHE = [
@@ -11,6 +11,7 @@ const FILES_TO_CACHE = [
     "./sitemap.xml",
     "./js/game.js",
     "./js/game6.js",
+    "./js/game-engine.js",
     "./js/ui.js",
     "./js/storage.js",
     "./js/constants.js",
@@ -22,6 +23,7 @@ const STALE_WHILE_REVALIDATE = [
     "./style.css",
     "./js/game.js",
     "./js/game6.js",
+    "./js/game-engine.js",
     "./js/ui.js",
     "./js/storage.js",
     "./js/constants.js",
