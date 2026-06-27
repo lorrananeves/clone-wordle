@@ -55,17 +55,12 @@ export const ui = {
         tentativa,
         conviteOntem = null,
         conviteOutroJogo = null,
-        nomeJogo = "Xingo"
+        nomeJogo = "Xingo",
+        fraseFinal = ""
     ) {
         const winPct = stats.jogos > 0
             ? Math.round((stats.vitorias / stats.jogos) * 100)
             : 0;
-
-        const fraseFinal =
-            this.obterMensagemFinal(
-                vitoria,
-                tentativa
-            );
 
         const conviteOntemHtml =
             conviteOntem
@@ -199,62 +194,4 @@ export const ui = {
         }, 2000);
     },
 
-    obterMensagemFinal(vitoria, tentativa) {
-
-        if (!vitoria) {
-
-            const derrotas = [
-                "Vergonha nacional.",
-                "Seu repertório tá triste.",
-                "A internet esperava mais."
-            ];
-
-            return derrotas[
-                Math.floor(
-                    Math.random() * derrotas.length
-                )
-            ];
-        }
-
-        const mensagens = {
-
-            1: [
-                "Mandou bem.",
-                "Calma aí, profissional."
-            ],
-
-            2: [
-                "Xingando com eficiência.",
-                "Tá treinando bastante hein."
-            ],
-
-            3: [
-                "Quase sem precisar pensar.",
-                "Tá aceitável."
-            ],
-
-            4: [
-                "No sufoco, mas foi.",
-                "Quase virou meme."
-            ],
-
-            5: [
-                "Foi por pouco.",
-                "Passou raspando."
-            ],
-
-            6: [
-                "Vitória culposa.",
-                "Nem você acreditou."
-            ]
-        };
-
-        const lista =
-            mensagens[tentativa] ||
-            mensagens[6];
-
-        return lista[
-            Math.floor(Math.random() * lista.length)
-        ];
-    }
 };

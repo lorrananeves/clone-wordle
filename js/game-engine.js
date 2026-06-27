@@ -1,5 +1,12 @@
 import { storage } from './storage.js';
 import { ui } from './ui.js';
+import {
+    avaliarTentativa,
+    obterMensagemFinal,
+    criarDataUtc,
+    obterIndiceDia,
+    obterOrdemDoCiclo
+} from './domain.js';
 
 /**
  * Cria e retorna uma instância do motor de jogo.
@@ -126,7 +133,8 @@ export function criarJogo(config) {
                 salvo.tentativa,
                 obterConviteOntem(salvo.vitoria),
                 obterConviteOutroJogo(),
-                TITULO_JOGO
+                TITULO_JOGO,
+                obterMensagemFinal(salvo.vitoria, salvo.tentativa)
             );
 
             configurarBotaoOntem();
@@ -239,17 +247,11 @@ export function criarJogo(config) {
         }`;
     }
 
-    function criarDataUtc(dataStr) {
-
-        const [ano, mes, dia] = dataStr.split('-').map(Number);
-
-        return new Date(Date.UTC(ano, mes - 1, dia));
-    }
-
     // ─── Palavra do dia ───────────────────────────────────────────────────────
 
     /**
      * Gera a palavra do dia baseada na data.
+     * Delega ao domain o cálculo determinístico do índice e do embaralhamento.
      */
     function configurarPalavraDoDia(dataStr) {
 
@@ -259,40 +261,9 @@ export function criarJogo(config) {
 
         const posicao = indiceDia % XINGOS.length;
 
-        const ordem = obterOrdemDoCiclo(ciclo);
+        const ordem = obterOrdemDoCiclo(XINGOS.length, ciclo, SEMENTE_CICLO);
 
         state.palavra = XINGOS[ordem[posicao]].toUpperCase();
-    }
-
-    function obterIndiceDia(dataStr) {
-
-        const inicio = criarDataUtc("2024-01-01");
-
-        const data = criarDataUtc(dataStr);
-
-        return Math.floor((data - inicio) / 86400000);
-    }
-
-    function obterOrdemDoCiclo(ciclo) {
-
-        const ordem = XINGOS.map((_, indice) => indice);
-
-        let semente = (ciclo + SEMENTE_CICLO) * 2654435761;
-
-        for (let i = ordem.length - 1; i > 0; i--) {
-
-            semente =
-                (semente * 1664525 + 1013904223) %
-                4294967296;
-
-            const j = semente % (i + 1);
-
-            const temporario = ordem[i];
-            ordem[i] = ordem[j];
-            ordem[j] = temporario;
-        }
-
-        return ordem;
     }
 
     // ─── Acessibilidade ───────────────────────────────────────────────────────
@@ -501,67 +472,26 @@ export function criarJogo(config) {
 
         state.travado = true;
 
-        let correct = 0;
-
-        const resultados = Array(TAMANHO_PALAVRA).fill(null);
-        const resultadoLinha = Array(TAMANHO_PALAVRA).fill("");
-
-        const palavraLimpa =
-            state.palavra
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
-
-        const letterCount = {};
-
-        for (const l of palavraLimpa) {
-            letterCount[l] = (letterCount[l] || 0) + 1;
-        }
-
-        // Primeira passagem: letras na posição correta
-        for (let c = 0; c < TAMANHO_PALAVRA; c++) {
-
-            const tile = state.tiles[state.fileira][c];
-
-            // Normaliza a letra digitada para remover acentos antes de comparar
-            const letra = tile.innerText
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
-
-            tile.innerText = letra;
-
-            if (palavraLimpa[c] === letra) {
-
-                resultados[c] = "correct";
-                resultadoLinha[c] = "🟩";
-                correct++;
-                letterCount[letra]--;
+        // Lê as letras dos tiles e normaliza (remove acentos)
+        const letrasDigitadas = Array.from(
+            { length: TAMANHO_PALAVRA },
+            (_, c) => {
+                const tile = state.tiles[state.fileira][c];
+                const letra = tile.innerText
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+                tile.innerText = letra; // atualiza tile para exibir sem acento
+                return letra;
             }
-        }
+        );
 
-        // Segunda passagem: letras presentes em outra posição ou ausentes
-        for (let c = 0; c < TAMANHO_PALAVRA; c++) {
+        const palavraLimpa = state.palavra
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
 
-            if (resultados[c] === "correct") continue;
-
-            const letra = state.tiles[state.fileira][c].innerText
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
-
-            if (
-                palavraLimpa.includes(letra) &&
-                letterCount[letra] > 0
-            ) {
-
-                resultados[c] = "present";
-                resultadoLinha[c] = "🟨";
-                letterCount[letra]--;
-
-            } else {
-
-                resultados[c] = "absent";
-                resultadoLinha[c] = "⬛";
-            }
-        }
+        // Delega avaliação ao domain — sem DOM, sem efeitos colaterais
+        const { resultados, resultadoLinha, correct } =
+            avaliarTentativa(letrasDigitadas.join(""), palavraLimpa);
 
         // Aplica animações e classes de resultado
         for (let c = 0; c < TAMANHO_PALAVRA; c++) {
@@ -705,7 +635,8 @@ ${URL_JOGO}`;
                     fileiraDaVez + 1,
                     obterConviteOntem(vitoria),
                     obterConviteOutroJogo(),
-                    TITULO_JOGO
+                    TITULO_JOGO,
+                    obterMensagemFinal(vitoria, fileiraDaVez + 1)
                 );
 
                 // configurarBotaoOntem() é chamado aqui, dentro do setTimeout,
