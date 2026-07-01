@@ -194,4 +194,59 @@ export const ui = {
         }, 2000);
     },
 
+    abrirModalCompartilhar(resultadoTexto, tituloJogo) {
+
+        // Remove modal anterior se existir
+        document.getElementById("modal-share")?.remove();
+
+        const textoUrl = encodeURIComponent(resultadoTexto);
+
+        const overlay = document.createElement("div");
+        overlay.id = "modal-share";
+        overlay.className = "share-overlay";
+
+        const box = document.createElement("div");
+        box.className = "share-box";
+
+        box.innerHTML = `
+            <p class="share-box-title">Compartilhar resultado</p>
+
+            <a class="share-btn-rede share-whatsapp"
+               href="https://wa.me/?text=${textoUrl}"
+               target="_blank" rel="noopener">
+                WhatsApp
+            </a>
+
+            <a class="share-btn-rede share-twitter"
+               href="https://x.com/intent/post?text=${textoUrl}"
+               target="_blank" rel="noopener">
+                Twitter / X
+            </a>
+
+            <a class="share-btn-rede share-telegram"
+               href="https://t.me/share/url?url=${encodeURIComponent("https://lorrananeves.github.io/xingo/")}&text=${textoUrl}"
+               target="_blank" rel="noopener">
+                Telegram
+            </a>
+
+            <button id="share-copy-btn" class="share-btn-rede share-copy">
+                Copiar texto
+            </button>
+
+            <button id="share-fechar-btn" class="share-btn-fechar">
+                Fechar
+            </button>
+        `;
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
+        box.querySelector("#share-fechar-btn").onclick = () => overlay.remove();
+
+        return box.querySelector("#share-copy-btn");
+    },
+
 };

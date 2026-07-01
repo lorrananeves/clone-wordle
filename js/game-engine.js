@@ -65,7 +65,7 @@ export function criarJogo(config) {
 
     function init() {
 
-        const hoje = obterDataLocal();
+        const hoje = storage.getHojeLocal();
 
         document.addEventListener('touchstart', (e) => {
             if (e.touches.length > 1) {
@@ -124,12 +124,7 @@ export function criarJogo(config) {
             ui.mostrarStatusFinal(
                 salvo.vitoria,
                 state.palavra,
-                {
-                    ...stats,
-                    ultimoAcerto:
-                        salvo.tentativa ||
-                        stats.ultimoAcerto
-                },
+                stats,
                 salvo.tentativa,
                 obterConviteOntem(salvo.vitoria),
                 obterConviteOutroJogo(),
@@ -138,6 +133,7 @@ export function criarJogo(config) {
             );
 
             configurarBotaoOntem();
+            vincularBotaoCompartilhar(salvo.vitoria);
 
             return;
         }
@@ -170,7 +166,7 @@ export function criarJogo(config) {
 
     function obterConviteOntem(vitoria) {
 
-        const hoje = obterDataLocal();
+        const hoje = storage.getHojeLocal();
         const ontem = alterarData(hoje, -1);
 
         if (state.dataJogo !== hoje) return null;
@@ -192,7 +188,7 @@ export function criarJogo(config) {
 
     function obterConviteOutroJogo() {
 
-        const hoje = obterDataLocal();
+        const hoje = storage.getHojeLocal();
 
         // Só mostra o convite se estiver jogando o jogo de hoje
         if (state.dataJogo !== hoje) return null;
@@ -219,20 +215,11 @@ export function criarJogo(config) {
         if (!botaoOntem) return;
 
         botaoOntem.onclick = () => {
-            iniciarJogo(alterarData(obterDataLocal(), -1));
+            iniciarJogo(alterarData(storage.getHojeLocal(), -1));
         };
     }
 
     // ─── Utilitários de data ──────────────────────────────────────────────────
-
-    function obterDataLocal(data = new Date()) {
-
-        return `${data.getFullYear()}-${
-            String(data.getMonth() + 1).padStart(2, '0')
-        }-${
-            String(data.getDate()).padStart(2, '0')
-        }`;
-    }
 
     function alterarData(dataStr, diferencaDias) {
 
@@ -546,53 +533,76 @@ ${vitoria
 
 ${URL_JOGO}`;
 
-        try {
+        if (compartilhandoAgora) return;
 
-            // Usa a Web Share API quando disponível (sem detecção de userAgent)
-            if (navigator.share) {
+        // Web Share API só faz sentido em dispositivos mobile — no desktop o sheet
+        // nativo do macOS/Windows não tem WhatsApp, Instagram etc. e exibe opções
+        // inúteis (Mail, Notas…). Forçamos o modal próprio no desktop.
+        const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+        const podeShareNativo =
+            isMobile &&
+            typeof navigator.canShare === "function" &&
+            navigator.canShare({ text: resultadoTexto });
 
-                if (window.gtag) {
-                    gtag('event', EVENTO_SHARE);
-                }
+        if (!podeShareNativo) {
+            // Abre modal próprio com redes sociais (desktop ou browser sem suporte)
+            const copyBtn = ui.abrirModalCompartilhar(resultadoTexto, TITULO_JOGO);
 
-                await navigator.share({
-                    title: TITULO_JOGO,
-                    text: resultadoTexto
-                });
-
-                ui.mostrarToast("Resultado compartilhado!");
-
-            } else {
+            copyBtn.onclick = async () => {
 
                 if (window.gtag) {
                     gtag('event', EVENTO_COPY);
                 }
 
-                await navigator.clipboard.writeText(resultadoTexto);
+                try {
+                    await navigator.clipboard.writeText(resultadoTexto);
+                    ui.mostrarToast("Resultado copiado!");
+                } catch {
+                    ui.mostrarToast("Não foi possível copiar.");
+                }
+            };
 
-                ui.mostrarToast("Resultado copiado!");
+            return;
+        }
+
+        // Share nativo (mobile com suporte confirmado)
+        compartilhandoAgora = true;
+
+        try {
+
+            if (window.gtag) {
+                gtag('event', EVENTO_SHARE);
             }
+
+            await navigator.share({ text: resultadoTexto });
+
+            ui.mostrarToast("Resultado compartilhado!");
 
         } catch (erro) {
 
-            console.error("Erro ao compartilhar:", erro);
+            // AbortError = usuário cancelou o sheet; não é erro real
+            if (erro.name !== "AbortError") {
+                // Falhou após o share nativo: abre modal como fallback
+                const copyBtn = ui.abrirModalCompartilhar(resultadoTexto, TITULO_JOGO);
 
-            try {
-
-                if (window.gtag) {
-                    gtag('event', EVENTO_COPY);
-                }
-
-                await navigator.clipboard.writeText(resultadoTexto);
-
-                ui.mostrarToast("Resultado copiado!");
-
-            } catch {
-
-                ui.mostrarToast("Não foi possível compartilhar.");
+                copyBtn.onclick = async () => {
+                    try {
+                        await navigator.clipboard.writeText(resultadoTexto);
+                        ui.mostrarToast("Resultado copiado!");
+                    } catch {
+                        ui.mostrarToast("Não foi possível copiar.");
+                    }
+                };
             }
+
+        } finally {
+
+            compartilhandoAgora = false;
         }
     }
+
+    // Flag para evitar shares simultâneos (duplo clique)
+    let compartilhandoAgora = false;
 
     /**
      * Finaliza jogo.
@@ -622,7 +632,7 @@ ${URL_JOGO}`;
 
             storage.salvarProgresso(vitoria, state.dataJogo, fileiraDaVez + 1, NS);
 
-            storage.atualizarEstatisticas(vitoria, fileiraDaVez, state.dataJogo, NS);
+            storage.atualizarEstatisticas(vitoria, fileiraDaVez, state.dataJogo, NS, TENTATIVAS);
 
             const stats = storage.obterEstatisticas(NS, TENTATIVAS);
 
@@ -631,7 +641,7 @@ ${URL_JOGO}`;
                 ui.mostrarStatusFinal(
                     vitoria,
                     state.palavra,
-                    { ...stats, ultimoAcerto: fileiraDaVez + 1 },
+                    stats,
                     fileiraDaVez + 1,
                     obterConviteOntem(vitoria),
                     obterConviteOutroJogo(),
@@ -639,16 +649,10 @@ ${URL_JOGO}`;
                     obterMensagemFinal(vitoria, fileiraDaVez + 1)
                 );
 
-                // configurarBotaoOntem() é chamado aqui, dentro do setTimeout,
-                // porque o botão só existe no DOM após mostrarStatusFinal renderizar o HTML.
+                // configurarBotaoOntem/Compartilhar são chamados aqui, dentro do setTimeout,
+                // porque os botões só existem no DOM após mostrarStatusFinal renderizar o HTML.
                 configurarBotaoOntem();
-
-                const shareBtn = document.getElementById("share-btn");
-
-                if (shareBtn) {
-                    shareBtn.onclick = () =>
-                        configurarBotaoCompartilhar(vitoria);
-                }
+                vincularBotaoCompartilhar(vitoria);
 
             }, 1500);
 
@@ -657,6 +661,16 @@ ${URL_JOGO}`;
             state.fileira++;
             state.coluna = 0;
             state.travado = false;
+        }
+    }
+
+    function vincularBotaoCompartilhar(vitoria) {
+
+        const shareBtn = document.getElementById("share-btn");
+
+        if (shareBtn) {
+            shareBtn.onclick = () =>
+                configurarBotaoCompartilhar(vitoria);
         }
     }
 

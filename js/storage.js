@@ -1,8 +1,7 @@
 export const storage = {
-    // Utilitário interno para gerar a data local formatada (AAAA-MM-DD)
-    _getHojeLocal() {
-        const agora = new Date();
-        return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
+    // Retorna a data local formatada (AAAA-MM-DD)
+    getHojeLocal(data = new Date()) {
+        return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
     },
 
     // ns = namespace: "xingo" (5 letras) ou "xingo6" (6 letras)
@@ -29,12 +28,12 @@ export const storage = {
         );
     },
 
-    // Nota: os parâmetros com default `this._getHojeLocal()` funcionam corretamente
+    // Nota: os parâmetros com default `this.getHojeLocal()` funcionam corretamente
     // enquanto o método for sempre chamado como `storage.salvarProgresso(...)`.
     // Evite desestruturar o objeto storage, pois isso quebraria o `this` nos defaults.
     salvarProgresso(
         vitoria,
-        data = this._getHojeLocal(),
+        data = this.getHojeLocal(),
         tentativa = null,
         ns = "xingo"
     ) {
@@ -54,7 +53,7 @@ export const storage = {
     },
 
     // Mesmo aviso: não desestruture o objeto storage ao usar este método.
-    obterProgresso(data = this._getHojeLocal(), ns = "xingo") {
+    obterProgresso(data = this.getHojeLocal(), ns = "xingo") {
         try {
             const progressos =
                 this._obterProgressos(ns);
@@ -70,10 +69,11 @@ export const storage = {
     atualizarEstatisticas(
         vitoria,
         tentativaFinal,
-        data = this._getHojeLocal(),
-        ns = "xingo"
+        data = this.getHojeLocal(),
+        ns = "xingo",
+        tentativas = 6
     ) {
-        const stats = this.obterEstatisticas(ns);
+        const stats = this.obterEstatisticas(ns, tentativas);
 
         if (stats.jogosPorData[data]) return;
 
@@ -162,7 +162,7 @@ export const storage = {
         );
     },
 
-    obterEstatisticas(ns = "xingo", tentativas = 6) {
+    obterEstatisticas(ns = "xingo", tentativas = 6 /* sempre passe TENTATIVAS do jogo */) {
         const distribuicaoPadrao = {};
         for (let i = 1; i <= tentativas; i++) {
             distribuicaoPadrao[i] = 0;

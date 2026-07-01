@@ -347,60 +347,6 @@ main {
 }
 
 /* =============================================
-   DISTRIBUIÇÃO DE TENTATIVAS
-   ============================================= */
-.dist-title {
-    text-align: left;
-    font-size: clamp(0.9rem, 2dvh, 1.05rem);
-    margin: clamp(6px, 1.2dvh, 12px) 0 clamp(5px, 1dvh, 10px);
-    letter-spacing: 1px;
-    flex: 0 0 auto;
-}
-
-.dist-container {
-    flex: 0 0 auto;
-    margin-bottom: clamp(4px, 1dvh, 10px);
-}
-
-.dist-row {
-    display: flex;
-    align-items: center;
-    margin: clamp(2px, 0.55dvh, 5px) 0;
-    font-size: clamp(0.8rem, 1.8dvh, 0.95rem);
-    font-family: sans-serif;
-}
-
-.dist-index {
-    width: 20px;
-    font-weight: bold;
-}
-
-.dist-bar-bg {
-    flex-grow: 1;
-    background: #121213;
-    height: clamp(15px, 2.6dvh, 20px);
-    border-radius: 2px;
-    margin-left: 5px;
-}
-
-.dist-bar {
-    height: 100%;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 8px;
-    box-sizing: border-box;
-    transition: width 0.5s ease-out;
-}
-
-.dist-value {
-    font-weight: bold;
-    font-size: clamp(0.68rem, 1.55dvh, 0.8rem);
-    color: white;
-}
-
-/* =============================================
    PALAVRA FINAL
    ============================================= */
 .palavra-container {
@@ -583,6 +529,84 @@ main {
 }
 
 /* =============================================
+   MODAL DE COMPARTILHAMENTO
+   ============================================= */
+.share-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.share-box {
+    background: #1e1e1e;
+    border: 1px solid #3a3a3c;
+    border-radius: 15px;
+    padding: clamp(20px, 3.5dvh, 32px) clamp(20px, 4vw, 32px);
+    width: min(360px, 92vw);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 1.8dvh, 14px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+}
+
+.share-box-title {
+    margin: 0;
+    text-align: center;
+    font-size: clamp(1rem, 2.6dvh, 1.25rem);
+    font-weight: bold;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.share-btn-rede {
+    display: block;
+    width: 100%;
+    padding: clamp(11px, 2dvh, 15px) 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: clamp(0.9rem, 2dvh, 1rem);
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    color: #fff;
+    box-sizing: border-box;
+    transition: filter 0.15s;
+    font-family: inherit;
+}
+
+.share-btn-rede:hover {
+    filter: brightness(1.15);
+}
+
+.share-whatsapp  { background: #25d366; }
+.share-twitter   { background: #1d9bf0; }
+.share-telegram  { background: #229ed9; }
+.share-copy      { background: #538d4e; }
+
+.share-btn-fechar {
+    background: transparent;
+    border: 1px solid #565758;
+    border-radius: 8px;
+    color: #818384;
+    font-size: clamp(0.82rem, 1.8dvh, 0.92rem);
+    padding: clamp(8px, 1.4dvh, 11px) 20px;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.share-btn-fechar:hover {
+    border-color: #818384;
+    color: white;
+}
+
+/* =============================================
    UTILITÁRIOS
    ============================================= */
 .hidden {
@@ -659,15 +683,6 @@ main {
         font-size: 0.58rem;
     }
 
-    .dist-title {
-        margin: 3px 0;
-        font-size: 0.68rem;
-    }
-
-    .dist-bar-bg {
-        height: 11px;
-    }
-
     .palavra-final {
         font-size: 1rem;
         margin-bottom: 3px;
@@ -702,8 +717,7 @@ main {
         padding: 20px 16px;
     }
 
-    .stats-title,
-    .dist-title {
+    .stats-title {
         font-size: 1rem;
     }
 
@@ -711,15 +725,9 @@ main {
         font-size: 1.5rem;
         letter-spacing: 2px;
     }
-
-    .dist-row {
-        font-size: 0.8rem;
-    }
 }
 
-html, body {
-    overflow-x: hidden;
-    overflow-y: auto;
+html {
     max-width: 100%;
 }
 
