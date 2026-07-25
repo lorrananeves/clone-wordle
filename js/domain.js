@@ -74,18 +74,57 @@ export function obterMensagemFinal(vitoria, tentativa) {
         const derrotas = [
             "Vergonha nacional.",
             "Seu repertório tá triste.",
-            "A internet esperava mais."
+            "A internet esperava mais.",
+            "Nem sua avó erraria essa.",
+            "Volta pro fundamental.",
+            "Tá precisando xingar mais no dia a dia."
         ];
         return derrotas[Math.floor(Math.random() * derrotas.length)];
     }
 
     const mensagens = {
-        1: ["Mandou bem.", "Calma aí, profissional."],
-        2: ["Xingando com eficiência.", "Tá treinando bastante hein."],
-        3: ["Quase sem precisar pensar.", "Tá aceitável."],
-        4: ["No sufoco, mas foi.", "Quase virou meme."],
-        5: ["Foi por pouco.", "Passou raspando."],
-        6: ["Vitória culposa.", "Nem você acreditou."]
+        1: [
+            "Isso foi sorte e a gente sabe.",
+            "Calma aí, gênio.",
+            "Tá de sacanagem né?",
+            "Uma tentativa. Respeito involuntário."
+        ],
+        2: [
+            "Xingando com eficiência.",
+            "Tá treinando bastante hein.",
+            "Rápido e sujo. Do jeito certo.",
+            "Dois tentativas. Impressionante."
+        ],
+        3: [
+            "Quase sem precisar pensar.",
+            "Tá aceitável.",
+            "Três tentativas. Tá no nível.",
+            "Sabe o que faz."
+        ],
+        4: [
+            "No sufoco, mas foi.",
+            "Quase virou meme.",
+            "Suou frio mas chegou lá.",
+            "Quatro tentativas. Na média. Serve."
+        ],
+        5: [
+            "Foi por pouco.",
+            "Passou raspando.",
+            "Mais sorte do que juízo.",
+            "Cinco tentativas. Tá vivo por pouco."
+        ],
+        6: [
+            "Vitória culposa.",
+            "Nem você acreditou.",
+            "Última chance. Aproveitou.",
+            "Seis tentativas. Passou no sufoco."
+        ],
+        7: [
+            "Sétima tentativa. Que drama.",
+            "Por um triz, mas foi.",
+            "Última chance no Xingão. Aproveitou bem.",
+            "Sobreviveu. Por pouco."
+        ]
     };
 
     const lista = mensagens[tentativa] || mensagens[6];

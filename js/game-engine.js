@@ -101,9 +101,33 @@ export function criarJogo(config) {
             }
         });
 
+        // ── Toggle de tema claro/escuro ──────────────────────────────────────
+        const temaGuardado = localStorage.getItem("xingo_tema");
+        if (temaGuardado === "light") {
+            document.body.classList.add("light");
+        }
+
+        const botaoTema = document.getElementById("btn-tema");
+        if (botaoTema) {
+            _atualizarIconeTema(botaoTema);
+            botaoTema.onclick = () => {
+                document.body.classList.toggle("light");
+                const isLight = document.body.classList.contains("light");
+                localStorage.setItem("xingo_tema", isLight ? "light" : "dark");
+                _atualizarIconeTema(botaoTema);
+            };
+        }
+
         iniciarJogo(hoje);
 
         document.addEventListener('keyup', handleInput);
+    }
+
+    function _atualizarIconeTema(btn) {
+        const isLight = document.body.classList.contains("light");
+        btn.textContent = isLight ? "🌙" : "☀️";
+        btn.setAttribute("title", isLight ? "Modo escuro" : "Modo claro");
+        btn.setAttribute("aria-label", isLight ? "Ativar modo escuro" : "Ativar modo claro");
     }
 
     function iniciarJogo(dataStr) {
@@ -635,6 +659,17 @@ ${URL_JOGO}`;
             storage.atualizarEstatisticas(vitoria, fileiraDaVez, state.dataJogo, NS, TENTATIVAS);
 
             const stats = storage.obterEstatisticas(NS, TENTATIVAS);
+
+            // Animação de bounce nos tiles da linha vencedora
+            if (vitoria) {
+                const BOUNCE_DELAY = 80;
+                for (let c = 0; c < TAMANHO_PALAVRA; c++) {
+                    const tile = state.tiles[fileiraDaVez][c];
+                    setTimeout(() => {
+                        tile.classList.add("bounce");
+                    }, c * BOUNCE_DELAY);
+                }
+            }
 
             setTimeout(() => {
 

@@ -153,9 +153,10 @@ export const ui = {
                     ${this._esc(fraseFinal)}
                 </p>
 
-                <p class="proximo-xingo">
-                    Próximo ${this._esc(nomeJogo)} disponível amanhã.
-                </p>
+                <div class="countdown-container">
+                    <p class="countdown-label">Próximo ${this._esc(nomeJogo)} em</p>
+                    <span class="countdown-timer" id="countdown-timer">--:--:--</span>
+                </div>
 
                 <div class="status-actions">
                     ${conviteOutroJogoHtml}
@@ -175,7 +176,44 @@ export const ui = {
         if (this.elements.keyboard) {
             this.elements.keyboard.style.display = "none";
         }
+
+        this._iniciarCountdown();
     },
+
+    _iniciarCountdown() {
+        if (this._countdownInterval) {
+            clearInterval(this._countdownInterval);
+        }
+
+        const atualizar = () => {
+            const el = document.getElementById("countdown-timer");
+            if (!el) {
+                clearInterval(this._countdownInterval);
+                return;
+            }
+
+            const agora = new Date();
+            const amanha = new Date(
+                agora.getFullYear(),
+                agora.getMonth(),
+                agora.getDate() + 1,
+                0, 0, 0, 0
+            );
+            const diff = amanha - agora;
+
+            const h = String(Math.floor(diff / 3600000)).padStart(2, "0");
+            const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, "0");
+            const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, "0");
+
+            el.textContent = `${h}:${m}:${s}`;
+        };
+
+        atualizar();
+        this._countdownInterval = setInterval(atualizar, 1000);
+    },
+
+    _countdownInterval: null,
+
 
     mostrarToast(texto) {
 

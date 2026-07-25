@@ -1,11 +1,48 @@
 /* =============================================
+   VARIÁVEIS DE TEMA
+   ============================================= */
+:root {
+    --bg:           #131213;
+    --surface:      #1e1e1e;
+    --border:       #3a3a3c;
+    --border-key:   #565758;
+    --text:         #ffffff;
+    --text-muted:   #818384;
+    --text-dim:     #bdbdbd;
+    --text-convite: #d7dadc;
+    --key-bg:       #818384;
+    --key-active:   #565758;
+    --header-hover: #2a2a2c;
+    --modal-overlay: rgba(0,0,0,0.85);
+    --toast-bg:     #2d2d2d;
+    --tile-border:  #3a3a3c;
+}
+
+body.light {
+    --bg:           #f9f9f9;
+    --surface:      #ffffff;
+    --border:       #d3d6da;
+    --border-key:   #d3d6da;
+    --text:         #1a1a1b;
+    --text-muted:   #787c7e;
+    --text-dim:     #4a4a4a;
+    --text-convite: #3a3a3a;
+    --key-bg:       #d3d6da;
+    --key-active:   #b0b3b8;
+    --header-hover: #e6e6e6;
+    --modal-overlay: rgba(0,0,0,0.55);
+    --toast-bg:     #1a1a1b;
+    --tile-border:  #d3d6da;
+}
+
+/* =============================================
    CONFIGURAÇÕES GLOBAIS
    ============================================= */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    background-color: #131213;
-    color: white;
+    background-color: var(--bg);
+    color: var(--text);
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -15,6 +52,7 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     touch-action: manipulation;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 /* =============================================
@@ -45,9 +83,9 @@ header {
     width: clamp(30px, 5.5dvh, 40px);
     height: clamp(30px, 5.5dvh, 40px);
     background: transparent;
-    border: 1px solid #565758;
+    border: 1px solid var(--border-key);
     border-radius: 6px;
-    color: white;
+    color: var(--text);
     font-size: clamp(0.72rem, 1.8dvh, 0.9rem);
     font-weight: bold;
     cursor: pointer;
@@ -62,8 +100,14 @@ header {
 }
 
 .header-btn:hover {
-    background: #2a2a2c;
-    border-color: #818384;
+    background: var(--header-hover);
+    border-color: var(--text-muted);
+}
+
+.header-right {
+    display: flex;
+    gap: 6px;
+    flex: 0 0 auto;
 }
 
 /* =============================================
@@ -102,7 +146,7 @@ main {
    TILES DO TABULEIRO
    ============================================= */
 .tile {
-    border: 2px solid #3a3a3c;
+    border: 2px solid var(--tile-border);
     aspect-ratio: 1 / 1;
     font-size: clamp(1.35rem, 5dvh, 2rem);
     font-weight: bold;
@@ -116,7 +160,7 @@ main {
 /* Animação de digitação */
 .tile.pop {
     animation: pop 0.1s ease-in-out;
-    border-color: #565758;
+    border-color: var(--border-key);
 }
 
 @keyframes pop {
@@ -146,6 +190,20 @@ main {
     20%, 80% { transform: translate3d(2px, 0, 0); }
     30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
     40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* Animação de vitória (bounce) */
+.tile.bounce {
+    animation: bounce 0.5s ease forwards;
+}
+
+@keyframes bounce {
+    0%   { transform: translateY(0); }
+    30%  { transform: translateY(-22px); }
+    55%  { transform: translateY(0); }
+    75%  { transform: translateY(-10px); }
+    90%  { transform: translateY(0); }
+    100% { transform: translateY(0); }
 }
 
 /* =============================================
@@ -195,7 +253,8 @@ main {
 
 .key-tile,
 .enter-key-tile {
-    background-color: #818384;
+    background-color: var(--key-bg);
+    color: var(--text);
     border-radius: 4px;
     margin: clamp(1px, 0.45dvh, 3px);
     cursor: pointer;
@@ -207,7 +266,7 @@ main {
     align-items: center;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    transition: background-color 0.15s, transform 0.1s;
+    transition: background-color 0.15s, transform 0.1s, color 0.2s;
 }
 
 .key-tile {
@@ -224,7 +283,7 @@ main {
 /* Feedback tátil */
 .key-tile:active,
 .enter-key-tile:active {
-    background-color: #565758;
+    background-color: var(--key-active);
     transform: scale(0.95);
 }
 
@@ -239,19 +298,20 @@ main {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: var(--modal-overlay);
     align-items: center;
     justify-content: center;
 }
 
 .modal-content {
-    background-color: #1e1e1e;
+    background-color: var(--surface);
+    color: var(--text);
     width: min(420px, 92vw);
     max-height: calc(100dvh - 24px);
     overflow: hidden;
     padding: clamp(16px, 3dvh, 25px);
     border-radius: 15px;
-    border: 1px solid #3a3a3c;
+    border: 1px solid var(--border);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
     line-height: 1.35;
     font-size: clamp(0.82rem, 2dvh, 1rem);
@@ -278,7 +338,8 @@ main {
 
 .status-container {
     width: min(420px, 92vw);
-    background-color: #1e1e1e;
+    background-color: var(--surface);
+    color: var(--text);
     max-height: min(
         100%,
         calc(100dvh - clamp(38px, 7dvh, 56px) - clamp(30px, 5dvh, 36px) - 18px)
@@ -289,7 +350,7 @@ main {
     justify-content: center;
     padding: clamp(10px, 2dvh, 18px);
     border-radius: 15px;
-    border: 1px solid #3a3a3c;
+    border: 1px solid var(--border);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
     line-height: 1.28;
     box-sizing: border-box;
@@ -350,7 +411,7 @@ main {
    PALAVRA FINAL
    ============================================= */
 .palavra-container {
-    border-top: 1px solid #3a3a3c;
+    border-top: 1px solid var(--border);
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
@@ -363,7 +424,7 @@ main {
 
 .palavra-label {
     margin: 0;
-    color: #818384;
+    color: var(--text-muted);
     text-transform: uppercase;
     font-size: clamp(0.75rem, 1.7dvh, 0.9rem);
 }
@@ -378,12 +439,12 @@ main {
 .proximo-xingo {
     margin: 0;
     font-size: clamp(0.78rem, 1.7dvh, 0.9rem);
-    color: #818384;
+    color: var(--text-muted);
 }
 
 .frase-final {
     font-size: clamp(0.85rem, 1.9dvh, 1rem);
-    color: #bdbdbd;
+    color: var(--text-dim);
     margin: 0;
     font-style: italic;
     line-height: 1.2;
@@ -402,12 +463,12 @@ main {
 .convite-ontem {
     margin: 0;
     padding-top: clamp(6px, 1dvh, 10px);
-    border-top: 1px solid #3a3a3c;
+    border-top: 1px solid var(--border);
 }
 
 .convite-ontem-texto {
     margin: 0 0 clamp(6px, 1dvh, 10px);
-    color: #d7dadc;
+    color: var(--text-convite);
     font-size: clamp(0.8rem, 1.75dvh, 0.95rem);
     line-height: 1.22;
 }
@@ -416,12 +477,12 @@ main {
 .convite-outro-jogo {
     margin: 0;
     padding-top: clamp(6px, 1dvh, 10px);
-    border-top: 1px solid #3a3a3c;
+    border-top: 1px solid var(--border);
 }
 
 .convite-outro-jogo-texto {
     margin: 0 0 clamp(6px, 1dvh, 10px);
-    color: #d7dadc;
+    color: var(--text-convite);
     font-size: clamp(0.8rem, 1.75dvh, 0.95rem);
     line-height: 1.22;
 }
@@ -494,8 +555,8 @@ main {
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: #2d2d2d;
-    color: white;
+    background: var(--toast-bg);
+    color: var(--text);
     padding: 14px 20px;
     border-radius: 10px;
     font-weight: bold;
@@ -535,15 +596,15 @@ main {
     position: fixed;
     inset: 0;
     z-index: 2000;
-    background: rgba(0, 0, 0, 0.85);
+    background: var(--modal-overlay);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .share-box {
-    background: #1e1e1e;
-    border: 1px solid #3a3a3c;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 15px;
     padding: clamp(20px, 3.5dvh, 32px) clamp(20px, 4vw, 32px);
     width: min(360px, 92vw);
@@ -558,7 +619,7 @@ main {
     text-align: center;
     font-size: clamp(1rem, 2.6dvh, 1.25rem);
     font-weight: bold;
-    color: white;
+    color: var(--text);
     letter-spacing: 1px;
 }
 
@@ -590,9 +651,9 @@ main {
 
 .share-btn-fechar {
     background: transparent;
-    border: 1px solid #565758;
+    border: 1px solid var(--border-key);
     border-radius: 8px;
-    color: #818384;
+    color: var(--text-muted);
     font-size: clamp(0.82rem, 1.8dvh, 0.92rem);
     padding: clamp(8px, 1.4dvh, 11px) 20px;
     cursor: pointer;
@@ -602,8 +663,35 @@ main {
 }
 
 .share-btn-fechar:hover {
-    border-color: #818384;
-    color: white;
+    border-color: var(--text-muted);
+    color: var(--text);
+}
+
+/* =============================================
+   CONTADOR REGRESSIVO
+   ============================================= */
+.countdown-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin: 0;
+}
+
+.countdown-label {
+    font-size: clamp(0.68rem, 1.5dvh, 0.8rem);
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.countdown-timer {
+    font-size: clamp(1.3rem, 3dvh, 1.7rem);
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
 }
 
 /* =============================================
