@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XINGÃO — Jogo Diário de Xingamentos de 6 Letras</title>
+    <title>XINGUINHO — Jogo Diário de Xingamentos de 4 Letras</title>
 
-    <meta name="description" content="Desafie sua mente com o Xingão! Tente adivinhar o xingamento de 6 letras em 7 tentativas. Mais longo, mais difícil, mais brabo.">
+    <meta name="description" content="Desafie sua mente com o Xinguinho! Tente adivinhar o xingamento de 4 letras em 5 tentativas. Curto, rápido e brabo.">
 
     <link rel="icon" type="image/png" href="icons/icon-192.png">
 
-    <meta property="og:title" content="Xingão - Jogo de Palavras 6 Letras">
-    <meta property="og:description" content="Será que você consegue descobrir o Xingão de hoje? 6 letras, 7 tentativas. Jogue agora!">
+    <meta property="og:title" content="Xinguinho - Jogo de Palavras 4 Letras">
+    <meta property="og:description" content="Será que você consegue descobrir o Xinguinho de hoje? 4 letras, 5 tentativas. Jogue agora!">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://lorrananeves.github.io/xingo/xingao.html">
+    <meta property="og:url" content="https://lorrananeves.github.io/xingo/xinguinho.html">
     <meta property="og:image" content="https://lorrananeves.github.io/xingo/icons/icon-512.png">
     <meta property="og:image:width" content="512">
     <meta property="og:image:height" content="512">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Xingão - Jogo de Palavras 6 Letras">
-    <meta name="twitter:description" content="Será que você consegue descobrir o Xingão de hoje? 6 letras, 7 tentativas. Jogue agora!">
+    <meta name="twitter:title" content="Xinguinho - Jogo de Palavras 4 Letras">
+    <meta name="twitter:description" content="Será que você consegue descobrir o Xinguinho de hoje? 4 letras, 5 tentativas. Jogue agora!">
     <meta name="twitter:image" content="https://lorrananeves.github.io/xingo/icons/icon-512.png">
-    <link rel="canonical" href="https://lorrananeves.github.io/xingo/xingao.html">
+    <link rel="canonical" href="https://lorrananeves.github.io/xingo/xinguinho.html">
     <link rel="manifest" href="manifest.json">
     <link rel="sitemap" type="application/xml" href="sitemap.xml">
     <meta name="theme-color" content="#131213">
@@ -50,9 +50,9 @@
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "XINGÃO",
-      "url": "https://lorrananeves.github.io/xingo/xingao.html",
-      "description": "Adivinhe o xingamento secreto de 6 letras em até 7 tentativas. Mais longo, mais difícil, mais brabo.",
+      "name": "XINGUINHO",
+      "url": "https://lorrananeves.github.io/xingo/xinguinho.html",
+      "description": "Adivinhe o xingamento secreto de 4 letras em até 5 tentativas. Curto, rápido e brabo.",
       "applicationCategory": "GameApplication",
       "operatingSystem": "Any",
       "inLanguage": "pt-BR",
@@ -65,10 +65,10 @@
     </script>
 
     <style>
-        /* Tabuleiro de 6 colunas — sobrescreve o padrão de 5 do style.css */
+        /* Tabuleiro de 4 colunas — sobrescreve o padrão de 5 do style.css */
         #board {
-            grid-template-columns: repeat(var(--colunas, 6), 1fr);
-            width: min(390px, 95vw, 44dvh);
+            grid-template-columns: repeat(var(--colunas, 4), 1fr);
+            width: min(280px, 80vw, 36dvh);
         }
     </style>
 </head>
@@ -76,11 +76,11 @@
 <body>
     <div id="modal-regras" class="modal">
         <div class="modal-content">
-            <h2>Bem-vindo ao XINGÃO! 🤬🤬</h2>
+            <h2>Bem-vindo ao XINGUINHO! 🤬</h2>
 
             <p>
-                O objetivo é adivinhar o xingamento secreto de <strong>6 letras</strong> em até 7 tentativas.
-                Mais longo, mais pesado, mais brabo.
+                O objetivo é adivinhar o xingamento secreto de <strong>4 letras</strong> em até 5 tentativas.
+                Curto, rápido e sem piedade.
             </p>
 
             <div class="exemplo-regras">
@@ -101,9 +101,9 @@
             </div>
 
             <p>
-                <strong>Por que é mais difícil?</strong>
-                Seis letras exigem mais raciocínio, mais vocabulário de baixaria
-                e mais resistência à vergonha alheia.
+                <strong>Por que é diferente?</strong>
+                Quatro letras parecem fácil — mas com só 5 tentativas,
+                cada chute errado dói mais.
             </p>
 
             <p style="text-align:center; margin-top: 4px;">
@@ -120,16 +120,16 @@
 
     <header>
         <button id="btn-regras" class="header-btn" aria-label="Ver regras" title="Regras">?</button>
-        <h1 id="title">XINGÃO</h1>
+        <h1 id="title">XINGUINHO</h1>
         <div class="header-right">
             <button id="btn-tema" class="header-btn" aria-label="Ativar modo claro" title="Modo claro">☀️</button>
-            <a href="./xinguinho.html" class="header-btn" aria-label="Jogar Xinguinho" title="Jogar Xinguinho (4 letras)">4↗</a>
             <a href="./index.html" class="header-btn" aria-label="Jogar Xingo" title="Jogar Xingo (5 letras)">5↗</a>
+            <a href="./xingao.html" class="header-btn" aria-label="Jogar Xingão" title="Jogar Xingão (6 letras)">6↗</a>
         </div>
     </header>
 
     <p class="hidden">
-        Xingão é um jogo de adivinhação de palavras de 6 letras inspirado no Wordle,
+        Xinguinho é um jogo de adivinhação de palavras de 4 letras inspirado no Wordle,
         com um vocabulário descontraído e desafiador.
     </p>
 
@@ -142,6 +142,6 @@
     </main>
 
     <script src="./js/sw-register.js"></script>
-    <script type="module" src="./js/game6.js"></script>
+    <script type="module" src="./js/game4.js"></script>
 </body>
 </html>

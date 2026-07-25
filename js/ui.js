@@ -54,7 +54,7 @@ export const ui = {
         stats,
         tentativa,
         conviteOntem = null,
-        conviteOutroJogo = null,
+        convitesOutrosJogos = [],
         nomeJogo = "Xingo",
         fraseFinal = ""
     ) {
@@ -77,19 +77,18 @@ export const ui = {
         `
                 : "";
 
-        const conviteOutroJogoHtml =
-            conviteOutroJogo
-                ? `
+        const convitesOutrosJogosHtml = convitesOutrosJogos
+            .map(({ url, rotulo, texto }) => `
                 <div class="convite-outro-jogo">
                     <p class="convite-outro-jogo-texto">
-                        ${this._esc(conviteOutroJogo.texto)}
+                        ${this._esc(texto)}
                     </p>
-                    <a href="${this._esc(conviteOutroJogo.url)}" class="reset-btn outro-jogo-btn">
-                        ${this._esc(conviteOutroJogo.rotulo)}
+                    <a href="${this._esc(url)}" class="reset-btn outro-jogo-btn">
+                        ${this._esc(rotulo)}
                     </a>
                 </div>
-        `
-                : "";
+            `)
+            .join("");
 
         this.elements.board.classList.add("board-status");
 
@@ -159,7 +158,7 @@ export const ui = {
                 </div>
 
                 <div class="status-actions">
-                    ${conviteOutroJogoHtml}
+                    ${convitesOutrosJogosHtml}
 
                     ${conviteOntemHtml}
 

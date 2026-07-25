@@ -24,6 +24,20 @@
     "related_applications": [],
     "shortcuts": [
         {
+            "name": "XINGUINHO",
+            "short_name": "XINGUINHO",
+            "description": "Versão com 4 letras e 5 tentativas",
+            "url": "./xinguinho.html",
+            "icons": [
+                {
+                    "src": "icons/icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "maskable any"
+                }
+            ]
+        },
+        {
             "name": "XINGÃO",
             "short_name": "XINGÃO",
             "description": "Versão com 6 letras e 7 tentativas",

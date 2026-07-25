@@ -10,10 +10,20 @@ const { init } = criarJogo({
     LABEL_TABULEIRO: "Tabuleiro do Xingão",
     TITULO_JOGO: "XINGÃO",
     URL_JOGO: "https://lorrananeves.github.io/xingo/xingao.html",
-    NS_OUTRO_JOGO: "xingo",
-    URL_OUTRO_JOGO: "./index.html",
-    ROTULO_OUTRO_JOGO: "Jogar XINGO (5 letras)",
-    TEXTO_OUTRO_JOGO: "Já jogou o XINGÃO — agora tenta o de 5 letras. Mais fácil? Talvez.",
+    OUTROS_JOGOS: [
+        {
+            ns: "xingo4",
+            url: "./xinguinho.html",
+            rotulo: "Jogar XINGUINHO (4 letras)",
+            texto: "Sobrou tempo? Tenta o XINGUINHO de 4 letras. Parece fácil..."
+        },
+        {
+            ns: "xingo",
+            url: "./index.html",
+            rotulo: "Jogar XINGO (5 letras)",
+            texto: "Já encarou o XINGÃO — agora tenta o XINGO de 5 letras. Mais fácil? Talvez."
+        }
+    ],
     EVENTO_WIN: "win_xingao",
     EVENTO_LOSE: "lose_xingao",
     EVENTO_SHARE: "share_xingao",

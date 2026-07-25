@@ -40,10 +40,7 @@ export function criarJogo(config) {
         LABEL_TABULEIRO,
         TITULO_JOGO,
         URL_JOGO,
-        NS_OUTRO_JOGO,
-        URL_OUTRO_JOGO,
-        ROTULO_OUTRO_JOGO,
-        TEXTO_OUTRO_JOGO,
+        OUTROS_JOGOS = [],
         EVENTO_WIN,
         EVENTO_LOSE,
         EVENTO_SHARE,
@@ -151,7 +148,7 @@ export function criarJogo(config) {
                 stats,
                 salvo.tentativa,
                 obterConviteOntem(salvo.vitoria),
-                obterConviteOutroJogo(),
+                obterConvitesOutrosJogos(),
                 TITULO_JOGO,
                 obterMensagemFinal(salvo.vitoria, salvo.tentativa)
             );
@@ -210,25 +207,17 @@ export function criarJogo(config) {
         };
     }
 
-    function obterConviteOutroJogo() {
+    function obterConvitesOutrosJogos() {
 
         const hoje = storage.getHojeLocal();
 
-        // Só mostra o convite se estiver jogando o jogo de hoje
-        if (state.dataJogo !== hoje) return null;
+        // Só mostra os convites se estiver jogando o jogo de hoje
+        if (state.dataJogo !== hoje) return [];
 
-        const progressoOutro = storage.obterProgresso(hoje, NS_OUTRO_JOGO);
-
-        if (
-            progressoOutro &&
-            progressoOutro.finalizado
-        ) return null;
-
-        return {
-            url: URL_OUTRO_JOGO,
-            rotulo: ROTULO_OUTRO_JOGO,
-            texto: TEXTO_OUTRO_JOGO
-        };
+        return OUTROS_JOGOS.filter(({ ns }) => {
+            const progresso = storage.obterProgresso(hoje, ns);
+            return !(progresso && progresso.finalizado);
+        });
     }
 
     function configurarBotaoOntem() {
@@ -679,7 +668,7 @@ ${URL_JOGO}`;
                     stats,
                     fileiraDaVez + 1,
                     obterConviteOntem(vitoria),
-                    obterConviteOutroJogo(),
+                    obterConvitesOutrosJogos(),
                     TITULO_JOGO,
                     obterMensagemFinal(vitoria, fileiraDaVez + 1)
                 );
