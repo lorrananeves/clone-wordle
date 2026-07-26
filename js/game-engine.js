@@ -159,6 +159,10 @@ export function criarJogo(config) {
             return;
         }
 
+        if (window.gtag) {
+            gtag('event', 'game_start', { jogo: TITULO_JOGO });
+        }
+
         criarTabuleiro();
 
         renderTeclado();
@@ -457,6 +461,13 @@ export function criarJogo(config) {
             return;
         }
 
+        if (window.gtag) {
+            gtag('event', 'guess_submitted', {
+                jogo: TITULO_JOGO,
+                tentativa: state.fileira + 1
+            });
+        }
+
         processarResultado(tentativa);
     }
 
@@ -559,12 +570,12 @@ ${URL_JOGO}`;
 
         if (!podeShareNativo) {
             // Abre modal próprio com redes sociais (desktop ou browser sem suporte)
-            const copyBtn = ui.abrirModalCompartilhar(resultadoTexto, TITULO_JOGO);
+            const copyBtn = ui.abrirModalCompartilhar(resultadoTexto, TITULO_JOGO, URL_JOGO);
 
             copyBtn.onclick = async () => {
 
                 if (window.gtag) {
-                    gtag('event', EVENTO_COPY);
+                    gtag('event', EVENTO_COPY, { jogo: TITULO_JOGO });
                 }
 
                 try {
@@ -584,7 +595,7 @@ ${URL_JOGO}`;
         try {
 
             if (window.gtag) {
-                gtag('event', EVENTO_SHARE);
+                gtag('event', EVENTO_SHARE, { jogo: TITULO_JOGO });
             }
 
             await navigator.share({ text: resultadoTexto });
@@ -596,9 +607,14 @@ ${URL_JOGO}`;
             // AbortError = usuário cancelou o sheet; não é erro real
             if (erro.name !== "AbortError") {
                 // Falhou após o share nativo: abre modal como fallback
-                const copyBtn = ui.abrirModalCompartilhar(resultadoTexto, TITULO_JOGO);
+                const copyBtn = ui.abrirModalCompartilhar(resultadoTexto, TITULO_JOGO, URL_JOGO);
 
                 copyBtn.onclick = async () => {
+
+                    if (window.gtag) {
+                        gtag('event', EVENTO_COPY, { jogo: TITULO_JOGO });
+                    }
+
                     try {
                         await navigator.clipboard.writeText(resultadoTexto);
                         ui.mostrarToast("Resultado copiado!");
@@ -639,7 +655,7 @@ ${URL_JOGO}`;
                 if (vitoria) {
                     gtag('event', EVENTO_WIN, { tentativas: fileiraDaVez + 1 });
                 } else {
-                    gtag('event', EVENTO_LOSE);
+                    gtag('event', EVENTO_LOSE, { tentativas: fileiraDaVez + 1 });
                 }
             }
 

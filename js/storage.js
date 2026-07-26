@@ -132,18 +132,30 @@ export const storage = {
                     stats.sequenciaAtual;
             }
 
-            stats.distribuicao[
-                tentativaFinal + 1
-            ]++;
+            // tentativaFinal é 0-based (índice da fileira), então +1 converte
+            // para o número de tentativas usado (1 = acerto na 1ª tentativa, etc.)
+            const numTentativas = tentativaFinal + 1;
+            stats.distribuicao[numTentativas]++;
 
             if (jogoMaisRecente) {
-                stats.ultimoAcerto =
-                    tentativaFinal + 1;
+                stats.ultimoAcerto = numTentativas;
             }
         } else {
             if (jogoMaisRecente) {
                 stats.sequenciaAtual = 0;
                 stats.ultimoAcerto = null;
+            }
+        }
+
+        // Remove entradas com mais de 90 dias (exceto a data atual) antes de inserir,
+        // para não quebrar o guard de deduplicação que lê jogosPorData[data] no topo.
+        const LIMITE_DIAS = 90;
+        const corte = new Date();
+        corte.setUTCDate(corte.getUTCDate() - LIMITE_DIAS);
+        const cutoff = corte.toISOString().slice(0, 10);
+        for (const chave of Object.keys(stats.jogosPorData)) {
+            if (chave < cutoff && chave !== data) {
+                delete stats.jogosPorData[chave];
             }
         }
 

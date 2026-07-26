@@ -181,3 +181,61 @@ describe("obterOrdemDoCiclo", () => {
         expect(a).not.toEqual(b);
     });
 });
+
+// ─── avaliarTentativa — edge cases ───────────────────────────────────────────
+
+describe("avaliarTentativa — edge cases", () => {
+
+    // #4 — palavra com todos os caracteres iguais
+    it("todas as letras iguais: acerto total", () => {
+        const { resultados, correct } = avaliarTentativa("AAAAA", "AAAAA");
+        expect(correct).toBe(5);
+        expect(resultados).toEqual(["correct","correct","correct","correct","correct"]);
+    });
+
+    it("todas as letras iguais: nenhuma na palavra", () => {
+        const { resultados, correct } = avaliarTentativa("BBBBB", "AAAAA");
+        expect(correct).toBe(0);
+        expect(resultados).toEqual(["absent","absent","absent","absent","absent"]);
+    });
+
+    // #5 — letra repetida na tentativa que existe menos vezes na palavra
+    it("letra repetida na tentativa: conta no máximo o que existe na palavra", () => {
+        // BURRO tem 1 B; tentativa BBBBB → só 1 pode ser present/correct, os 4 restantes absent
+        const { resultados } = avaliarTentativa("BBBBB", "BURRO");
+        const naoAusentes = resultados.filter(r => r !== "absent");
+        expect(naoAusentes.length).toBe(1);
+    });
+
+    it("letra repetida na tentativa: posição correta vira correct, não present", () => {
+        // BURRO[0] = B; tentativa BXXXX → B na posição certa = correct
+        const { resultados } = avaliarTentativa("BXXXX", "BURRO");
+        expect(resultados[0]).toBe("correct");
+        expect(resultados.slice(1)).toEqual(["absent","absent","absent","absent"]);
+    });
+});
+
+// ─── obterIndiceDia — edge cases ─────────────────────────────────────────────
+
+describe("obterIndiceDia — edge cases", () => {
+
+    // #3 — datas antes de 2024-01-01 retornam índice negativo
+    it("data anterior ao início (2023-12-31) retorna índice negativo", () => {
+        expect(obterIndiceDia("2023-12-31")).toBe(-1);
+    });
+
+    it("dois dias antes do início retorna -2", () => {
+        expect(obterIndiceDia("2023-12-30")).toBe(-2);
+    });
+});
+
+// ─── obterOrdemDoCiclo — edge cases ──────────────────────────────────────────
+
+describe("obterOrdemDoCiclo — edge cases", () => {
+
+    // #6 — lista com uma única palavra não lança erro
+    it("totalPalavras = 1 retorna [0] sem lançar erro", () => {
+        expect(() => obterOrdemDoCiclo(1, 0, 1)).not.toThrow();
+        expect(obterOrdemDoCiclo(1, 0, 1)).toEqual([0]);
+    });
+});

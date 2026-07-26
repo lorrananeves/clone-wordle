@@ -231,7 +231,7 @@ export const ui = {
         }, 2000);
     },
 
-    abrirModalCompartilhar(resultadoTexto, tituloJogo) {
+    abrirModalCompartilhar(resultadoTexto, tituloJogo, urlJogo = "https://lorrananeves.github.io/xingo/") {
 
         // Remove modal anterior se existir
         document.getElementById("modal-share")?.remove();
@@ -261,7 +261,7 @@ export const ui = {
             </a>
 
             <a class="share-btn-rede share-telegram"
-               href="https://t.me/share/url?url=${encodeURIComponent("https://lorrananeves.github.io/xingo/")}&text=${textoUrl}"
+               href="https://t.me/share/url?url=${encodeURIComponent(urlJogo)}&text=${textoUrl}"
                target="_blank" rel="noopener">
                 Telegram
             </a>

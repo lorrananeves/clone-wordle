@@ -20,7 +20,7 @@ window.addEventListener('appinstalled', () => {
 
     if (window.gtag) {
 
-        gtag('event', 'pwa_installed');
+        gtag('event', 'pwa_installed', { jogo: document.title });
 
     }
 });
