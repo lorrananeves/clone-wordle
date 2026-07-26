@@ -166,6 +166,9 @@ export function criarJogo(config) {
         criarTabuleiro();
 
         renderTeclado();
+
+        _marcarLinhaAtiva(0);
+        _moverCursor(0);
     }
 
     function resetarEstado(dataStr) {
@@ -325,6 +328,13 @@ export function criarJogo(config) {
                     obterDescricaoTile(r, c)
                 );
 
+                // Clique no tile move o cursor para aquela coluna
+                tile.addEventListener("click", () => {
+                    if (state.fimDeJogo || state.travado) return;
+                    if (r !== state.fileira) return;
+                    _moverCursor(c);
+                });
+
                 ui.elements.board.appendChild(tile);
 
                 state.tiles[r][c] = tile;
@@ -410,27 +420,45 @@ export function criarJogo(config) {
                 );
 
                 tile.classList.add("pop");
-
                 setTimeout(() => tile.classList.remove("pop"), 100);
 
-                state.coluna++;
+                // Avança cursor para a próxima coluna vazia, ou para
+                // a próxima posição sequencial se todas estiverem preenchidas
+                const proxVazia = _proximaColunaVazia(state.coluna + 1);
+                _moverCursor(proxVazia !== -1 ? proxVazia : Math.min(state.coluna + 1, TAMANHO_PALAVRA - 1));
             }
 
-        } else if (e.code === "Backspace" && state.coluna > 0) {
+        } else if (e.code === "Backspace") {
 
-            state.coluna--;
+            const tile = state.tiles[state.fileira][state.coluna];
 
-            state.tiles[state.fileira][state.coluna].innerText = "";
-
-            state.tiles[state.fileira][state.coluna].setAttribute(
-                "aria-label",
-                obterDescricaoTile(state.fileira, state.coluna)
-            );
+            if (tile.innerText) {
+                // Tile atual tem letra — apaga ela e mantém cursor aqui
+                tile.innerText = "";
+                tile.setAttribute("aria-label", obterDescricaoTile(state.fileira, state.coluna));
+            } else if (state.coluna > 0) {
+                // Tile atual vazio — recua cursor e apaga o anterior
+                _moverCursor(state.coluna - 1);
+                const anterior = state.tiles[state.fileira][state.coluna];
+                anterior.innerText = "";
+                anterior.setAttribute("aria-label", obterDescricaoTile(state.fileira, state.coluna));
+            }
 
         } else if (e.code === "Enter") {
 
             validarTentativa();
         }
+    }
+
+    /**
+     * Retorna o índice da próxima coluna vazia a partir de `inicio`,
+     * ou -1 se não houver nenhuma.
+     */
+    function _proximaColunaVazia(inicio) {
+        for (let c = inicio; c < TAMANHO_PALAVRA; c++) {
+            if (!state.tiles[state.fileira][c].innerText) return c;
+        }
+        return -1;
     }
 
     // ─── Validação e resultado ────────────────────────────────────────────────
@@ -582,7 +610,7 @@ ${URL_JOGO}`;
                     await navigator.clipboard.writeText(resultadoTexto);
                     ui.mostrarToast("Resultado copiado!");
                 } catch {
-                    ui.mostrarToast("Não foi possível copiar.");
+                    ui.mostrarToast("Não foi possível copiar.", "erro");
                 }
             };
 
@@ -619,7 +647,7 @@ ${URL_JOGO}`;
                         await navigator.clipboard.writeText(resultadoTexto);
                         ui.mostrarToast("Resultado copiado!");
                     } catch {
-                        ui.mostrarToast("Não foi possível copiar.");
+                        ui.mostrarToast("Não foi possível copiar.", "erro");
                     }
                 };
             }
@@ -698,9 +726,42 @@ ${URL_JOGO}`;
 
         } else {
 
+            _desmarcarLinhaAtiva(state.fileira);
             state.fileira++;
             state.coluna = 0;
             state.travado = false;
+            _marcarLinhaAtiva(state.fileira);
+            _moverCursor(0);
+        }
+    }
+
+    function _marcarLinhaAtiva(fileira) {
+        if (!state.tiles[fileira]) return;
+        for (const tile of state.tiles[fileira]) {
+            tile.classList.add("active-row");
+        }
+    }
+
+    function _desmarcarLinhaAtiva(fileira) {
+        if (!state.tiles[fileira]) return;
+        for (const tile of state.tiles[fileira]) {
+            tile.classList.remove("active-row");
+            tile.classList.remove("tile-cursor");
+        }
+    }
+
+    /**
+     * Move o cursor visual para a coluna indicada e atualiza state.coluna.
+     */
+    function _moverCursor(coluna) {
+        // Remove cursor do tile anterior
+        if (state.tiles[state.fileira]?.[state.coluna]) {
+            state.tiles[state.fileira][state.coluna].classList.remove("tile-cursor");
+        }
+        state.coluna = coluna;
+        // Aplica cursor no novo tile (só se a linha ainda existir)
+        if (state.tiles[state.fileira]?.[state.coluna]) {
+            state.tiles[state.fileira][state.coluna].classList.add("tile-cursor");
         }
     }
 
@@ -711,6 +772,8 @@ ${URL_JOGO}`;
         if (shareBtn) {
             shareBtn.onclick = () =>
                 configurarBotaoCompartilhar(vitoria);
+        } else {
+            console.warn("[xingo] share-btn não encontrado no DOM — compartilhamento indisponível.");
         }
     }
 

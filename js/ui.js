@@ -153,7 +153,7 @@ export const ui = {
                 </p>
 
                 <div class="countdown-container">
-                    <p class="countdown-label">Próximo ${this._esc(nomeJogo)} em</p>
+                    <p class="countdown-label">Próximo ${this._esc(nomeJogo)} à meia-noite em</p>
                     <span class="countdown-timer" id="countdown-timer">--:--:--</span>
                 </div>
 
@@ -214,13 +214,13 @@ export const ui = {
     _countdownInterval: null,
 
 
-    mostrarToast(texto) {
+    mostrarToast(texto, tipo = "info") {
 
         const toast = document.createElement("div");
 
-        toast.className = "toast";
-        toast.setAttribute("role", "status");
-        toast.setAttribute("aria-live", "polite");
+        toast.className = tipo === "erro" ? "toast toast--erro" : "toast";
+        toast.setAttribute("role", tipo === "erro" ? "alert" : "status");
+        toast.setAttribute("aria-live", tipo === "erro" ? "assertive" : "polite");
 
         toast.innerText = texto;
 
