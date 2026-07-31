@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>https://lorrananeves.github.io/xingo/</loc>
+        <loc>https://lorrananeves.github.io/clone-wordle/</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
 
     <url>
-        <loc>https://lorrananeves.github.io/xingo/xingao.html</loc>
+        <loc>https://lorrananeves.github.io/clone-wordle/xingao.html</loc>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://lorrananeves.github.io/xingo/xinguinho.html</loc>
+        <loc>https://lorrananeves.github.io/clone-wordle/xinguinho.html</loc>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
     </url>
