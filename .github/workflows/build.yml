@@ -38,13 +38,13 @@ jobs:
         run: |
           git diff --quiet arquivo.html && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
 
-      - name: Commit do arquivo.html atualizado
+      - name: Commit dos arquivos atualizados
         if: steps.check.outputs.changed == 'true'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add arquivo.html
-          git commit -m "chore: atualiza arquivo.html com palavras até $(date -u +%Y-%m-%d) [skip ci]"
+          git add arquivo.html arquivo-*.html sitemap.xml
+          git commit -m "chore: atualiza arquivo com palavras até $(date -u +%Y-%m-%d) [skip ci]"
           git push
 
       - name: Deploy no GitHub Pages
@@ -53,3 +53,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
           exclude_assets: '.github,node_modules,scripts,tests,vitest.config.js,package*.json,README.md'
+
