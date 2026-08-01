@@ -13,14 +13,14 @@
     <meta property="og:description" content="Será que você consegue descobrir o Xingão de hoje? 6 letras, 7 tentativas. Jogue agora!">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lorrananeves.github.io/clone-wordle/xingao.html">
-    <meta property="og:image" content="https://lorrananeves.github.io/clone-wordle/icons/og-cover-xingao.svg">
-    <meta property="og:image:type" content="image/svg+xml">
+    <meta property="og:image" content="https://lorrananeves.github.io/clone-wordle/icons/og-cover-xingao.png">
+    <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Xingão - Jogo de Palavras 6 Letras">
     <meta name="twitter:description" content="Será que você consegue descobrir o Xingão de hoje? 6 letras, 7 tentativas. Jogue agora!">
-    <meta name="twitter:image" content="https://lorrananeves.github.io/clone-wordle/icons/og-cover-xingao.svg">
+    <meta name="twitter:image" content="https://lorrananeves.github.io/clone-wordle/icons/og-cover-xingao.png">
     <link rel="canonical" href="https://lorrananeves.github.io/clone-wordle/xingao.html">
     <link rel="manifest" href="manifest.json">
     <link rel="sitemap" type="application/xml" href="sitemap.xml">
@@ -44,7 +44,7 @@
       "name": "XINGÃO",
       "url": "https://lorrananeves.github.io/clone-wordle/xingao.html",
       "description": "Adivinhe o xingamento secreto de 6 letras em até 7 tentativas. Mais longo, mais difícil, mais brabo.",
-      "image": "https://lorrananeves.github.io/clone-wordle/icons/og-cover-xingao.svg",
+      "image": "https://lorrananeves.github.io/clone-wordle/icons/og-cover-xingao.png",
       "applicationCategory": "GameApplication",
       "operatingSystem": "Any",
       "inLanguage": "pt-BR",
@@ -74,6 +74,54 @@
             width: min(390px, 95vw, 44dvh);
         }
     </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "O Xingão muda todo dia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Uma nova palavra de 6 letras é sorteada automaticamente a cada dia à meia-noite."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O Xingão é mais difícil que o Xingo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Com 6 letras e mais combinações possíveis, o vocabulário exigido é maior — mesmo tendo uma tentativa a mais."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Posso jogar o Xingão de ontem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim! Na tela de resultado aparece um botão para ver a palavra do dia anterior."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O jogo funciona sem internet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. O Xingão é um Progressive Web App (PWA) — depois da primeira visita ele funciona offline."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Posso instalar no celular?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pode. No Chrome/Safari, use a opção \"Adicionar à tela inicial\" para instalar como aplicativo sem precisar da loja."
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 
 <body>
@@ -128,6 +176,7 @@
             <button id="btn-tema" class="header-btn" aria-label="Ativar modo claro" title="Modo claro">☀️</button>
             <a href="./xinguinho.html" class="header-btn" aria-label="Jogar Xinguinho (4 letras)" title="Jogar Xinguinho (4 letras)"><span aria-hidden="true">4↗</span><span class="sr-only">Jogar Xinguinho (4 letras)</span></a>
             <a href="./index.html" class="header-btn" aria-label="Jogar Xingo (5 letras)" title="Jogar Xingo (5 letras)"><span aria-hidden="true">5↗</span><span class="sr-only">Jogar Xingo (5 letras)</span></a>
+            <a href="./arquivo.html" class="header-btn" aria-label="Ver respostas anteriores" title="Arquivo de respostas"><span aria-hidden="true">≡</span><span class="sr-only">Arquivo de respostas anteriores</span></a>
         </div>
     </header>
 
