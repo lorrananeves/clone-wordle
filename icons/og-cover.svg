@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style>
+      .title { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-weight: 900; letter-spacing: 18px; fill: #ffffff; }
+      .sub   { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-weight: 400; fill: #818384; letter-spacing: 1px; }
+      .tag   { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-weight: 700; fill: #538d4e; letter-spacing: 2px; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#131213"/>
+
+  <!-- Subtle grid texture lines -->
+  <line x1="0" y1="315" x2="1200" y2="315" stroke="#1e1e1e" stroke-width="1"/>
+  <line x1="600" y1="0" x2="600" y2="630" stroke="#1e1e1e" stroke-width="1"/>
+
+  <!-- ═══ LEFT SIDE — mini board ═══ -->
+  <!-- Row 1: X I N G O — all correct (green) -->
+  <rect x="80"  y="120" width="72" height="72" rx="6" fill="#538d4e"/>
+  <rect x="164" y="120" width="72" height="72" rx="6" fill="#538d4e"/>
+  <rect x="248" y="120" width="72" height="72" rx="6" fill="#538d4e"/>
+  <rect x="332" y="120" width="72" height="72" rx="6" fill="#538d4e"/>
+  <rect x="416" y="120" width="72" height="72" rx="6" fill="#538d4e"/>
+  <text x="116"  y="171" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">X</text>
+  <text x="200"  y="171" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">I</text>
+  <text x="284"  y="171" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">N</text>
+  <text x="368"  y="171" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">G</text>
+  <text x="452"  y="171" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">O</text>
+
+  <!-- Row 2: mixed present/absent/correct -->
+  <rect x="80"  y="204" width="72" height="72" rx="6" fill="#b59f3b"/>
+  <rect x="164" y="204" width="72" height="72" rx="6" fill="#3a3a3c"/>
+  <rect x="248" y="204" width="72" height="72" rx="6" fill="#538d4e"/>
+  <rect x="332" y="204" width="72" height="72" rx="6" fill="#3a3a3c"/>
+  <rect x="416" y="204" width="72" height="72" rx="6" fill="#b59f3b"/>
+  <text x="116"  y="255" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">B</text>
+  <text x="200"  y="255" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">O</text>
+  <text x="284"  y="255" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">N</text>
+  <text x="368"  y="255" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">E</text>
+  <text x="452"  y="255" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#ffffff">C</text>
+
+  <!-- Row 3: all absent -->
+  <rect x="80"  y="288" width="72" height="72" rx="6" fill="#3a3a3c"/>
+  <rect x="164" y="288" width="72" height="72" rx="6" fill="#3a3a3c"/>
+  <rect x="248" y="288" width="72" height="72" rx="6" fill="#3a3a3c"/>
+  <rect x="332" y="288" width="72" height="72" rx="6" fill="#3a3a3c"/>
+  <rect x="416" y="288" width="72" height="72" rx="6" fill="#3a3a3c"/>
+  <text x="116"  y="339" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#818384">P</text>
+  <text x="200"  y="339" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#818384">A</text>
+  <text x="284"  y="339" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#818384">T</text>
+  <text x="368"  y="339" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#818384">I</text>
+  <text x="452"  y="339" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="900" font-size="36" fill="#818384">F</text>
+
+  <!-- Row 4: empty tiles (today's challenge) -->
+  <rect x="80"  y="372" width="72" height="72" rx="6" fill="none" stroke="#3a3a3c" stroke-width="2"/>
+  <rect x="164" y="372" width="72" height="72" rx="6" fill="none" stroke="#3a3a3c" stroke-width="2"/>
+  <rect x="248" y="372" width="72" height="72" rx="6" fill="none" stroke="#3a3a3c" stroke-width="2"/>
+  <rect x="332" y="372" width="72" height="72" rx="6" fill="none" stroke="#3a3a3c" stroke-width="2"/>
+  <rect x="416" y="372" width="72" height="72" rx="6" fill="none" stroke="#3a3a3c" stroke-width="2"/>
+
+  <!-- ═══ RIGHT SIDE — text ═══ -->
+  <!-- Tag line -->
+  <text x="660" y="210" class="tag" font-size="22">JOGO DIÁRIO DE PALAVRAS</text>
+
+  <!-- Main title -->
+  <text x="648" y="320" class="title" font-size="112">XINGO</text>
+
+  <!-- Divider -->
+  <line x1="648" y1="348" x2="1120" y2="348" stroke="#3a3a3c" stroke-width="1.5"/>
+
+  <!-- Subtitle -->
+  <text x="650" y="388" class="sub" font-size="22">Adivinhe o xingamento em 6 tentativas.</text>
+  <text x="650" y="418" class="sub" font-size="22">Uma palavra nova todo dia, à meia-noite.</text>
+
+  <!-- Mode pills -->
+  <rect x="650" y="450" width="140" height="40" rx="8" fill="#1e1e1e" stroke="#3a3a3c" stroke-width="1.5"/>
+  <text x="720" y="476" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="700" font-size="18" fill="#818384">4 letras</text>
+
+  <rect x="804" y="450" width="140" height="40" rx="8" fill="#538d4e"/>
+  <text x="874" y="476" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="700" font-size="18" fill="#ffffff">5 letras</text>
+
+  <rect x="958" y="450" width="140" height="40" rx="8" fill="#1e1e1e" stroke="#3a3a3c" stroke-width="1.5"/>
+  <text x="1028" y="476" text-anchor="middle" font-family="-apple-system,'Segoe UI',system-ui,sans-serif" font-weight="700" font-size="18" fill="#818384">6 letras</text>
+
+  <!-- URL -->
+  <text x="650" y="550" class="sub" font-size="18">lorrananeves.github.io/clone-wordle</text>
+</svg>

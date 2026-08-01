@@ -12,15 +12,16 @@
     <meta property="og:title" content="Xingo - Jogo de Palavras">
     <meta property="og:description" content="Será que você consegue descobrir o Xingo de hoje? Jogue agora!">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://lorrananeves.github.io/xingo/">
-    <meta property="og:image" content="https://lorrananeves.github.io/xingo/icons/icon-512.png">
-    <meta property="og:image:width" content="512">
-    <meta property="og:image:height" content="512">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:url" content="https://lorrananeves.github.io/clone-wordle/">
+    <meta property="og:image" content="https://lorrananeves.github.io/clone-wordle/icons/og-cover.svg">
+    <meta property="og:image:type" content="image/svg+xml">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Xingo - Jogo de Palavras">
     <meta name="twitter:description" content="Será que você consegue descobrir o Xingo de hoje? Jogue agora!">
-    <meta name="twitter:image" content="https://lorrananeves.github.io/xingo/icons/icon-512.png">
-    <link rel="canonical" href="https://lorrananeves.github.io/xingo/">
+    <meta name="twitter:image" content="https://lorrananeves.github.io/clone-wordle/icons/og-cover.svg">
+    <link rel="canonical" href="https://lorrananeves.github.io/clone-wordle/">
     <link rel="manifest" href="manifest.json">
     <link rel="sitemap" type="application/xml" href="sitemap.xml">
     <meta name="theme-color" content="#131213">
@@ -28,13 +29,11 @@
     <link rel="stylesheet" href="style.css">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HK87QQNRB8"></script>
+    <!-- Analytics: dataLayer stub inerte — sem requisição de rede -->
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-HK87QQNRB8');
     </script>
 
@@ -44,39 +43,46 @@
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "XINGO",
-        "url": "https://lorrananeves.github.io/xingo/",
+        "url": "https://lorrananeves.github.io/clone-wordle/",
         "description": "Jogo diário de palavras e xingamentos em português. Três modos: XINGUINHO (4 letras), XINGO (5 letras) e XINGÃO (6 letras).",
         "inLanguage": "pt-BR",
         "hasPart": [
           {
-            "@type": "WebApplication",
+            "@type": ["WebApplication", "Game"],
             "name": "XINGUINHO — 4 letras",
-            "url": "https://lorrananeves.github.io/xingo/xinguinho.html",
+            "url": "https://lorrananeves.github.io/clone-wordle/xinguinho.html",
             "description": "Adivinhe o xingamento de 4 letras em até 5 tentativas. Curto, rápido e brabo."
           },
           {
-            "@type": "WebApplication",
+            "@type": ["WebApplication", "Game"],
             "name": "XINGO — 5 letras",
-            "url": "https://lorrananeves.github.io/xingo/",
+            "url": "https://lorrananeves.github.io/clone-wordle/",
             "description": "Adivinhe o xingamento de 5 letras em até 6 tentativas."
           },
           {
-            "@type": "WebApplication",
+            "@type": ["WebApplication", "Game"],
             "name": "XINGÃO — 6 letras",
-            "url": "https://lorrananeves.github.io/xingo/xingao.html",
+            "url": "https://lorrananeves.github.io/clone-wordle/xingao.html",
             "description": "Adivinhe o xingamento de 6 letras em até 7 tentativas. Mais longo, mais difícil, mais brabo."
           }
         ]
       },
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": ["WebApplication", "Game"],
         "name": "XINGO",
-        "url": "https://lorrananeves.github.io/xingo/",
+        "url": "https://lorrananeves.github.io/clone-wordle/",
         "description": "Adivinhe o xingamento secreto de 5 letras em até 6 tentativas. Um jogo diário de palavras descontraído e desafiador.",
+        "image": "https://lorrananeves.github.io/clone-wordle/icons/og-cover.svg",
         "applicationCategory": "GameApplication",
         "operatingSystem": "Any",
         "inLanguage": "pt-BR",
+        "genre": "Word Game",
+        "numberOfPlayers": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 1
+        },
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -86,13 +92,6 @@
     ]
     </script>
 
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "wo3g0xxakg");
-    </script>
 </head>
 
 <body>
@@ -140,8 +139,8 @@
         <h1 id="title">XINGO</h1>
         <div class="header-right">
             <button id="btn-tema" class="header-btn" aria-label="Ativar modo claro" title="Modo claro">☀️</button>
-            <a href="./xinguinho.html" class="header-btn" aria-label="Jogar Xinguinho" title="Jogar Xinguinho (4 letras)">4↗</a>
-            <a href="./xingao.html" class="header-btn" aria-label="Jogar Xingão" title="Jogar Xingão (6 letras)">6↗</a>
+            <a href="./xinguinho.html" class="header-btn" aria-label="Jogar Xinguinho (4 letras)" title="Jogar Xinguinho (4 letras)"><span aria-hidden="true">4↗</span><span class="sr-only">Jogar Xinguinho (4 letras)</span></a>
+            <a href="./xingao.html" class="header-btn" aria-label="Jogar Xingão (6 letras)" title="Jogar Xingão (6 letras)"><span aria-hidden="true">6↗</span><span class="sr-only">Jogar Xingão (6 letras)</span></a>
         </div>
     </header>
 
@@ -160,5 +159,54 @@
 
     <script src="./js/sw-register.js"></script>
     <script type="module" src="./js/game.js"></script>
+
+    <section class="seo-section" aria-label="Sobre o Xingo">
+        <details class="seo-accordion">
+            <summary>Como jogar Xingo</summary>
+            <div class="seo-accordion-body">
+                <p>O <strong>Xingo</strong> é um jogo diário de palavras em português inspirado no Wordle. A cada dia uma palavra secreta de <strong>5 letras</strong> é sorteada — e você tem <strong>6 tentativas</strong> para descobri-la.</p>
+                <p>Digite uma palavra de 5 letras e pressione <strong>ENTER</strong>. Depois de cada chute, as letras ganham cores: <strong style="color:#538d4e">verde</strong> significa letra certa no lugar certo, <strong style="color:#b59f3b">amarelo</strong> significa letra certa no lugar errado, e cinza significa que a letra não está na palavra.</p>
+                <p>O desafio se renova à meia-noite: uma nova palavra de xingamento ou palavrão aguarda você todo dia.</p>
+            </div>
+        </details>
+
+        <details class="seo-accordion">
+            <summary>Xingo, Xinguinho e Xingão — qual a diferença?</summary>
+            <div class="seo-accordion-body">
+                <p>O site tem três modos de dificuldade com palavras de tamanhos diferentes:</p>
+                <ul>
+                    <li><strong>XINGUINHO</strong> — palavras de <strong>4 letras</strong>, 5 tentativas. Curto, rápido e sem piedade.</li>
+                    <li><strong>XINGO</strong> — palavras de <strong>5 letras</strong>, 6 tentativas. O modo clássico.</li>
+                    <li><strong>XINGÃO</strong> — palavras de <strong>6 letras</strong>, 7 tentativas. Mais longo, mais difícil, mais brabo.</li>
+                </ul>
+                <p>Você pode jogar os três no mesmo dia — cada um tem sua própria palavra diária independente.</p>
+            </div>
+        </details>
+
+        <details class="seo-accordion">
+            <summary>Perguntas frequentes</summary>
+            <div class="seo-accordion-body">
+                <dl>
+                    <dt>O Xingo muda todo dia?</dt>
+                    <dd>Sim. Uma nova palavra é sorteada automaticamente a cada dia. Você não pode avançar para o dia seguinte antes da meia-noite.</dd>
+
+                    <dt>Qual horário sai a palavra nova?</dt>
+                    <dd>A palavra muda à meia-noite no horário local do seu dispositivo.</dd>
+
+                    <dt>Posso jogar o Xingo de ontem?</dt>
+                    <dd>Sim! Na tela de resultado aparece um botão para ver a palavra do dia anterior.</dd>
+
+                    <dt>O jogo funciona sem internet?</dt>
+                    <dd>Sim. O Xingo é um Progressive Web App (PWA) — depois da primeira visita ele funciona offline.</dd>
+
+                    <dt>Posso instalar o Xingo no celular?</dt>
+                    <dd>Pode. No Chrome/Safari, use a opção "Adicionar à tela inicial" para instalar como aplicativo sem precisar da loja.</dd>
+                </dl>
+            </div>
+        </details>
+    </section>
+
+    <!-- Consentimento LGPD — carrega analytics só após aceite do usuário -->
+    <script src="./js/consent.js"></script>
 </body>
 </html>
