@@ -144,7 +144,7 @@
 
 <body>
     <div id="modal-regras" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-content--scrollable">
             <h2>Bem-vindo ao XINGO! 🤬</h2>
 
             <p>
@@ -176,6 +176,50 @@
                 não gostaria de ouvir!
             </p>
 
+            <details class="modal-accordion">
+                <summary>Como jogar Xingo</summary>
+                <div class="modal-accordion-body">
+                    <p>O <strong>Xingo</strong> é um jogo diário de palavras em português inspirado no Wordle. A cada dia uma palavra secreta de <strong>5 letras</strong> é sorteada — e você tem <strong>6 tentativas</strong> para descobri-la.</p>
+                    <p>Digite uma palavra de 5 letras e pressione <strong>ENTER</strong>. Depois de cada chute, as letras ganham cores: <strong style="color:#538d4e">verde</strong> significa letra certa no lugar certo, <strong style="color:#b59f3b">amarelo</strong> significa letra certa no lugar errado, e cinza significa que a letra não está na palavra.</p>
+                    <p>O desafio se renova à meia-noite: uma nova palavra de xingamento ou palavrão aguarda você todo dia.</p>
+                </div>
+            </details>
+
+            <details class="modal-accordion">
+                <summary>Xingo, Xinguinho e Xingão — qual a diferença?</summary>
+                <div class="modal-accordion-body">
+                    <p>O site tem três modos de dificuldade com palavras de tamanhos diferentes:</p>
+                    <ul>
+                        <li><strong>XINGUINHO</strong> — palavras de <strong>4 letras</strong>, 5 tentativas. Curto, rápido e sem piedade.</li>
+                        <li><strong>XINGO</strong> — palavras de <strong>5 letras</strong>, 6 tentativas. O modo clássico.</li>
+                        <li><strong>XINGÃO</strong> — palavras de <strong>6 letras</strong>, 7 tentativas. Mais longo, mais difícil, mais brabo.</li>
+                    </ul>
+                    <p>Você pode jogar os três no mesmo dia — cada um tem sua própria palavra diária independente.</p>
+                </div>
+            </details>
+
+            <details class="modal-accordion">
+                <summary>Perguntas frequentes</summary>
+                <div class="modal-accordion-body">
+                    <dl>
+                        <dt>O Xingo muda todo dia?</dt>
+                        <dd>Sim. Uma nova palavra é sorteada automaticamente a cada dia. Você não pode avançar para o dia seguinte antes da meia-noite.</dd>
+
+                        <dt>Qual horário sai a palavra nova?</dt>
+                        <dd>A palavra muda à meia-noite no horário local do seu dispositivo.</dd>
+
+                        <dt>Posso jogar o Xingo de ontem?</dt>
+                        <dd>Sim! Na tela de resultado aparece um botão para ver a palavra do dia anterior.</dd>
+
+                        <dt>O jogo funciona sem internet?</dt>
+                        <dd>Sim. O Xingo é um Progressive Web App (PWA) — depois da primeira visita ele funciona offline.</dd>
+
+                        <dt>Posso instalar o Xingo no celular?</dt>
+                        <dd>Pode. No Chrome/Safari, use a opção "Adicionar à tela inicial" para instalar como aplicativo sem precisar da loja.</dd>
+                    </dl>
+                </div>
+            </details>
+
             <button id="fechar-modal" class="reset-btn centralizar-btn">
                 Bora Jogar!
             </button>
@@ -189,7 +233,7 @@
             <button id="btn-tema" class="header-btn" aria-label="Ativar modo claro" title="Modo claro">☀️</button>
             <a href="./xinguinho.html" class="header-btn" aria-label="Jogar Xinguinho (4 letras)" title="Jogar Xinguinho (4 letras)"><span aria-hidden="true">4↗</span><span class="sr-only">Jogar Xinguinho (4 letras)</span></a>
             <a href="./xingao.html" class="header-btn" aria-label="Jogar Xingão (6 letras)" title="Jogar Xingão (6 letras)"><span aria-hidden="true">6↗</span><span class="sr-only">Jogar Xingão (6 letras)</span></a>
-            <a href="./arquivo.html" class="header-btn" aria-label="Ver respostas anteriores" title="Arquivo de respostas"><span aria-hidden="true">≡</span><span class="sr-only">Arquivo de respostas anteriores</span></a>
+
         </div>
     </header>
 
@@ -208,52 +252,6 @@
 
     <script src="./js/sw-register.js"></script>
     <script type="module" src="./js/game.js"></script>
-
-    <section class="seo-section" aria-label="Sobre o Xingo">
-        <details class="seo-accordion">
-            <summary>Como jogar Xingo</summary>
-            <div class="seo-accordion-body">
-                <p>O <strong>Xingo</strong> é um jogo diário de palavras em português inspirado no Wordle. A cada dia uma palavra secreta de <strong>5 letras</strong> é sorteada — e você tem <strong>6 tentativas</strong> para descobri-la.</p>
-                <p>Digite uma palavra de 5 letras e pressione <strong>ENTER</strong>. Depois de cada chute, as letras ganham cores: <strong style="color:#538d4e">verde</strong> significa letra certa no lugar certo, <strong style="color:#b59f3b">amarelo</strong> significa letra certa no lugar errado, e cinza significa que a letra não está na palavra.</p>
-                <p>O desafio se renova à meia-noite: uma nova palavra de xingamento ou palavrão aguarda você todo dia.</p>
-            </div>
-        </details>
-
-        <details class="seo-accordion">
-            <summary>Xingo, Xinguinho e Xingão — qual a diferença?</summary>
-            <div class="seo-accordion-body">
-                <p>O site tem três modos de dificuldade com palavras de tamanhos diferentes:</p>
-                <ul>
-                    <li><strong>XINGUINHO</strong> — palavras de <strong>4 letras</strong>, 5 tentativas. Curto, rápido e sem piedade.</li>
-                    <li><strong>XINGO</strong> — palavras de <strong>5 letras</strong>, 6 tentativas. O modo clássico.</li>
-                    <li><strong>XINGÃO</strong> — palavras de <strong>6 letras</strong>, 7 tentativas. Mais longo, mais difícil, mais brabo.</li>
-                </ul>
-                <p>Você pode jogar os três no mesmo dia — cada um tem sua própria palavra diária independente.</p>
-            </div>
-        </details>
-
-        <details class="seo-accordion">
-            <summary>Perguntas frequentes</summary>
-            <div class="seo-accordion-body">
-                <dl>
-                    <dt>O Xingo muda todo dia?</dt>
-                    <dd>Sim. Uma nova palavra é sorteada automaticamente a cada dia. Você não pode avançar para o dia seguinte antes da meia-noite.</dd>
-
-                    <dt>Qual horário sai a palavra nova?</dt>
-                    <dd>A palavra muda à meia-noite no horário local do seu dispositivo.</dd>
-
-                    <dt>Posso jogar o Xingo de ontem?</dt>
-                    <dd>Sim! Na tela de resultado aparece um botão para ver a palavra do dia anterior.</dd>
-
-                    <dt>O jogo funciona sem internet?</dt>
-                    <dd>Sim. O Xingo é um Progressive Web App (PWA) — depois da primeira visita ele funciona offline.</dd>
-
-                    <dt>Posso instalar o Xingo no celular?</dt>
-                    <dd>Pode. No Chrome/Safari, use a opção "Adicionar à tela inicial" para instalar como aplicativo sem precisar da loja.</dd>
-                </dl>
-            </div>
-        </details>
-    </section>
 
     <!-- Consentimento LGPD — carrega analytics só após aceite do usuário -->
     <script src="./js/consent.js"></script>

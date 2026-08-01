@@ -352,6 +352,58 @@ main {
 }
 
 /* =============================================
+   MODAL COM SCROLL (regras + FAQ)
+   ============================================= */
+.modal-content--scrollable {
+    overflow-y: auto;
+}
+
+.modal-accordion {
+    border-top: 1px solid var(--border);
+    margin-top: clamp(8px, 1.6dvh, 14px);
+    padding-top: clamp(6px, 1.2dvh, 10px);
+}
+
+.modal-accordion summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: clamp(0.8rem, 1.9dvh, 0.95rem);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+.modal-accordion summary::-webkit-details-marker { display: none; }
+
+.modal-accordion summary::after {
+    content: '+';
+    font-size: 1.1em;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.modal-accordion[open] summary::after {
+    content: '−';
+}
+
+.modal-accordion-body {
+    padding-top: clamp(6px, 1dvh, 10px);
+    font-size: clamp(0.78rem, 1.8dvh, 0.9rem);
+    color: var(--text-dim);
+    line-height: 1.5;
+}
+
+.modal-accordion-body p { margin: 6px 0; }
+.modal-accordion-body ul { margin: 6px 0; padding-left: 18px; }
+.modal-accordion-body li { margin-bottom: 4px; }
+.modal-accordion-body dl { margin: 0; }
+.modal-accordion-body dt { font-weight: bold; color: var(--text); margin-top: 8px; }
+.modal-accordion-body dd { margin: 2px 0 0 0; }
+
+/* =============================================
    STATUS / ESTATÍSTICAS
    ============================================= */
 .status-wrapper {
