@@ -1,0 +1,45 @@
+export const TENTATIVAS = 6;
+export const TAMANHO_PALAVRA = 5;
+
+export const XINGOS = [
+    "antão", "antas", "azeda", "azedo",
+    "babão", "bagos", "bagre", "banal",
+    "bêbum",
+    "besta", "bicha", "bicho", "birra",
+    "bisca", "bobão", "bocal", "bocão",
+    "bocos", "bosta", "brega", "bruta",
+    "bruto", "bruxa", "bunda", "burra",
+    "burro", "cagão", "calva", "calvo",
+    "carai", "cabra", "chata", "chato", "chula",
+    "chulo", "chupa", "corna", "corno",
+    "cuzão", "débil", "doida", "doido",
+    "droga",
+    "falsa", "falso", "feião", "fodão",
+    "fedor", "fraca", "fraco", "froxa",
+    "gados", "grelo", "jegue",
+    "kenga", "ladra", "lerda", "lerdo",
+    "lesmo", "lixão", "lorpa", "manco",
+    "meião",
+    "melga", "merda", "mijão", "monga", "mongo",
+    "mosca",
+    "noias", "nojão", "patão", "peida",
+    "palha", "pasmo", "peido", "peste", "picão", "pífia",
+    "pífio", "pinto", "pobre", "podre",
+    "porca", "porco", "porra", "putão",
+    "putos", "raiva", "ranco", "ranho",
+    "ronha", "sarna", "senil", "sonsa",
+    "sonso", "suína", "suíno", "sujas",
+    "sujos", "tansa", "tanso", "teima",
+    "tanga", "tédio", "tensa", "tenso", "tezão", "tonta",
+    "tonto", "torpe", "torta", "torto",
+    "tosca", "tosco", "trapo", "troxa",
+    "vadia", "vadio", "vazia", "vazio",
+    "velha", "velho", "verme", "vesgo",
+    "viada", "viado", "vilão", "visgo", "xibiu",
+    "xotas", "zonza", "zonzo",
+].filter((p, i, arr) => {
+    // Remove duplicatas e garante exatamente 5 letras base (sem diacríticos)
+    if (arr.indexOf(p) !== i) return false;
+    const limpa = p.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return limpa.length === 5;
+});

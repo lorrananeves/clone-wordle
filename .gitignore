@@ -1,0 +1,9 @@
+# Dependências
+node_modules/
+
+# Cache de build
+.vite/
+
+# Variáveis de ambiente
+.env
+.env.local

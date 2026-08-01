@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lorrananeves.github.io/clone-wordle/sitemap.xml
