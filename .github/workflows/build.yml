@@ -1,0 +1,55 @@
+name: Build e Deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Roda todo dia às 00:05 UTC para incluir a palavra do dia novo
+    - cron: '5 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Gerar tabela estática do arquivo.html
+        run: npm run build
+
+      - name: Verificar se houve mudança
+        id: check
+        run: |
+          git diff --quiet arquivo.html && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit do arquivo.html atualizado
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add arquivo.html
+          git commit -m "chore: atualiza arquivo.html com palavras até $(date -u +%Y-%m-%d) [skip ci]"
+          git push
+
+      - name: Deploy no GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          exclude_assets: '.github,node_modules,scripts,tests,vitest.config.js,package*.json,README.md'
